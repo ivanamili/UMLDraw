@@ -5,6 +5,8 @@
  */
 package umldraw;
 
+import org.jhotdraw.draw.EllipseFigure;
+
 /**
  *
  * @author Korisnik
@@ -15,7 +17,8 @@ public class UMLDraw {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        EllipseFigure ef= new EllipseFigure(8,8,10,15);
+        
     }
     
 }
