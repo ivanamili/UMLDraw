@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 27, 2017 1:33:45 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.Klasnid" table="klasnid" catalog="jhotdraw" optimistic-lock="version">
+        <composite-id name="id" class="store.entity.KlasnidId">
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+            <key-property name="klasaId" type="int">
+                <column name="KlasaID" />
+            </key-property>
+        </composite-id>
+        <property name="atribut" type="string">
+            <column name="Atribut" />
+        </property>
+        <property name="metoda" type="string">
+            <column name="Metoda" />
+        </property>
+    </class>
+</hibernate-mapping>
