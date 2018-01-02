@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.Korisnik" table="korisnik" catalog="jhotdraw" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="crtez" class="store.entity.Crtez" fetch="select">
+            <column name="TrenutniCrtezID" />
+        </many-to-one>
+        <property name="ime" type="string">
+            <column name="Ime" />
+        </property>
+        <property name="sifra" type="string">
+            <column name="Sifra" />
+        </property>
+    </class>
+</hibernate-mapping>

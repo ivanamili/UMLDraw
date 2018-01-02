@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Dec 27, 2017 1:33:45 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.AktorKonekcija" table="aktor_konekcija" catalog="jhotdraw" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="ID" />
-            <generator class="identity" />
+            <generator class="foreign">
+                <param name="property">crtez</param>
+            </generator>
         </id>
+        <one-to-one name="crtez" class="store.entity.Crtez" constrained="true"></one-to-one>
         <property name="crtezId" type="java.lang.Integer">
             <column name="CrtezID" />
         </property>

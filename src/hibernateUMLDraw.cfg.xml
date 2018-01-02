@@ -48,12 +48,14 @@ Contributor(s):
     <property name="hibernate.connection.password">ivanamili</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
+    <mapping resource="store/entity/UseCaseKonekcija.hbm.xml"/>
+    <mapping resource="store/entity/Korisnik.hbm.xml"/>
+    <mapping resource="store/entity/Crtez.hbm.xml"/>
     <mapping resource="store/entity/Aktor.hbm.xml"/>
     <mapping resource="store/entity/DijagramKonekcija.hbm.xml"/>
-    <mapping resource="store/entity/Klasnid.hbm.xml"/>
     <mapping resource="store/entity/Interfejs.hbm.xml"/>
     <mapping resource="store/entity/UseCase.hbm.xml"/>
     <mapping resource="store/entity/AktorKonekcija.hbm.xml"/>
-    <mapping resource="store/entity/Konekcija.hbm.xml"/>
+    <mapping resource="store/entity/Klasa.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

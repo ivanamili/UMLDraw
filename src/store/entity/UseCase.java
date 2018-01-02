@@ -1,5 +1,5 @@
 package store.entity;
-// Generated Dec 27, 2017 1:33:44 AM by Hibernate Tools 4.3.1
+// Generated Jan 2, 2018 5:10:25 PM by Hibernate Tools 4.3.1
 
 
 
@@ -10,6 +10,7 @@ public class UseCase  implements java.io.Serializable {
 
 
      private UseCaseId id;
+     private Crtez crtez;
      private String naziv;
      private Double pocetnaKoorX;
      private Double pocetnaKoorY;
@@ -20,11 +21,13 @@ public class UseCase  implements java.io.Serializable {
     }
 
 	
-    public UseCase(UseCaseId id) {
+    public UseCase(UseCaseId id, Crtez crtez) {
         this.id = id;
+        this.crtez = crtez;
     }
-    public UseCase(UseCaseId id, String naziv, Double pocetnaKoorX, Double pocetnaKoorY, Double visina, Double sirina) {
+    public UseCase(UseCaseId id, Crtez crtez, String naziv, Double pocetnaKoorX, Double pocetnaKoorY, Double visina, Double sirina) {
        this.id = id;
+       this.crtez = crtez;
        this.naziv = naziv;
        this.pocetnaKoorX = pocetnaKoorX;
        this.pocetnaKoorY = pocetnaKoorY;
@@ -38,6 +41,13 @@ public class UseCase  implements java.io.Serializable {
     
     public void setId(UseCaseId id) {
         this.id = id;
+    }
+    public Crtez getCrtez() {
+        return this.crtez;
+    }
+    
+    public void setCrtez(Crtez crtez) {
+        this.crtez = crtez;
     }
     public String getNaziv() {
         return this.naziv;
