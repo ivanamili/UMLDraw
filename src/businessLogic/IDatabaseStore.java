@@ -1,0 +1,31 @@
+package businessLogic;
+
+import org.hibernate.SessionFactory;
+
+public interface IDatabaseStore {
+
+	/**
+	 * 
+	 * @param sessionFactory
+	 */
+	void save(SessionFactory sessionFactory);
+
+	/**
+	 * 
+	 * @param sessionFactory
+	 */
+	void update(SessionFactory sessionFactory);
+
+	/**
+	 * 
+	 * @param sessionFactory
+	 */
+	void delete(SessionFactory sessionFactory);
+
+	/**
+	 * 
+	 * @param idComponents
+	 */
+	void getByID(int[] idComponents);
+
+}
