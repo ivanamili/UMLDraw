@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 3, 2018 7:59:28 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.UseCaseKonekcija" table="use_case_konekcija" catalog="jhotdraw" optimistic-lock="version">
         <composite-id name="id" class="store.entity.UseCaseKonekcijaId">
@@ -15,12 +15,14 @@
         <many-to-one name="crtez" class="store.entity.Crtez" update="false" insert="false" fetch="select">
             <column name="CrtezID" not-null="true" />
         </many-to-one>
-        <property name="uceCaseId" type="java.lang.Integer">
-            <column name="UceCaseID" />
-        </property>
-        <property name="useCaseKonekcijaId" type="java.lang.Integer">
-            <column name="UseCaseKonekcijaID" />
-        </property>
+        <many-to-one name="useCaseByUseCaseConnOdKoga" class="store.entity.UseCase" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+            <column name="OdKogaID" />
+        </many-to-one>
+        <many-to-one name="useCaseByUseCaseConnDoKoga" class="store.entity.UseCase" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+            <column name="DoKogaID" />
+        </many-to-one>
         <property name="tipVeze" type="string">
             <column name="Tip_veze" />
         </property>

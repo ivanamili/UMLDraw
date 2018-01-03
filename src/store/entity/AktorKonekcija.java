@@ -1,5 +1,5 @@
 package store.entity;
-// Generated Jan 2, 2018 5:10:25 PM by Hibernate Tools 4.3.1
+// Generated Jan 3, 2018 7:59:26 PM by Hibernate Tools 4.3.1
 
 
 
@@ -9,34 +9,34 @@ package store.entity;
 public class AktorKonekcija  implements java.io.Serializable {
 
 
-     private Integer id;
+     private AktorKonekcijaId id;
+     private Aktor aktor;
      private Crtez crtez;
-     private Integer crtezId;
-     private Integer aktorId;
-     private Integer uceCaseId;
-     private Integer useCaseKonekcijaId;
+     private UseCase useCase;
 
     public AktorKonekcija() {
     }
 
-	
-    public AktorKonekcija(Crtez crtez) {
-        this.crtez = crtez;
-    }
-    public AktorKonekcija(Crtez crtez, Integer crtezId, Integer aktorId, Integer uceCaseId, Integer useCaseKonekcijaId) {
+    public AktorKonekcija(AktorKonekcijaId id, Aktor aktor, Crtez crtez, UseCase useCase) {
+       this.id = id;
+       this.aktor = aktor;
        this.crtez = crtez;
-       this.crtezId = crtezId;
-       this.aktorId = aktorId;
-       this.uceCaseId = uceCaseId;
-       this.useCaseKonekcijaId = useCaseKonekcijaId;
+       this.useCase = useCase;
     }
    
-    public Integer getId() {
+    public AktorKonekcijaId getId() {
         return this.id;
     }
     
-    public void setId(Integer id) {
+    public void setId(AktorKonekcijaId id) {
         this.id = id;
+    }
+    public Aktor getAktor() {
+        return this.aktor;
+    }
+    
+    public void setAktor(Aktor aktor) {
+        this.aktor = aktor;
     }
     public Crtez getCrtez() {
         return this.crtez;
@@ -45,33 +45,12 @@ public class AktorKonekcija  implements java.io.Serializable {
     public void setCrtez(Crtez crtez) {
         this.crtez = crtez;
     }
-    public Integer getCrtezId() {
-        return this.crtezId;
+    public UseCase getUseCase() {
+        return this.useCase;
     }
     
-    public void setCrtezId(Integer crtezId) {
-        this.crtezId = crtezId;
-    }
-    public Integer getAktorId() {
-        return this.aktorId;
-    }
-    
-    public void setAktorId(Integer aktorId) {
-        this.aktorId = aktorId;
-    }
-    public Integer getUceCaseId() {
-        return this.uceCaseId;
-    }
-    
-    public void setUceCaseId(Integer uceCaseId) {
-        this.uceCaseId = uceCaseId;
-    }
-    public Integer getUseCaseKonekcijaId() {
-        return this.useCaseKonekcijaId;
-    }
-    
-    public void setUseCaseKonekcijaId(Integer useCaseKonekcijaId) {
-        this.useCaseKonekcijaId = useCaseKonekcijaId;
+    public void setUseCase(UseCase useCase) {
+        this.useCase = useCase;
     }
 
 

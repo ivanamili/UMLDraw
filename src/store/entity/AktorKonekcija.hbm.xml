@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 3, 2018 7:59:28 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.AktorKonekcija" table="aktor_konekcija" catalog="jhotdraw" optimistic-lock="version">
-        <id name="id" type="java.lang.Integer">
-            <column name="ID" />
-            <generator class="foreign">
-                <param name="property">crtez</param>
-            </generator>
-        </id>
-        <one-to-one name="crtez" class="store.entity.Crtez" constrained="true"></one-to-one>
-        <property name="crtezId" type="java.lang.Integer">
-            <column name="CrtezID" />
-        </property>
-        <property name="aktorId" type="java.lang.Integer">
+        <composite-id name="id" class="store.entity.AktorKonekcijaId">
+            <key-property name="id" type="int">
+                <column name="ID" />
+            </key-property>
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="aktor" class="store.entity.Aktor" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
             <column name="AktorID" />
-        </property>
-        <property name="uceCaseId" type="java.lang.Integer">
+        </many-to-one>
+        <many-to-one name="crtez" class="store.entity.Crtez" update="false" insert="false" fetch="select">
+            <column name="ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="useCase" class="store.entity.UseCase" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
             <column name="UceCaseID" />
-        </property>
-        <property name="useCaseKonekcijaId" type="java.lang.Integer">
-            <column name="UseCaseKonekcijaID" />
-        </property>
+        </many-to-one>
     </class>
 </hibernate-mapping>

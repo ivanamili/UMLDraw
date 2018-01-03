@@ -41,13 +41,16 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-catalog="jhotdraw"/>
-  <table-filter match-name="crtez"/>
-  <table-filter match-name="use_case_konekcija"/>
-  <table-filter match-name="dijagram_konekcija"/>
-  <table-filter match-name="klasa"/>
-  <table-filter match-name="aktor"/>
-  <table-filter match-name="korisnik"/>
-  <table-filter match-name="use_case"/>
-  <table-filter match-name="aktor_konekcija"/>
   <table-filter match-name="interfejs"/>
+  <table-filter match-name="klasa"/>
+  <table-filter match-name="use_case_konekcija"/>
+  <table-filter match-name="korisnik"/>
+  <table-filter match-name="argument"/>
+  <table-filter match-name="aktor"/>
+  <table-filter match-name="metod"/>
+  <table-filter match-name="dijagram_konekcija"/>
+  <table-filter match-name="crtez"/>
+  <table-filter match-name="atribut"/>
+  <table-filter match-name="aktor_konekcija"/>
+  <table-filter match-name="use_case"/>
 </hibernate-reverse-engineering>

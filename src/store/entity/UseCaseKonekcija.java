@@ -1,5 +1,5 @@
 package store.entity;
-// Generated Jan 2, 2018 5:10:25 PM by Hibernate Tools 4.3.1
+// Generated Jan 3, 2018 7:59:26 PM by Hibernate Tools 4.3.1
 
 
 
@@ -11,23 +11,25 @@ public class UseCaseKonekcija  implements java.io.Serializable {
 
      private UseCaseKonekcijaId id;
      private Crtez crtez;
-     private Integer uceCaseId;
-     private Integer useCaseKonekcijaId;
+     private UseCase useCaseByUseCaseConnOdKoga;
+     private UseCase useCaseByUseCaseConnDoKoga;
      private String tipVeze;
 
     public UseCaseKonekcija() {
     }
 
 	
-    public UseCaseKonekcija(UseCaseKonekcijaId id, Crtez crtez) {
+    public UseCaseKonekcija(UseCaseKonekcijaId id, Crtez crtez, UseCase useCaseByUseCaseConnOdKoga, UseCase useCaseByUseCaseConnDoKoga) {
         this.id = id;
         this.crtez = crtez;
+        this.useCaseByUseCaseConnOdKoga = useCaseByUseCaseConnOdKoga;
+        this.useCaseByUseCaseConnDoKoga = useCaseByUseCaseConnDoKoga;
     }
-    public UseCaseKonekcija(UseCaseKonekcijaId id, Crtez crtez, Integer uceCaseId, Integer useCaseKonekcijaId, String tipVeze) {
+    public UseCaseKonekcija(UseCaseKonekcijaId id, Crtez crtez, UseCase useCaseByUseCaseConnOdKoga, UseCase useCaseByUseCaseConnDoKoga, String tipVeze) {
        this.id = id;
        this.crtez = crtez;
-       this.uceCaseId = uceCaseId;
-       this.useCaseKonekcijaId = useCaseKonekcijaId;
+       this.useCaseByUseCaseConnOdKoga = useCaseByUseCaseConnOdKoga;
+       this.useCaseByUseCaseConnDoKoga = useCaseByUseCaseConnDoKoga;
        this.tipVeze = tipVeze;
     }
    
@@ -45,19 +47,19 @@ public class UseCaseKonekcija  implements java.io.Serializable {
     public void setCrtez(Crtez crtez) {
         this.crtez = crtez;
     }
-    public Integer getUceCaseId() {
-        return this.uceCaseId;
+    public UseCase getUseCaseByUseCaseConnOdKoga() {
+        return this.useCaseByUseCaseConnOdKoga;
     }
     
-    public void setUceCaseId(Integer uceCaseId) {
-        this.uceCaseId = uceCaseId;
+    public void setUseCaseByUseCaseConnOdKoga(UseCase useCaseByUseCaseConnOdKoga) {
+        this.useCaseByUseCaseConnOdKoga = useCaseByUseCaseConnOdKoga;
     }
-    public Integer getUseCaseKonekcijaId() {
-        return this.useCaseKonekcijaId;
+    public UseCase getUseCaseByUseCaseConnDoKoga() {
+        return this.useCaseByUseCaseConnDoKoga;
     }
     
-    public void setUseCaseKonekcijaId(Integer useCaseKonekcijaId) {
-        this.useCaseKonekcijaId = useCaseKonekcijaId;
+    public void setUseCaseByUseCaseConnDoKoga(UseCase useCaseByUseCaseConnDoKoga) {
+        this.useCaseByUseCaseConnDoKoga = useCaseByUseCaseConnDoKoga;
     }
     public String getTipVeze() {
         return this.tipVeze;

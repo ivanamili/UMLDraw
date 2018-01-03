@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.util.Arrays;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -35,6 +36,10 @@ public class UMLDraw {
         Aktor a=new Aktor();
         a.setId(new AktorId(c.getId(),11));
         a.setCrtez(c);
+        
+        Aktor b=new Aktor();
+        b.setId(new AktorId(c.getId(),22));
+        b.setCrtez(c);
        
         Session session=null;
         Transaction tx = null;
@@ -45,17 +50,16 @@ public class UMLDraw {
             
         
          tx = session.beginTransaction();
-                
+//                session.save(c);
+//                session.save(a);
+//                session.save(b);
          Query query;
-          query = session.createQuery("FROM Aktor");
-          List<Aktor> l=query.list();
-          Aktor bla=l.get(0);
-          Crtez jajaja=bla.getCrtez();
+          query = session.createQuery("FROM Crtez");
+          List<Crtez> l=query.list();
+          Crtez bla=l.get(0);
+          int size=bla.getAktors().size();   
+          int size2= bla.getKlasas().size();
           
-          Crtez fuck=(Crtez)session.createQuery("FROM Crtez").list().get(0);
-         String naslov=fuck.getNaslov();
-         int broj=fuck.getCounter1();
-         System.out.println(naslov);
          tx.commit();
       } catch (Exception e) {
          if (tx!=null) tx.rollback();

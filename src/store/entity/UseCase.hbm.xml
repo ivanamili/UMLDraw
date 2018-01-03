@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 3, 2018 7:59:28 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.UseCase" table="use_case" catalog="jhotdraw" optimistic-lock="version">
         <composite-id name="id" class="store.entity.UseCaseId">
@@ -30,5 +30,26 @@
         <property name="sirina" type="java.lang.Double">
             <column name="Sirina" precision="22" scale="0" />
         </property>
+        <set name="useCaseKonekcijasForUseCaseConnOdKoga" table="use_case_konekcija" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+                <column name="OdKogaID" />
+            </key>
+            <one-to-many class="store.entity.UseCaseKonekcija" />
+        </set>
+        <set name="aktorKonekcijas" table="aktor_konekcija" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+                <column name="UceCaseID" />
+            </key>
+            <one-to-many class="store.entity.AktorKonekcija" />
+        </set>
+        <set name="useCaseKonekcijasForUseCaseConnDoKoga" table="use_case_konekcija" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+                <column name="DoKogaID" />
+            </key>
+            <one-to-many class="store.entity.UseCaseKonekcija" />
+        </set>
     </class>
 </hibernate-mapping>

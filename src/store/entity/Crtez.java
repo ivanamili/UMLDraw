@@ -1,5 +1,5 @@
 package store.entity;
-// Generated Jan 2, 2018 5:10:25 PM by Hibernate Tools 4.3.1
+// Generated Jan 3, 2018 7:59:26 PM by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -12,18 +12,17 @@ public class Crtez  implements java.io.Serializable {
 
 
      private int id;
+     private Korisnik korisnik;
      private String naslov;
      private String tip;
-     private Integer autorId;
      private Integer counter1;
      private Integer counter2;
-     private Integer counter3;
      private Set klasas = new HashSet(0);
      private Set dijagramKonekcijas = new HashSet(0);
      private Set aktors = new HashSet(0);
      private Set useCases = new HashSet(0);
      private Set korisniks = new HashSet(0);
-     private AktorKonekcija aktorKonekcija;
+     private Set aktorKonekcijas = new HashSet(0);
      private Set interfejses = new HashSet(0);
      private Set useCaseKonekcijas = new HashSet(0);
 
@@ -34,20 +33,19 @@ public class Crtez  implements java.io.Serializable {
     public Crtez(int id) {
         this.id = id;
     }
-    public Crtez(int id, String naslov, String tip, Integer autorId, Integer counter1, Integer counter2, Integer counter3, Set klasas, Set dijagramKonekcijas, Set aktors, Set useCases, Set korisniks, AktorKonekcija aktorKonekcija, Set interfejses, Set useCaseKonekcijas) {
+    public Crtez(int id, Korisnik korisnik, String naslov, String tip, Integer counter1, Integer counter2, Set klasas, Set dijagramKonekcijas, Set aktors, Set useCases, Set korisniks, Set aktorKonekcijas, Set interfejses, Set useCaseKonekcijas) {
        this.id = id;
+       this.korisnik = korisnik;
        this.naslov = naslov;
        this.tip = tip;
-       this.autorId = autorId;
        this.counter1 = counter1;
        this.counter2 = counter2;
-       this.counter3 = counter3;
        this.klasas = klasas;
        this.dijagramKonekcijas = dijagramKonekcijas;
        this.aktors = aktors;
        this.useCases = useCases;
        this.korisniks = korisniks;
-       this.aktorKonekcija = aktorKonekcija;
+       this.aktorKonekcijas = aktorKonekcijas;
        this.interfejses = interfejses;
        this.useCaseKonekcijas = useCaseKonekcijas;
     }
@@ -58,6 +56,13 @@ public class Crtez  implements java.io.Serializable {
     
     public void setId(int id) {
         this.id = id;
+    }
+    public Korisnik getKorisnik() {
+        return this.korisnik;
+    }
+    
+    public void setKorisnik(Korisnik korisnik) {
+        this.korisnik = korisnik;
     }
     public String getNaslov() {
         return this.naslov;
@@ -73,13 +78,6 @@ public class Crtez  implements java.io.Serializable {
     public void setTip(String tip) {
         this.tip = tip;
     }
-    public Integer getAutorId() {
-        return this.autorId;
-    }
-    
-    public void setAutorId(Integer autorId) {
-        this.autorId = autorId;
-    }
     public Integer getCounter1() {
         return this.counter1;
     }
@@ -93,13 +91,6 @@ public class Crtez  implements java.io.Serializable {
     
     public void setCounter2(Integer counter2) {
         this.counter2 = counter2;
-    }
-    public Integer getCounter3() {
-        return this.counter3;
-    }
-    
-    public void setCounter3(Integer counter3) {
-        this.counter3 = counter3;
     }
     public Set getKlasas() {
         return this.klasas;
@@ -136,12 +127,12 @@ public class Crtez  implements java.io.Serializable {
     public void setKorisniks(Set korisniks) {
         this.korisniks = korisniks;
     }
-    public AktorKonekcija getAktorKonekcija() {
-        return this.aktorKonekcija;
+    public Set getAktorKonekcijas() {
+        return this.aktorKonekcijas;
     }
     
-    public void setAktorKonekcija(AktorKonekcija aktorKonekcija) {
-        this.aktorKonekcija = aktorKonekcija;
+    public void setAktorKonekcijas(Set aktorKonekcijas) {
+        this.aktorKonekcijas = aktorKonekcijas;
     }
     public Set getInterfejses() {
         return this.interfejses;

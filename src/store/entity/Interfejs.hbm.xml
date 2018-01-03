@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 3, 2018 7:59:28 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.Interfejs" table="interfejs" catalog="jhotdraw" optimistic-lock="version">
         <composite-id name="id" class="store.entity.InterfejsId">
@@ -18,8 +18,22 @@
         <property name="naziv" type="string">
             <column name="Naziv" />
         </property>
-        <property name="metoda" type="string">
-            <column name="Metoda" />
+        <property name="metodCounter" type="java.lang.Integer">
+            <column name="MetodCounter" />
         </property>
+        <set name="metods" table="metod" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+                <column name="KlasaIliInterfejsID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.Metod" />
+        </set>
+        <set name="dijagramKonekcijas" table="dijagram_konekcija" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+                <column name="DoKogaID" />
+            </key>
+            <one-to-many class="store.entity.DijagramKonekcija" />
+        </set>
     </class>
 </hibernate-mapping>

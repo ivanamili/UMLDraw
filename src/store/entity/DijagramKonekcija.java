@@ -1,5 +1,5 @@
 package store.entity;
-// Generated Jan 2, 2018 5:10:25 PM by Hibernate Tools 4.3.1
+// Generated Jan 3, 2018 7:59:26 PM by Hibernate Tools 4.3.1
 
 
 
@@ -11,24 +11,29 @@ public class DijagramKonekcija  implements java.io.Serializable {
 
      private DijagramKonekcijaId id;
      private Crtez crtez;
+     private Interfejs interfejs;
+     private Klasa klasaByKonekcijaKlasaFkDoKoga;
+     private Klasa klasaByKonekcijaKlasaFkOdKoga;
      private String tipVeze;
-     private Integer odKogaId;
-     private Integer doKogaId;
 
     public DijagramKonekcija() {
     }
 
 	
-    public DijagramKonekcija(DijagramKonekcijaId id, Crtez crtez) {
+    public DijagramKonekcija(DijagramKonekcijaId id, Crtez crtez, Interfejs interfejs, Klasa klasaByKonekcijaKlasaFkDoKoga, Klasa klasaByKonekcijaKlasaFkOdKoga) {
         this.id = id;
         this.crtez = crtez;
+        this.interfejs = interfejs;
+        this.klasaByKonekcijaKlasaFkDoKoga = klasaByKonekcijaKlasaFkDoKoga;
+        this.klasaByKonekcijaKlasaFkOdKoga = klasaByKonekcijaKlasaFkOdKoga;
     }
-    public DijagramKonekcija(DijagramKonekcijaId id, Crtez crtez, String tipVeze, Integer odKogaId, Integer doKogaId) {
+    public DijagramKonekcija(DijagramKonekcijaId id, Crtez crtez, Interfejs interfejs, Klasa klasaByKonekcijaKlasaFkDoKoga, Klasa klasaByKonekcijaKlasaFkOdKoga, String tipVeze) {
        this.id = id;
        this.crtez = crtez;
+       this.interfejs = interfejs;
+       this.klasaByKonekcijaKlasaFkDoKoga = klasaByKonekcijaKlasaFkDoKoga;
+       this.klasaByKonekcijaKlasaFkOdKoga = klasaByKonekcijaKlasaFkOdKoga;
        this.tipVeze = tipVeze;
-       this.odKogaId = odKogaId;
-       this.doKogaId = doKogaId;
     }
    
     public DijagramKonekcijaId getId() {
@@ -45,26 +50,33 @@ public class DijagramKonekcija  implements java.io.Serializable {
     public void setCrtez(Crtez crtez) {
         this.crtez = crtez;
     }
+    public Interfejs getInterfejs() {
+        return this.interfejs;
+    }
+    
+    public void setInterfejs(Interfejs interfejs) {
+        this.interfejs = interfejs;
+    }
+    public Klasa getKlasaByKonekcijaKlasaFkDoKoga() {
+        return this.klasaByKonekcijaKlasaFkDoKoga;
+    }
+    
+    public void setKlasaByKonekcijaKlasaFkDoKoga(Klasa klasaByKonekcijaKlasaFkDoKoga) {
+        this.klasaByKonekcijaKlasaFkDoKoga = klasaByKonekcijaKlasaFkDoKoga;
+    }
+    public Klasa getKlasaByKonekcijaKlasaFkOdKoga() {
+        return this.klasaByKonekcijaKlasaFkOdKoga;
+    }
+    
+    public void setKlasaByKonekcijaKlasaFkOdKoga(Klasa klasaByKonekcijaKlasaFkOdKoga) {
+        this.klasaByKonekcijaKlasaFkOdKoga = klasaByKonekcijaKlasaFkOdKoga;
+    }
     public String getTipVeze() {
         return this.tipVeze;
     }
     
     public void setTipVeze(String tipVeze) {
         this.tipVeze = tipVeze;
-    }
-    public Integer getOdKogaId() {
-        return this.odKogaId;
-    }
-    
-    public void setOdKogaId(Integer odKogaId) {
-        this.odKogaId = odKogaId;
-    }
-    public Integer getDoKogaId() {
-        return this.doKogaId;
-    }
-    
-    public void setDoKogaId(Integer doKogaId) {
-        this.doKogaId = doKogaId;
     }
 
 

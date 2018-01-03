@@ -1,30 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 3, 2018 7:59:28 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.Crtez" table="crtez" catalog="jhotdraw" optimistic-lock="version">
         <id name="id" type="int">
             <column name="ID" />
             <generator class="assigned" />
         </id>
+        <many-to-one name="korisnik" class="store.entity.Korisnik" fetch="select">
+            <column name="ImeAutora" />
+        </many-to-one>
         <property name="naslov" type="string">
             <column name="Naslov" />
         </property>
         <property name="tip" type="string">
             <column name="Tip" />
         </property>
-        <property name="autorId" type="java.lang.Integer">
-            <column name="AutorID" />
-        </property>
         <property name="counter1" type="java.lang.Integer">
             <column name="Counter1" />
         </property>
         <property name="counter2" type="java.lang.Integer">
             <column name="Counter2" />
-        </property>
-        <property name="counter3" type="java.lang.Integer">
-            <column name="Counter3" />
         </property>
         <set name="klasas" table="klasa" inverse="true" lazy="true" fetch="select">
             <key>
@@ -56,7 +53,12 @@
             </key>
             <one-to-many class="store.entity.Korisnik" />
         </set>
-        <one-to-one name="aktorKonekcija" class="store.entity.AktorKonekcija"></one-to-one>
+        <set name="aktorKonekcijas" table="aktor_konekcija" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.AktorKonekcija" />
+        </set>
         <set name="interfejses" table="interfejs" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="CrtezID" not-null="true" />

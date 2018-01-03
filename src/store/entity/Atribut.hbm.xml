@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 3, 2018 7:59:28 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.Atribut" table="atribut" catalog="jhotdraw" optimistic-lock="version">
+        <composite-id name="id" class="store.entity.AtributId">
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+            <key-property name="klasaId" type="int">
+                <column name="KlasaID" />
+            </key-property>
+            <key-property name="attributId" type="int">
+                <column name="AttributID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="klasa" class="store.entity.Klasa" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+            <column name="KlasaID" not-null="true" />
+        </many-to-one>
+        <property name="naziv" type="string">
+            <column name="Naziv" length="100" />
+        </property>
+        <property name="tip" type="string">
+            <column name="Tip" length="100" />
+        </property>
+        <property name="vidljivost" type="string">
+            <column name="Vidljivost" length="20" />
+        </property>
+        <property name="isStatic" type="java.lang.Byte">
+            <column name="IsStatic" />
+        </property>
+    </class>
+</hibernate-mapping>

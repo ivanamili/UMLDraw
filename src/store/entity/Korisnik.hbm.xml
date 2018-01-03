@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 2, 2018 5:10:26 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 3, 2018 7:59:28 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.Korisnik" table="korisnik" catalog="jhotdraw" optimistic-lock="version">
-        <id name="id" type="int">
-            <column name="ID" />
+        <id name="ime" type="string">
+            <column name="Ime" />
             <generator class="assigned" />
         </id>
         <many-to-one name="crtez" class="store.entity.Crtez" fetch="select">
             <column name="TrenutniCrtezID" />
         </many-to-one>
-        <property name="ime" type="string">
-            <column name="Ime" />
-        </property>
         <property name="sifra" type="string">
             <column name="Sifra" />
         </property>
+        <set name="crtezs" table="crtez" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ImeAutora" />
+            </key>
+            <one-to-many class="store.entity.Crtez" />
+        </set>
     </class>
 </hibernate-mapping>
