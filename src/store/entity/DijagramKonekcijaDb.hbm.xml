@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.DijagramKonekcijaDb" table="dijagram_konekcija_db" catalog="jhotdraw" optimistic-lock="version">
+        <composite-id name="id" class="store.entity.DijagramKonekcijaDbId">
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+            <key-property name="vezeId" type="int">
+                <column name="VezeID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="crtezDb" class="store.entity.CrtezDb" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+        </many-to-one>
+        <property name="tipVeze" type="string">
+            <column name="Tip_veze" />
+        </property>
+        <property name="odKogaId" type="java.lang.Integer">
+            <column name="OdKogaID" />
+        </property>
+        <property name="doKogaId" type="java.lang.Integer">
+            <column name="DoKogaID" />
+        </property>
+    </class>
+</hibernate-mapping>

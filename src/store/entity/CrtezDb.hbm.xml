@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.CrtezDb" table="crtez_db" catalog="jhotdraw" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="korisnikDb" class="store.entity.KorisnikDb" fetch="select">
+            <column name="ImeAutora" />
+        </many-to-one>
+        <property name="naslov" type="string">
+            <column name="Naslov" />
+        </property>
+        <property name="tip" type="string">
+            <column name="Tip" />
+        </property>
+        <property name="counter1" type="java.lang.Integer">
+            <column name="Counter1" />
+        </property>
+        <property name="counter2" type="java.lang.Integer">
+            <column name="Counter2" />
+        </property>
+        <set name="dijagramKonekcijaDbs" table="dijagram_konekcija_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.DijagramKonekcijaDb" />
+        </set>
+        <set name="interfejsDbs" table="interfejs_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.InterfejsDb" />
+        </set>
+        <set name="klasaDbs" table="klasa_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.KlasaDb" />
+        </set>
+        <set name="useCaseKonekcijaDbs" table="use_case_konekcija_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.UseCaseKonekcijaDb" />
+        </set>
+        <set name="aktorDbs" table="aktor_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.AktorDb" />
+        </set>
+        <set name="aktorKonekcijaDbs" table="aktor_konekcija_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.AktorKonekcijaDb" />
+        </set>
+        <set name="korisnikDbs" table="korisnik_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TrenutniCrtezID" />
+            </key>
+            <one-to-many class="store.entity.KorisnikDb" />
+        </set>
+        <set name="useCaseDbs" table="use_case_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.UseCaseDb" />
+        </set>
+    </class>
+</hibernate-mapping>

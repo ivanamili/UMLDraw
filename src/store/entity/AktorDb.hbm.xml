@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.AktorDb" table="aktor_db" catalog="jhotdraw" optimistic-lock="version">
+        <composite-id name="id" class="store.entity.AktorDbId">
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+            <key-property name="id" type="int">
+                <column name="ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="crtezDb" class="store.entity.CrtezDb" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+        </many-to-one>
+        <property name="naziv" type="string">
+            <column name="Naziv" />
+        </property>
+        <property name="pocetnaKoorX" type="java.lang.Double">
+            <column name="PocetnaKoorX" precision="22" scale="0" />
+        </property>
+        <property name="pocetnaKoorY" type="java.lang.Double">
+            <column name="PocetnaKoorY" precision="22" scale="0" />
+        </property>
+        <property name="visina" type="java.lang.Double">
+            <column name="Visina" precision="22" scale="0" />
+        </property>
+        <property name="sirina" type="java.lang.Double">
+            <column name="Sirina" precision="22" scale="0" />
+        </property>
+        <set name="aktorKonekcijaDbs" table="aktor_konekcija_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+                <column name="AktorID" />
+            </key>
+            <one-to-many class="store.entity.AktorKonekcijaDb" />
+        </set>
+    </class>
+</hibernate-mapping>

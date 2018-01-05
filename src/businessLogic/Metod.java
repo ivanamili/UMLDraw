@@ -2,7 +2,16 @@ package businessLogic;
 
 import enumerations.VisibilityTypeEnum;
 import java.util.ArrayList;
+import java.util.Iterator;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import store.entity.MetodDb;
+import store.entity.MetodDbId;
+import store.entity.ArgumentDb;
+import store.entity.ArgumentDbId;
+import store.entity.NewHibernateUtil;
 
 public class Metod implements IDatabaseStore {
 
@@ -16,6 +25,11 @@ public class Metod implements IDatabaseStore {
 	private String povratnaVrednost;
 	private ArrayList<Argument> argumenti;
 	private int argumentiCounter;
+        
+        public Metod()
+        {
+            this.argumenti= new ArrayList<Argument>();
+        }
 
 	public int getCrtezID() {
 		return this.crtezID;
@@ -29,9 +43,8 @@ public class Metod implements IDatabaseStore {
 		this.crtezID = crtezID;
 	}
 
-	public int getKlasaID() {
-		// TODO - implement Metod.getKlasaID
-		throw new UnsupportedOperationException();
+	public int getKlasaIliInterjfejsID() {
+		return this.klasaIliInterjfejsID;
 	}
 
 	/**
@@ -39,13 +52,11 @@ public class Metod implements IDatabaseStore {
 	 * @param klasaID
 	 */
 	public void setKlasaID(int klasaID) {
-		// TODO - implement Metod.setKlasaID
-		throw new UnsupportedOperationException();
+		this.klasaIliInterjfejsID=klasaID;
 	}
 
 	public int getID() {
-		// TODO - implement Metod.getID
-		throw new UnsupportedOperationException();
+		return this.ID;
 	}
 
 	/**
@@ -53,8 +64,7 @@ public class Metod implements IDatabaseStore {
 	 * @param ID
 	 */
 	public void setID(int ID) {
-		// TODO - implement Metod.setID
-		throw new UnsupportedOperationException();
+		this.ID=ID;
 	}
 
 	public String getNaziv() {
@@ -160,8 +170,7 @@ public class Metod implements IDatabaseStore {
 	 * @param arg
 	 */
 	public void dodajArgument(Argument arg) {
-		// TODO - implement Metod.dodajArgument
-		throw new UnsupportedOperationException();
+		this.argumenti.add(arg);
 	}
 
 	/**
@@ -175,22 +184,130 @@ public class Metod implements IDatabaseStore {
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //popunjavanje osnovnih podataka objekta za bazu
+        MetodDb zaBazu=new MetodDb();
+        zaBazu.setId(new MetodDbId(this.crtezID,this.klasaIliInterjfejsID,this.ID));
+        zaBazu.setNaziv(this.naziv);
+        zaBazu.setVidljivost( this.vidljivost.name());
+        zaBazu.setIsStatic((byte)(this.isStatic?1:0));
+        zaBazu.setIsAbstract((byte)(this.isStatic?1:0));
+        zaBazu.setPovratnaVrednost(this.povratnaVrednost);
+        zaBazu.setAtributCounter(this.argumentiCounter);
+        
+        //popuna atributa uz nadu da ce njih hibernate automatski da sacuva
+        Iterator i= this.argumenti.iterator();
+        while(i.hasNext())
+        {
+            Argument arg=(Argument)i.next();
+            ArgumentDb argDb=new ArgumentDb(new ArgumentDbId(arg.getCrtezID(),arg.getKlasaID(),arg.getMetodID(),arg.getID()),zaBazu);
+            argDb.setNaziv(arg.getNaziv());
+            argDb.setTip(arg.getTip());
+            
+            zaBazu.getArgumentDbs().add(argDb);
+        }
+        
+        //tek ovde pocinje cuvanje 
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(zaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //popunjavanje osnovnih podataka objekta za bazu
+        MetodDb zaBazu=new MetodDb();
+        zaBazu.setId(new MetodDbId(this.crtezID,this.klasaIliInterjfejsID,this.ID));
+        zaBazu.setNaziv(this.naziv);
+        zaBazu.setVidljivost( this.vidljivost.name());
+        zaBazu.setIsStatic((byte)(this.isStatic?1:0));
+        zaBazu.setIsAbstract((byte)(this.isStatic?1:0));
+        zaBazu.setPovratnaVrednost(this.povratnaVrednost);
+        zaBazu.setAtributCounter(this.argumentiCounter);
+        
+        //popuna atributa uz nadu da ce njih hibernate automatski da sacuva
+        Iterator i= this.argumenti.iterator();
+        while(i.hasNext())
+        {
+            Argument arg=(Argument)i.next();
+            ArgumentDb argDb=new ArgumentDb(new ArgumentDbId(arg.getCrtezID(),arg.getKlasaID(),arg.getMetodID(),arg.getID()),zaBazu);
+            argDb.setNaziv(arg.getNaziv());
+            argDb.setTip(arg.getTip());
+            
+            zaBazu.getArgumentDbs().add(argDb);
+        }
+        
+        //tek ovde pocinje cuvanje 
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(zaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         MetodDb zaBazu=new MetodDb();
+        zaBazu.setId(new MetodDbId(this.crtezID,this.klasaIliInterjfejsID,this.ID));
+        zaBazu.setNaziv(this.naziv);
+        zaBazu.setVidljivost( this.vidljivost.name());
+        zaBazu.setIsStatic((byte)(this.isStatic?1:0));
+        zaBazu.setIsAbstract((byte)(this.isStatic?1:0));
+        zaBazu.setPovratnaVrednost(this.povratnaVrednost);
+        zaBazu.setAtributCounter(this.argumentiCounter);
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(zaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void getByID(int[] idComponents) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       
     }
 
 }

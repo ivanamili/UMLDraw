@@ -48,8 +48,7 @@ public class Argument implements IDatabaseStore {
 	}
 
 	public int getID() {
-		// TODO - implement Argument.getID
-		throw new UnsupportedOperationException();
+		return this.ID;
 	}
 
 	/**
@@ -57,8 +56,7 @@ public class Argument implements IDatabaseStore {
 	 * @param ID
 	 */
 	public void setID(int ID) {
-		// TODO - implement Argument.setID
-		throw new UnsupportedOperationException();
+		this.ID=ID;
 	}
 
 	public String getNaziv() {

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.ArgumentDb" table="argument_db" catalog="jhotdraw" optimistic-lock="version">
+        <composite-id name="id" class="store.entity.ArgumentDbId">
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+            <key-property name="klasaId" type="int">
+                <column name="KlasaID" />
+            </key-property>
+            <key-property name="metodId" type="int">
+                <column name="MetodID" />
+            </key-property>
+            <key-property name="id" type="int">
+                <column name="ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="metodDb" class="store.entity.MetodDb" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+            <column name="KlasaID" not-null="true" />
+            <column name="MetodID" not-null="true" />
+        </many-to-one>
+        <property name="naziv" type="string">
+            <column name="Naziv" length="45" />
+        </property>
+        <property name="tip" type="string">
+            <column name="Tip" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

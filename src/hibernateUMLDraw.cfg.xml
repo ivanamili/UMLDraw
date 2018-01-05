@@ -48,17 +48,17 @@ Contributor(s):
     <property name="hibernate.connection.password">ivanamili</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
-    <mapping resource="store/entity/Atribut.hbm.xml"/>
-    <mapping resource="store/entity/UseCaseKonekcija.hbm.xml"/>
-    <mapping resource="store/entity/Argument.hbm.xml"/>
-    <mapping resource="store/entity/Korisnik.hbm.xml"/>
-    <mapping resource="store/entity/Crtez.hbm.xml"/>
-    <mapping resource="store/entity/Aktor.hbm.xml"/>
-    <mapping resource="store/entity/DijagramKonekcija.hbm.xml"/>
-    <mapping resource="store/entity/Interfejs.hbm.xml"/>
-    <mapping resource="store/entity/UseCase.hbm.xml"/>
-    <mapping resource="store/entity/Metod.hbm.xml"/>
-    <mapping resource="store/entity/AktorKonekcija.hbm.xml"/>
-    <mapping resource="store/entity/Klasa.hbm.xml"/>
+    <mapping resource="store/entity/KlasaDb.hbm.xml"/>
+    <mapping resource="store/entity/InterfejsDb.hbm.xml"/>
+    <mapping resource="store/entity/MetodDb.hbm.xml"/>
+    <mapping resource="store/entity/ArgumentDb.hbm.xml"/>
+    <mapping resource="store/entity/AtributDb.hbm.xml"/>
+    <mapping resource="store/entity/KorisnikDb.hbm.xml"/>
+    <mapping resource="store/entity/AktorDb.hbm.xml"/>
+    <mapping resource="store/entity/AktorKonekcijaDb.hbm.xml"/>
+    <mapping resource="store/entity/DijagramKonekcijaDb.hbm.xml"/>
+    <mapping resource="store/entity/UseCaseKonekcijaDb.hbm.xml"/>
+    <mapping resource="store/entity/UseCaseDb.hbm.xml"/>
+    <mapping resource="store/entity/CrtezDb.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

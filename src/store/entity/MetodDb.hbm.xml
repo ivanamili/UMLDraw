@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.MetodDb" table="metod_db" catalog="jhotdraw" optimistic-lock="version">
+        <composite-id name="id" class="store.entity.MetodDbId">
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+            <key-property name="klasaIliInterfejsId" type="int">
+                <column name="KlasaIliInterfejsID" />
+            </key-property>
+            <key-property name="id" type="int">
+                <column name="ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="klasaDb" class="store.entity.KlasaDb" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+            <column name="KlasaIliInterfejsID" not-null="true" />
+        </many-to-one>
+        <property name="naziv" type="string">
+            <column name="Naziv" />
+        </property>
+        <property name="vidljivost" type="string">
+            <column name="Vidljivost" length="20" />
+        </property>
+        <property name="isStatic" type="java.lang.Byte">
+            <column name="IsStatic" />
+        </property>
+        <property name="isAbstract" type="java.lang.Byte">
+            <column name="IsAbstract" />
+        </property>
+        <property name="povratnaVrednost" type="string">
+            <column name="PovratnaVrednost" length="100" />
+        </property>
+        <property name="atributCounter" type="java.lang.Integer">
+            <column name="AtributCounter" />
+        </property>
+        <set name="argumentDbs" table="argument_db" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CrtezID" not-null="true" />
+                <column name="KlasaID" not-null="true" />
+                <column name="MetodID" not-null="true" />
+            </key>
+            <one-to-many class="store.entity.ArgumentDb" />
+        </set>
+    </class>
+</hibernate-mapping>

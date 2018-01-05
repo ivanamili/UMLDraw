@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="store.entity.AktorKonekcijaDb" table="aktor_konekcija_db" catalog="jhotdraw" optimistic-lock="version">
+        <composite-id name="id" class="store.entity.AktorKonekcijaDbId">
+            <key-property name="id" type="int">
+                <column name="ID" />
+            </key-property>
+            <key-property name="crtezId" type="int">
+                <column name="CrtezID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="aktorDb" class="store.entity.AktorDb" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+            <column name="AktorID" />
+        </many-to-one>
+        <many-to-one name="crtezDb" class="store.entity.CrtezDb" update="false" insert="false" fetch="select">
+            <column name="ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="useCaseDb" class="store.entity.UseCaseDb" update="false" insert="false" fetch="select">
+            <column name="CrtezID" not-null="true" />
+            <column name="UceCaseID" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
