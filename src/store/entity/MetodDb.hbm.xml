@@ -37,7 +37,7 @@
         <property name="atributCounter" type="java.lang.Integer">
             <column name="AtributCounter" />
         </property>
-        <set name="argumentDbs" table="argument_db" inverse="true" lazy="true" fetch="select">
+        <set name="argumentDbs" table="argument_db" inverse="true" lazy="true" fetch="select" cascade="all">
             <key>
                 <column name="CrtezID" not-null="true" />
                 <column name="KlasaID" not-null="true" />

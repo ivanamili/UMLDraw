@@ -56,12 +56,13 @@ public class UMLDraw {
         arg2.setCrtezID(0);
         arg2.setKlasaID(111);
         arg2.setMetodID(666);
-        arg2.setID(1);
-        arg2.setNaziv("UpdateGlupaPromenjiva");
-        arg2.setTip("bool");
+        arg2.setID(31);
+        arg2.setNaziv("FUCKFUCK");
+        arg2.setTip("bla");
         m.dodajArgument(arg2);
         
-        m.delete(factory);
+        arg2.delete(factory);
+       // m.save(factory);
 //        try 
 //        {
 //            factory = NewHibernateUtil.getSessionFactory();

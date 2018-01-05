@@ -194,16 +194,12 @@ public class Metod implements IDatabaseStore {
         zaBazu.setPovratnaVrednost(this.povratnaVrednost);
         zaBazu.setAtributCounter(this.argumentiCounter);
         
-        //popuna atributa uz nadu da ce njih hibernate automatski da sacuva
+        //prosledjivanje poziva metode child elementima
         Iterator i= this.argumenti.iterator();
         while(i.hasNext())
         {
             Argument arg=(Argument)i.next();
-            ArgumentDb argDb=new ArgumentDb(new ArgumentDbId(arg.getCrtezID(),arg.getKlasaID(),arg.getMetodID(),arg.getID()),zaBazu);
-            argDb.setNaziv(arg.getNaziv());
-            argDb.setTip(arg.getTip());
-            
-            zaBazu.getArgumentDbs().add(argDb);
+            arg.save(sessionFactory);
         }
         
         //tek ovde pocinje cuvanje 
@@ -245,11 +241,7 @@ public class Metod implements IDatabaseStore {
         while(i.hasNext())
         {
             Argument arg=(Argument)i.next();
-            ArgumentDb argDb=new ArgumentDb(new ArgumentDbId(arg.getCrtezID(),arg.getKlasaID(),arg.getMetodID(),arg.getID()),zaBazu);
-            argDb.setNaziv(arg.getNaziv());
-            argDb.setTip(arg.getTip());
-            
-            zaBazu.getArgumentDbs().add(argDb);
+            arg.update(sessionFactory);
         }
         
         //tek ovde pocinje cuvanje 

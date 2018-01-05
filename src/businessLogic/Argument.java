@@ -1,6 +1,11 @@
 package businessLogic;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import store.entity.ArgumentDb;
+import store.entity.ArgumentDbId;
+
 
 public class Argument implements IDatabaseStore {
 
@@ -99,17 +104,83 @@ public class Argument implements IDatabaseStore {
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArgumentDb attrZaBazu= new ArgumentDb();
+        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
+        attrZaBazu.setTip(this.tip);
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArgumentDb attrZaBazu= new ArgumentDb();
+        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
+        attrZaBazu.setTip(this.tip);
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArgumentDb attrZaBazu= new ArgumentDb();
+        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
+        attrZaBazu.setTip(this.tip);
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
