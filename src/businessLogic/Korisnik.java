@@ -1,5 +1,6 @@
 package businessLogic;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -80,7 +81,7 @@ public class Korisnik implements IDatabaseStore {
 
     @Override
     public void update(SessionFactory sessionFactory) {
-         KorisnikDb attrZaBazu= new KorisnikDb();
+        KorisnikDb attrZaBazu= new KorisnikDb();
         attrZaBazu.setIme(this.ime);
         attrZaBazu.setSifra(this.sifra);
         attrZaBazu.setCrtezDb(new CrtezDb(this.trenutniCrtez.getID()));
@@ -92,6 +93,12 @@ public class Korisnik implements IDatabaseStore {
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
+             
+             Query q=session.createQuery("select k.id from KorisnikDb k where k.ime like :ime");
+             q.setParameter("ime", this.ime);
+             
+             int id=(int)q.uniqueResult();
+             attrZaBazu.setId(id);
 
             session.update(attrZaBazu);
          
@@ -107,7 +114,7 @@ public class Korisnik implements IDatabaseStore {
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-         KorisnikDb attrZaBazu= new KorisnikDb();
+        KorisnikDb attrZaBazu= new KorisnikDb();
         attrZaBazu.setIme(this.ime);
         attrZaBazu.setSifra(this.sifra);
         attrZaBazu.setCrtezDb(new CrtezDb(this.trenutniCrtez.getID()));
@@ -119,6 +126,12 @@ public class Korisnik implements IDatabaseStore {
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
+             
+            Query q=session.createQuery("select k.id from KorisnikDb k where k.ime like :ime");
+             q.setParameter("ime", this.ime);
+             
+             int id=(int)q.uniqueResult();
+             attrZaBazu.setId(id);
 
             session.delete(attrZaBazu);
          
@@ -134,7 +147,35 @@ public class Korisnik implements IDatabaseStore {
 
     @Override
     public void getByID(int[] idComponents, SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Session session=null;
+        Transaction tx = null;
+        KorisnikDb koIzBaze=null;
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from KorisnikDb ko where ko.id = :id");
+            query.setParameter("id",idComponents[0]);
+          
+             
+            
+            koIzBaze=(KorisnikDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze        
+        this.ime=koIzBaze.getIme();
+        this.sifra=koIzBaze.getSifra();
+	//FALI THIS.CRTEZ DA SE UCITA IZ BAZE
     }
 
 }

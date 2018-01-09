@@ -11,6 +11,7 @@ import java.util.Set;
 public class KorisnikDb  implements java.io.Serializable {
 
 
+    private int id;
      private String ime;
      private CrtezDb crtezDb;
      private String sifra;
@@ -57,6 +58,18 @@ public class KorisnikDb  implements java.io.Serializable {
     
     public void setCrtezDbs(Set crtezDbs) {
         this.crtezDbs = crtezDbs;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id)
+    {
+        this.id=id;
     }
 
 

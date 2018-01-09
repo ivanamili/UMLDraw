@@ -13,7 +13,9 @@ public class DijagramKonekcijaDb  implements java.io.Serializable {
      private CrtezDb crtezDb;
      private String tipVeze;
      private Integer odKogaId;
+     private String odKogaTip;
      private Integer doKogaId;
+     private String doKogaTip;
 
     public DijagramKonekcijaDb() {
     }
@@ -65,6 +67,34 @@ public class DijagramKonekcijaDb  implements java.io.Serializable {
     
     public void setDoKogaId(Integer doKogaId) {
         this.doKogaId = doKogaId;
+    }
+
+    /**
+     * @return the odKogaTip
+     */
+    public String getOdKogaTip() {
+        return odKogaTip;
+    }
+
+    /**
+     * @param odKogaTip the odKogaTip to set
+     */
+    public void setOdKogaTip(String odKogaTip) {
+        this.odKogaTip = odKogaTip;
+    }
+
+    /**
+     * @return the doKogaTip
+     */
+    public String getDoKogaTip() {
+        return doKogaTip;
+    }
+
+    /**
+     * @param doKogaTip the doKogaTip to set
+     */
+    public void setDoKogaTip(String doKogaTip) {
+        this.doKogaTip = doKogaTip;
     }
 
 

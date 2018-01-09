@@ -21,19 +21,15 @@
         <property name="metodCounter" type="java.lang.Integer">
             <column name="MetodCounter" />
         </property>
-        <property name="isAbstract" type="java.lang.Byte">
+        <property name="isAbstract" type="java.lang.Boolean">
             <column name="IsAbstract" />
         </property>
-        <property name="isStatic" type="java.lang.Byte">
+        <property name="ime" type="string">
+            <column name="Ime" />
+        </property>
+        <property name="isStatic" type="java.lang.Boolean">
             <column name="IsStatic" />
         </property>
-        <set name="metodDbs" table="metod_db" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="CrtezID" not-null="true" />
-                <column name="KlasaIliInterfejsID" not-null="true" />
-            </key>
-            <one-to-many class="store.entity.MetodDb" />
-        </set>
         <set name="atributDbs" table="atribut_db" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="CrtezID" not-null="true" />

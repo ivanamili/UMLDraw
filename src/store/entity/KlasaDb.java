@@ -15,9 +15,9 @@ public class KlasaDb  implements java.io.Serializable {
      private CrtezDb crtezDb;
      private Integer atributCounter;
      private Integer metodCounter;
-     private Byte isAbstract;
-     private Byte isStatic;
-     private Set metodDbs = new HashSet(0);
+     private String ime;
+     private Boolean isAbstract;
+     private Boolean isStatic;
      private Set atributDbs = new HashSet(0);
 
     public KlasaDb() {
@@ -28,14 +28,13 @@ public class KlasaDb  implements java.io.Serializable {
         this.id = id;
         this.crtezDb = crtezDb;
     }
-    public KlasaDb(KlasaDbId id, CrtezDb crtezDb, Integer atributCounter, Integer metodCounter, Byte isAbstract, Byte isStatic, Set metodDbs, Set atributDbs) {
+    public KlasaDb(KlasaDbId id, CrtezDb crtezDb, Integer atributCounter, Integer metodCounter, Boolean isAbstract, Boolean isStatic, Set atributDbs) {
        this.id = id;
        this.crtezDb = crtezDb;
        this.atributCounter = atributCounter;
        this.metodCounter = metodCounter;
        this.isAbstract = isAbstract;
        this.isStatic = isStatic;
-       this.metodDbs = metodDbs;
        this.atributDbs = atributDbs;
     }
    
@@ -67,33 +66,41 @@ public class KlasaDb  implements java.io.Serializable {
     public void setMetodCounter(Integer metodCounter) {
         this.metodCounter = metodCounter;
     }
-    public Byte getIsAbstract() {
+    public Boolean getIsAbstract() {
         return this.isAbstract;
     }
     
-    public void setIsAbstract(Byte isAbstract) {
+    public void setIsAbstract(Boolean isAbstract) {
         this.isAbstract = isAbstract;
     }
-    public Byte getIsStatic() {
+    public Boolean getIsStatic() {
         return this.isStatic;
     }
     
-    public void setIsStatic(Byte isStatic) {
+    public void setIsStatic(Boolean isStatic) {
         this.isStatic = isStatic;
     }
-    public Set getMetodDbs() {
-        return this.metodDbs;
-    }
-    
-    public void setMetodDbs(Set metodDbs) {
-        this.metodDbs = metodDbs;
-    }
+   
     public Set getAtributDbs() {
         return this.atributDbs;
     }
     
     public void setAtributDbs(Set atributDbs) {
         this.atributDbs = atributDbs;
+    }
+
+    /**
+     * @return the ime
+     */
+    public String getIme() {
+        return ime;
+    }
+
+    /**
+     * @param ime the ime to set
+     */
+    public void setIme(String ime) {
+        this.ime = ime;
     }
 
 

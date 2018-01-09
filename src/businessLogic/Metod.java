@@ -166,6 +166,11 @@ public class Metod implements IDatabaseStore {
         
         public void dodajArgument(Argument arg)
         {
+            arg.setCrtezID(this.crtezID);
+            arg.setKlasaID(this.klasaIliInterjfejsID);
+            arg.setMetodID(this.ID);
+            arg.setID(this.argumentiCounter);
+            this.argumentiCounter++;
             this.argumenti.add(arg);
         }
 
@@ -182,12 +187,7 @@ public class Metod implements IDatabaseStore {
         zaBazu.setAtributCounter(this.argumentiCounter);
         
         //prosledjivanje poziva metode child elementima
-        Iterator i= this.argumenti.iterator();
-        while(i.hasNext())
-        {
-            Argument arg=(Argument)i.next();
-            arg.save(sessionFactory);
-        }
+        
         
         //tek ovde pocinje cuvanje 
         
@@ -209,6 +209,12 @@ public class Metod implements IDatabaseStore {
       } finally {
          session.close(); 
       }      
+        Iterator i= this.argumenti.iterator();
+        while(i.hasNext())
+        {
+            Argument arg=(Argument)i.next();
+            arg.save(sessionFactory);
+        }
     }
 
     @Override
@@ -223,13 +229,13 @@ public class Metod implements IDatabaseStore {
         zaBazu.setPovratnaVrednost(this.povratnaVrednost);
         zaBazu.setAtributCounter(this.argumentiCounter);
         
-        //popuna atributa uz nadu da ce njih hibernate automatski da sacuva
-        Iterator i= this.argumenti.iterator();
-        while(i.hasNext())
-        {
-            Argument arg=(Argument)i.next();
-            arg.update(sessionFactory);
-        }
+//        MOZDA NE TREBA
+//        Iterator i= this.argumenti.iterator();
+//        while(i.hasNext())
+//        {
+//            Argument arg=(Argument)i.next();
+//            arg.update(sessionFactory);
+//        }
         
         //tek ovde pocinje cuvanje 
         

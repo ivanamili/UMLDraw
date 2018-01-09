@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 import businessLogic.*;
+import enumerations.ClassConnTypeEnum;
 import enumerations.UseCaseConnType;
 import enumerations.VisibilityTypeEnum;
 import java.awt.geom.Rectangle2D;
@@ -41,29 +42,58 @@ public class UMLDraw {
         Transaction tx = null;
         factory = NewHibernateUtil.getSessionFactory();
         
-        int[] idComp={0,111,0};
+        int[] idComp={0,1919};
         
-//        Atribut attr= new Atribut();
-//        attr.setCrtezID(0);
-//        attr.setKlasaID(111);
-//        attr.setID(0);
-//        attr.setNaziv("RADIANS");
-//        attr.setTip("float");
-//        attr.setVidljivost(VisibilityTypeEnum.PUBLIC);
-//        attr.setIsStatic(false);
-//        
-//        attr.save(factory);
-
-          Korisnik k= new Korisnik();
+//          Interfejs it= new Interfejs();
+//          it.setNaziv("IIIIIIII");
+//          it.setCrtezID(0);
+//          it.setID(1000);
+//          
+//          Metod met= new Metod();
+//          met.setNaziv("metodaIme");
+//          met.setPovratnaVrednost("void");
+//          met.setIsAbstract(true);
+//          met.setIsStatic(false);
+//          met.setVidljivost(VisibilityTypeEnum.PRIVATE);
+//          met.setArgumentiCounter(0);
+//          it.dodajMetodu(met);
+//          
+//          met= new Metod();
+//          met.setNaziv("METMETMETODA");
+//          met.setPovratnaVrednost("INT");
+//          met.setIsAbstract(true);
+//          met.setIsStatic(false);
+//          met.setVidljivost(VisibilityTypeEnum.PUBLIC);
+//          met.setArgumentiCounter(0);
+//          
+//          Argument arg= new Argument();
+//          arg.setNaziv("testARgument");
+//          arg.setTip("string");
+//          
+//          it.dodajMetodu(met);
+//          met.dodajArgument(arg);
           
-          k.setIme("Ivana");
-          k.setSifra("bla2222");
-          Crtez c= new Crtez();
-          c.setID(1);
-          k.setTrenutniCrtez(c);
+          //it.save(factory);
+          //klas.save(factory);
           
-          k.delete(factory);
-
+          ClassDiagramVeza veza= new ClassDiagramVeza();
+          veza.setCrtezID(0);
+          veza.setID(1919);
+          veza.setTip(ClassConnTypeEnum.COMPOSITION);
+          Klasa k= new Klasa();
+          k.setID(90);
+          k.setCrtezID(0);
+          veza.setOdKoga(k);
+          
+         Klasa k1= new Klasa();
+          k1.setID(55);
+          k1.setCrtezID(0);
+          veza.setDoKoga(k1);
+          
+          //veza.save(factory);
+          
+          ClassDiagramVeza vez2=new ClassDiagramVeza();
+          vez2.getByID(idComp, factory);
         System.out.println("Success!");
         
     }

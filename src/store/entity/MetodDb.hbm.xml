@@ -15,10 +15,6 @@
                 <column name="ID" />
             </key-property>
         </composite-id>
-        <many-to-one name="klasaDb" class="store.entity.KlasaDb" update="false" insert="false" fetch="select">
-            <column name="CrtezID" not-null="true" />
-            <column name="KlasaIliInterfejsID" not-null="true" />
-        </many-to-one>
         <property name="naziv" type="string">
             <column name="Naziv" />
         </property>
