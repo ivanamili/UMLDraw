@@ -1,7 +1,9 @@
 package businessLogic;
 
-import org.hibernate.SessionFactory;
+import java.awt.geom.Rectangle2D;
+import org.hibernate.*;
 import org.jhotdraw.draw.EllipseFigure;
+import store.entity.*;
 
 public class UseCase extends Element {
 
@@ -23,8 +25,7 @@ public class UseCase extends Element {
 	}
 
 	public int getID() {
-		// TODO - implement UseCase.getID
-		throw new UnsupportedOperationException();
+		return this.ID;
 	}
 
 	/**
@@ -32,8 +33,7 @@ public class UseCase extends Element {
 	 * @param ID
 	 */
 	public void setID(int ID) {
-		// TODO - implement UseCase.setID
-		throw new UnsupportedOperationException();
+		this.ID=ID;
 	}
 
 	public String getNaziv() {
@@ -62,22 +62,132 @@ public class UseCase extends Element {
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(this.crtezID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
+	Rectangle2D.Double bounds=this.elipsa.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(this.crtezID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
+	Rectangle2D.Double bounds=this.elipsa.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(this.crtezID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
+	Rectangle2D.Double bounds=this.elipsa.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
-    public void getByID(int[] idComponents) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
+         Session session=null;
+        Transaction tx = null;
+        UseCaseDb izBaze=null;
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from UseCaseDb usecase where usecase.id.crtezId = :crtezID and usecase.id.id = :id");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("id", idComponents[1]);
+            
+            izBaze=(UseCaseDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        this.crtezID=izBaze.getId().getCrtezId();
+        this.ID=izBaze.getId().getId();
+        this.naziv=izBaze.getNaziv();
+        this.elipsa= new EllipseFigure(izBaze.getPocetnaKoorX(),izBaze.getPocetnaKoorY(),izBaze.getSirina(),izBaze.getVisina());
     }
 
 }

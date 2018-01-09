@@ -16,8 +16,7 @@ public class Crtez implements IDatabaseStore {
 	private ArrayList<Veza> veze;
 
 	public int getID() {
-		// TODO - implement Crtez.getID
-		throw new UnsupportedOperationException();
+		return this.ID;
 	}
 
 	/**
@@ -25,8 +24,7 @@ public class Crtez implements IDatabaseStore {
 	 * @param ID
 	 */
 	public void setID(int ID) {
-		// TODO - implement Crtez.setID
-		throw new UnsupportedOperationException();
+		this.ID=ID;
 	}
 
 	public String getNaslov() {
@@ -171,7 +169,7 @@ public class Crtez implements IDatabaseStore {
     }
 
     @Override
-    public void getByID(int[] idComponents) {
+    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

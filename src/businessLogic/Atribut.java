@@ -1,7 +1,12 @@
 package businessLogic;
 
 import enumerations.VisibilityTypeEnum;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import store.entity.AtributDb;
+import store.entity.AtributDbId;
 
 public class Atribut implements IDatabaseStore {
 
@@ -38,8 +43,7 @@ public class Atribut implements IDatabaseStore {
 	}
 
 	public int getID() {
-		// TODO - implement Atribut.getID
-		throw new UnsupportedOperationException();
+		return this.ID;
 	}
 
 	/**
@@ -47,23 +51,10 @@ public class Atribut implements IDatabaseStore {
 	 * @param ID
 	 */
 	public void setID(int ID) {
-		// TODO - implement Atribut.setID
-		throw new UnsupportedOperationException();
+		this.ID=ID;
 	}
 
-	public void getAttribute() {
-		// TODO - implement Atribut.getAttribute
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param attribute
-	 */
-	public void setAttribute(int attribute) {
-		// TODO - implement Atribut.setAttribute
-		throw new UnsupportedOperationException();
-	}
+	
 
 	public String getTip() {
 		return this.tip;
@@ -103,22 +94,141 @@ public class Atribut implements IDatabaseStore {
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        AtributDb attrZaBazu= new AtributDb();
+        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        attrZaBazu.setTip(this.tip);
+        attrZaBazu.setVidljivost(this.vidljivost.name());
+        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AtributDb attrZaBazu= new AtributDb();
+        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        attrZaBazu.setTip(this.tip);
+        attrZaBazu.setVidljivost(this.vidljivost.name());
+        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        AtributDb attrZaBazu= new AtributDb();
+        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        attrZaBazu.setTip(this.tip);
+        attrZaBazu.setVidljivost(this.vidljivost.name());
+        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
-    public void getByID(int[] idComponents) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
+        Session session=null;
+        Transaction tx = null;
+        AtributDb atrIzBaze=null;
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from AtributDb atr where atr.id.crtezId = :crtezID and atr.id.klasaId = :klasaID and atr.id.attributId = :attributID");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("klasaID", idComponents[1]);
+            query.setParameter("attributID", idComponents[2]);
+            
+            atrIzBaze=(AtributDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        this.crtezID=atrIzBaze.getId().getCrtezId();
+	this.klasaID=atrIzBaze.getId().getKlasaId();
+	this.ID=atrIzBaze.getId().getAttributId();
+        this.naziv=atrIzBaze.getNaziv();
+	this.tip=atrIzBaze.getTip();
+	this.vidljivost=VisibilityTypeEnum.valueOf(atrIzBaze.getVidljivost());
+	this.isStatic=atrIzBaze.getIsStatic()!=0;
+    }
+
+    /**
+     * @return the naziv
+     */
+    public String getNaziv() {
+        return naziv;
+    }
+
+    /**
+     * @param naziv the naziv to set
+     */
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
     }
 
 }

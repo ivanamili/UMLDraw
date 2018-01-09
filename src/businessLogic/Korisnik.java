@@ -1,6 +1,10 @@
 package businessLogic;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import store.entity.CrtezDb;
+import store.entity.KorisnikDb;
 
 public class Korisnik implements IDatabaseStore {
 
@@ -8,19 +12,7 @@ public class Korisnik implements IDatabaseStore {
 	private String sifra;
 	private Crtez trenutniCrtez;
 
-	public int getID() {
-		// TODO - implement Class.getID
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param ID
-	 */
-	public void setID(int ID) {
-		// TODO - implement Class.setID
-		throw new UnsupportedOperationException();
-	}
+	
 
 	public String getIme() {
 		return this.ime;
@@ -60,21 +52,88 @@ public class Korisnik implements IDatabaseStore {
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        KorisnikDb attrZaBazu= new KorisnikDb();
+        attrZaBazu.setIme(this.ime);
+        attrZaBazu.setSifra(this.sifra);
+        attrZaBazu.setCrtezDb(new CrtezDb(this.trenutniCrtez.getID()));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         KorisnikDb attrZaBazu= new KorisnikDb();
+        attrZaBazu.setIme(this.ime);
+        attrZaBazu.setSifra(this.sifra);
+        attrZaBazu.setCrtezDb(new CrtezDb(this.trenutniCrtez.getID()));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         KorisnikDb attrZaBazu= new KorisnikDb();
+        attrZaBazu.setIme(this.ime);
+        attrZaBazu.setSifra(this.sifra);
+        attrZaBazu.setCrtezDb(new CrtezDb(this.trenutniCrtez.getID()));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
-    public void getByID(int[] idComponents) {
+    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

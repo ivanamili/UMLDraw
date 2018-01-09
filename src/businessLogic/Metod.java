@@ -154,26 +154,8 @@ public class Metod implements IDatabaseStore {
 	public void getAttribute() {
 		// TODO - implement Metod.getAttribute
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param attribute
-	 */
-	public void setAttribute(int attribute) {
-		// TODO - implement Metod.setAttribute
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param arg
-	 */
-	public void dodajArgument(Argument arg) {
-		this.argumenti.add(arg);
-	}
-
-	/**
+	}	
+        /**
 	 * 
 	 * @param id
 	 */
@@ -181,6 +163,11 @@ public class Metod implements IDatabaseStore {
 		// TODO - implement Metod.obrisiArgument
 		throw new UnsupportedOperationException();
 	}
+        
+        public void dodajArgument(Argument arg)
+        {
+            this.argumenti.add(arg);
+        }
 
     @Override
     public void save(SessionFactory sessionFactory) {
@@ -298,8 +285,64 @@ public class Metod implements IDatabaseStore {
     }
 
     @Override
-    public void getByID(int[] idComponents) {
+    //prvi je crtezId pa id klase/interfejsa i na kraju id same metode
+    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
+        
+        Session session=null;
+        Transaction tx = null;
+        MetodDb meIzBaze=null;
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from MetodDb me where me.id.crtezId = :crtezID and me.id.klasaIliInterfejsId = :klasaIliInterfejsID and me.id.id = :id");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("klasaIliInterfejsID", idComponents[1]);
+            query.setParameter("id", idComponents[2]);
+            
+            meIzBaze=(MetodDb)query.uniqueResult();
+            
+            this.argumenti= new ArrayList<Argument>();
+        
+            Iterator i= meIzBaze.getArgumentDbs().iterator();
+            while(i.hasNext())
+            {
+                ArgumentDb arg= (ArgumentDb)i.next();
+                Argument argum= new Argument();
+                argum.setCrtezID(arg.getId().getCrtezId());
+                argum.setKlasaID(arg.getId().getKlasaId());
+                argum.setMetodID(arg.getId().getMetodId());
+                argum.setID(arg.getId().getId());
+                argum.setNaziv(arg.getNaziv());
+                argum.setTip(arg.getTip());
+                this.argumenti.add(argum);
+            }
+
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        this.crtezID=meIzBaze.getId().getCrtezId();
+	this.klasaIliInterjfejsID=meIzBaze.getId().getKlasaIliInterfejsId();
+	this.ID=meIzBaze.getId().getId();
+        this.naziv=meIzBaze.getNaziv();
+	this.vidljivost=VisibilityTypeEnum.valueOf(meIzBaze.getVidljivost());
+	this.isStatic= meIzBaze.getIsStatic()!=0;
+	this.isAbstract=meIzBaze.getIsAbstract()!=0;
+	this.povratnaVrednost=meIzBaze.getPovratnaVrednost();
+	this.argumentiCounter=meIzBaze.getAtributCounter();
+	
        
     }
 
+	
 }

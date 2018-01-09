@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 9, 2018 4:38:38 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.UseCaseKonekcijaDb" table="use_case_konekcija_db" catalog="jhotdraw" optimistic-lock="version">
         <composite-id name="id" class="store.entity.UseCaseKonekcijaDbId">
@@ -15,14 +15,12 @@
         <many-to-one name="crtezDb" class="store.entity.CrtezDb" update="false" insert="false" fetch="select">
             <column name="CrtezID" not-null="true" />
         </many-to-one>
-        <many-to-one name="useCaseDbByUseCaseConnOdKoga" class="store.entity.UseCaseDb" update="false" insert="false" fetch="select">
-            <column name="CrtezID" not-null="true" />
-            <column name="OdKogaID" />
-        </many-to-one>
-        <many-to-one name="useCaseDbByUseCaseConnDoKoga" class="store.entity.UseCaseDb" update="false" insert="false" fetch="select">
-            <column name="CrtezID" not-null="true" />
-            <column name="DoKogaID" />
-        </many-to-one>
+        <property name="odKogaId" type="int">
+            <column name="OdKogaID" not-null="true" />
+        </property>
+        <property name="doKogaId" type="int">
+            <column name="DoKogaID" not-null="true" />
+        </property>
         <property name="tipVeze" type="string">
             <column name="Tip_veze" />
         </property>

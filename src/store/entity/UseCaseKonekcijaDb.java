@@ -1,5 +1,5 @@
 package store.entity;
-// Generated Jan 5, 2018 2:02:22 AM by Hibernate Tools 4.3.1
+// Generated Jan 9, 2018 4:38:35 PM by Hibernate Tools 4.3.1
 
 
 
@@ -11,25 +11,25 @@ public class UseCaseKonekcijaDb  implements java.io.Serializable {
 
      private UseCaseKonekcijaDbId id;
      private CrtezDb crtezDb;
-     private UseCaseDb useCaseDbByUseCaseConnOdKoga;
-     private UseCaseDb useCaseDbByUseCaseConnDoKoga;
+     private int odKogaId;
+     private int doKogaId;
      private String tipVeze;
 
     public UseCaseKonekcijaDb() {
     }
 
 	
-    public UseCaseKonekcijaDb(UseCaseKonekcijaDbId id, CrtezDb crtezDb, UseCaseDb useCaseDbByUseCaseConnOdKoga, UseCaseDb useCaseDbByUseCaseConnDoKoga) {
+    public UseCaseKonekcijaDb(UseCaseKonekcijaDbId id, CrtezDb crtezDb, int odKogaId, int doKogaId) {
         this.id = id;
         this.crtezDb = crtezDb;
-        this.useCaseDbByUseCaseConnOdKoga = useCaseDbByUseCaseConnOdKoga;
-        this.useCaseDbByUseCaseConnDoKoga = useCaseDbByUseCaseConnDoKoga;
+        this.odKogaId = odKogaId;
+        this.doKogaId = doKogaId;
     }
-    public UseCaseKonekcijaDb(UseCaseKonekcijaDbId id, CrtezDb crtezDb, UseCaseDb useCaseDbByUseCaseConnOdKoga, UseCaseDb useCaseDbByUseCaseConnDoKoga, String tipVeze) {
+    public UseCaseKonekcijaDb(UseCaseKonekcijaDbId id, CrtezDb crtezDb, int odKogaId, int doKogaId, String tipVeze) {
        this.id = id;
        this.crtezDb = crtezDb;
-       this.useCaseDbByUseCaseConnOdKoga = useCaseDbByUseCaseConnOdKoga;
-       this.useCaseDbByUseCaseConnDoKoga = useCaseDbByUseCaseConnDoKoga;
+       this.odKogaId = odKogaId;
+       this.doKogaId = doKogaId;
        this.tipVeze = tipVeze;
     }
    
@@ -47,19 +47,19 @@ public class UseCaseKonekcijaDb  implements java.io.Serializable {
     public void setCrtezDb(CrtezDb crtezDb) {
         this.crtezDb = crtezDb;
     }
-    public UseCaseDb getUseCaseDbByUseCaseConnOdKoga() {
-        return this.useCaseDbByUseCaseConnOdKoga;
+    public int getOdKogaId() {
+        return this.odKogaId;
     }
     
-    public void setUseCaseDbByUseCaseConnOdKoga(UseCaseDb useCaseDbByUseCaseConnOdKoga) {
-        this.useCaseDbByUseCaseConnOdKoga = useCaseDbByUseCaseConnOdKoga;
+    public void setOdKogaId(int odKogaId) {
+        this.odKogaId = odKogaId;
     }
-    public UseCaseDb getUseCaseDbByUseCaseConnDoKoga() {
-        return this.useCaseDbByUseCaseConnDoKoga;
+    public int getDoKogaId() {
+        return this.doKogaId;
     }
     
-    public void setUseCaseDbByUseCaseConnDoKoga(UseCaseDb useCaseDbByUseCaseConnDoKoga) {
-        this.useCaseDbByUseCaseConnDoKoga = useCaseDbByUseCaseConnDoKoga;
+    public void setDoKogaId(int doKogaId) {
+        this.doKogaId = doKogaId;
     }
     public String getTipVeze() {
         return this.tipVeze;

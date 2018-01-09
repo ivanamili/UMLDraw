@@ -1,5 +1,6 @@
 package businessLogic;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -88,19 +89,7 @@ public class Argument implements IDatabaseStore {
 		this.tip = tip;
 	}
 
-	public void getAttribute() {
-		// TODO - implement Argument.getAttribute
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param attribute
-	 */
-	public void setAttribute(int attribute) {
-		// TODO - implement Argument.setAttribute
-		throw new UnsupportedOperationException();
-	}
+	
 
     @Override
     public void save(SessionFactory sessionFactory) {
@@ -184,8 +173,41 @@ public class Argument implements IDatabaseStore {
     }
 
     @Override
-    public void getByID(int[] idComponents) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    //prvi je crtezId, pa klasaId, pa metodId i na kraju Id samog argumenta
+    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
+        Session session=null;
+        Transaction tx = null;
+        ArgumentDb argIzBaze=null;
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from ArgumentDb arg where arg.id.crtezId = :crtezID and arg.id.klasaId = :klasaID and arg.id.metodId = :metodID and arg.id.id = :ID");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("klasaID", idComponents[1]);
+            query.setParameter("metodID", idComponents[2]);
+            query.setParameter("ID", idComponents[3]);
+            
+            argIzBaze=(ArgumentDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        this.crtezID=argIzBaze.getId().getCrtezId();
+	this.klasaID=argIzBaze.getId().getKlasaId();
+	this.metodID=argIzBaze.getId().getMetodId();
+	this.ID=argIzBaze.getId().getId();
+        this.naziv=argIzBaze.getNaziv();
+	this.tip=argIzBaze.getTip();
     }
 
 }

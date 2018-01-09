@@ -1,5 +1,5 @@
 package store.entity;
-// Generated Jan 5, 2018 2:02:22 AM by Hibernate Tools 4.3.1
+// Generated Jan 9, 2018 4:38:35 PM by Hibernate Tools 4.3.1
 
 
 
@@ -10,18 +10,18 @@ public class AktorKonekcijaDb  implements java.io.Serializable {
 
 
      private AktorKonekcijaDbId id;
-     private AktorDb aktorDb;
      private CrtezDb crtezDb;
-     private UseCaseDb useCaseDb;
+     private int aktorId;
+     private int uceCaseId;
 
     public AktorKonekcijaDb() {
     }
 
-    public AktorKonekcijaDb(AktorKonekcijaDbId id, AktorDb aktorDb, CrtezDb crtezDb, UseCaseDb useCaseDb) {
+    public AktorKonekcijaDb(AktorKonekcijaDbId id, CrtezDb crtezDb, int aktorId, int uceCaseId) {
        this.id = id;
-       this.aktorDb = aktorDb;
        this.crtezDb = crtezDb;
-       this.useCaseDb = useCaseDb;
+       this.aktorId = aktorId;
+       this.uceCaseId = uceCaseId;
     }
    
     public AktorKonekcijaDbId getId() {
@@ -31,13 +31,6 @@ public class AktorKonekcijaDb  implements java.io.Serializable {
     public void setId(AktorKonekcijaDbId id) {
         this.id = id;
     }
-    public AktorDb getAktorDb() {
-        return this.aktorDb;
-    }
-    
-    public void setAktorDb(AktorDb aktorDb) {
-        this.aktorDb = aktorDb;
-    }
     public CrtezDb getCrtezDb() {
         return this.crtezDb;
     }
@@ -45,12 +38,19 @@ public class AktorKonekcijaDb  implements java.io.Serializable {
     public void setCrtezDb(CrtezDb crtezDb) {
         this.crtezDb = crtezDb;
     }
-    public UseCaseDb getUseCaseDb() {
-        return this.useCaseDb;
+    public int getAktorId() {
+        return this.aktorId;
     }
     
-    public void setUseCaseDb(UseCaseDb useCaseDb) {
-        this.useCaseDb = useCaseDb;
+    public void setAktorId(int aktorId) {
+        this.aktorId = aktorId;
+    }
+    public int getUceCaseId() {
+        return this.uceCaseId;
+    }
+    
+    public void setUceCaseId(int uceCaseId) {
+        this.uceCaseId = uceCaseId;
     }
 
 

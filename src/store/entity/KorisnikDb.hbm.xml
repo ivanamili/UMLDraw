@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Jan 5, 2018 2:02:23 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated Jan 9, 2018 4:38:38 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="store.entity.KorisnikDb" table="korisnik_db" catalog="jhotdraw" optimistic-lock="version">
         <id name="ime" type="string">
             <column name="Ime" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="crtezDb" class="store.entity.CrtezDb" fetch="select">
+        <many-to-one name="crtezDb" class="store.entity.CrtezDb" insert="true" fetch="select">
             <column name="TrenutniCrtezID" />
         </many-to-one>
         <property name="sifra" type="string">

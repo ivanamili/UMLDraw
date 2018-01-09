@@ -1,6 +1,17 @@
 package businessLogic;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.jhotdraw.draw.EllipseFigure;
+import org.jhotdraw.draw.RectangleFigure;
+import store.entity.AktorDb;
+import store.entity.AktorDbId;
+import store.entity.AktorKonekcijaDb;
+import store.entity.AktorKonekcijaDbId;
+import store.entity.UseCaseDb;
+import store.entity.UseCaseDbId;
 
 public class AktorVeza extends Veza {
 
@@ -22,8 +33,7 @@ public class AktorVeza extends Veza {
 	}
 
 	public int getID() {
-		// TODO - implement AktorVeza.getID
-		throw new UnsupportedOperationException();
+		return this.ID;
 	}
 
 	/**
@@ -31,8 +41,7 @@ public class AktorVeza extends Veza {
 	 * @param ID
 	 */
 	public void setID(int ID) {
-		// TODO - implement AktorVeza.setID
-		throw new UnsupportedOperationException();
+		this.ID=ID;
 	}
 
 	public Aktor getAktor() {
@@ -89,22 +98,127 @@ public class AktorVeza extends Veza {
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
+        attrZaBazu.setId(new AktorKonekcijaDbId(this.ID,this.crtezID));
+        attrZaBazu.setAktorId(this.aktor.getID());
+        attrZaBazu.setUceCaseId(this.useCase.getID());
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+         AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
+        attrZaBazu.setId(new AktorKonekcijaDbId(this.ID,this.crtezID));
+        attrZaBazu.setAktorId(this.aktor.getID());
+        attrZaBazu.setUceCaseId(this.useCase.getID());
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }
     }
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
+        attrZaBazu.setId(new AktorKonekcijaDbId(this.ID,this.crtezID));
+        attrZaBazu.setAktorId(this.aktor.getID());
+        attrZaBazu.setUceCaseId(this.useCase.getID());
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }
     }
 
     @Override
-    public void getByID(int[] idComponents) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
+       Session session=null;
+        Transaction tx = null;
+        AktorKonekcijaDb aktKIzBaze=null;
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from AktorKonekcijaDb aktk where aktk.id.crtezId = :crtezID and aktk.id.id = :id");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("id", idComponents[1]);
+            
+            aktKIzBaze=(AktorKonekcijaDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        this.crtezID=aktKIzBaze.getId().getCrtezId();
+        this.ID=aktKIzBaze.getId().getId();
+        
+        //Aktor
+        this.aktor=new Aktor();
+        int[] idComp={this.crtezID,aktKIzBaze.getAktorId()};
+        this.aktor.getByID(idComp, sessionFactory);
+        
+        //UseCase
+        this.useCase=new UseCase();
+        int[] idComp2={this.crtezID,aktKIzBaze.getUceCaseId()};
+        this.useCase.getByID(idComp2, sessionFactory);
     }
 
 }

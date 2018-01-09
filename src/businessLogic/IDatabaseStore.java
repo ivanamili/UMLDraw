@@ -25,7 +25,8 @@ public interface IDatabaseStore {
 	/**
 	 * 
 	 * @param idComponents
+     * @param sessionFactory the value of sessionFactory
 	 */
-	void getByID(int[] idComponents);
+	void getByID(int[] idComponents, SessionFactory sessionFactory);
 
 }
