@@ -1,19 +1,21 @@
-package businessLogic;
+package businessLogic.UseCaseDiagrams;
+
+import businessLogic.AbstractClassHierarchy.Veza;
+import enumerations.UseCaseConnType;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.jhotdraw.draw.*;
-import store.entity.AktorDb;
-import store.entity.AktorDbId;
-import java.awt.geom.Rectangle2D;
-import org.hibernate.Query;
+import store.entity.UseCaseKonekcijaDb;
+import store.entity.UseCaseKonekcijaDbId;
 
-public class Aktor extends Element {
+public class UseCaseVeza extends Veza {
 
 	private int crtezID;
 	private int ID;
-	private RectangleFigure okvir;
-        private String naziv;
+	private UseCase odKoga;
+	private UseCase doKoga;
+	private UseCaseConnType tipVeze;
 
 	public int getCrtezID() {
 		return this.crtezID;
@@ -39,29 +41,50 @@ public class Aktor extends Element {
 		this.ID=ID;
 	}
 
-	public RectangleFigure getOkvir() {
-		return this.okvir;
+	public UseCase getOdKoga() {
+		return this.odKoga;
 	}
 
 	/**
 	 * 
-	 * @param okvir
+	 * @param odKoga
 	 */
-	public void setOkvir(RectangleFigure okvir) {
-		this.okvir = okvir;
+	public void setOdKoga(UseCase odKoga) {
+		this.odKoga = odKoga;
 	}
+
+	public UseCase getDoKoga() {
+		return this.doKoga;
+	}
+
+	/**
+	 * 
+	 * @param doKoga
+	 */
+	public void setDoKoga(UseCase doKoga) {
+		this.doKoga = doKoga;
+	}
+
+	public UseCaseConnType getTipVeze() {
+		return this.tipVeze;
+	}
+
+	/**
+	 * 
+	 * @param tipVeze
+	 */
+	public void setTipVeze(UseCaseConnType tipVeze) {
+		this.tipVeze = tipVeze;
+	}
+	
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        
-        AktorDb attrZaBazu= new AktorDb();
-        attrZaBazu.setId(new AktorDbId(this.crtezID,this.ID));
-        attrZaBazu.setNaziv(this.getNaziv());
-        Rectangle2D.Double bounds=this.okvir.getBounds();
-        attrZaBazu.setPocetnaKoorX(bounds.x);
-        attrZaBazu.setPocetnaKoorY(bounds.y);
-        attrZaBazu.setVisina(bounds.height);
-        attrZaBazu.setSirina(bounds.width);
+        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
+        attrZaBazu.setId(new UseCaseKonekcijaDbId(this.ID,this.crtezID));
+        attrZaBazu.setOdKogaId(this.odKoga.getID());
+        attrZaBazu.setDoKogaId(this.doKoga.getID());
+        attrZaBazu.setTipVeze(this.tipVeze.name());
         
 		
         Session session=null;
@@ -86,15 +109,11 @@ public class Aktor extends Element {
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        
-        AktorDb attrZaBazu= new AktorDb();
-        attrZaBazu.setId(new AktorDbId(this.crtezID,this.ID));
-        attrZaBazu.setNaziv(this.getNaziv());
-        Rectangle2D.Double bounds=this.okvir.getBounds();
-        attrZaBazu.setPocetnaKoorX(bounds.x);
-        attrZaBazu.setPocetnaKoorY(bounds.y);
-        attrZaBazu.setVisina(bounds.height);
-        attrZaBazu.setSirina(bounds.width);
+        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
+        attrZaBazu.setId(new UseCaseKonekcijaDbId(this.ID,this.crtezID));
+        attrZaBazu.setOdKogaId(this.odKoga.getID());
+        attrZaBazu.setDoKogaId(this.doKoga.getID());
+        attrZaBazu.setTipVeze(this.tipVeze.name());
         
 		
         Session session=null;
@@ -119,15 +138,11 @@ public class Aktor extends Element {
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        
-        AktorDb attrZaBazu= new AktorDb();
-        attrZaBazu.setId(new AktorDbId(this.crtezID,this.ID));
-        attrZaBazu.setNaziv(this.getNaziv());
-        Rectangle2D.Double bounds=this.okvir.getBounds();
-        attrZaBazu.setPocetnaKoorX(bounds.x);
-        attrZaBazu.setPocetnaKoorY(bounds.y);
-        attrZaBazu.setVisina(bounds.height);
-        attrZaBazu.setSirina(bounds.width);
+        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
+        attrZaBazu.setId(new UseCaseKonekcijaDbId(this.ID,this.crtezID));
+        attrZaBazu.setOdKogaId(this.odKoga.getID());
+        attrZaBazu.setDoKogaId(this.doKoga.getID());
+        attrZaBazu.setTipVeze(this.tipVeze.name());
         
 		
         Session session=null;
@@ -151,25 +166,22 @@ public class Aktor extends Element {
     }
 
     @Override
-    //prvi id je idCrteza a drugi id je id samog aktora
-    //nacin koriscenja je prvo kreirati Aktor objekat defaultnim konstruktorom (prazan aktor objekat)
-    //a zatim ga "popuniti" pozivom ove metode
     public void getByID(int[] idComponents, SessionFactory sessionFactory) {
-        
         Session session=null;
         Transaction tx = null;
-        AktorDb aktIzBaze=null;
+        UseCaseKonekcijaDb ucIzBaze=null;
         try {
             //session factory se dobija preko parametra, pa se otvara sesija
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
              
-            Query query=session.createQuery("from AktorDb akt where akt.id.crtezId = :crtezID and akt.id.id = :id");
+            Query query=session.createQuery("from UseCaseKonekcijaDb uc where uc.id.crtezId = :crtezID and uc.id.id = :id");
             query.setParameter("crtezID",idComponents[0]);
             query.setParameter("id", idComponents[1]);
+             
             
-            aktIzBaze=(AktorDb)query.uniqueResult();
+	ucIzBaze=(UseCaseKonekcijaDb)query.uniqueResult();
          
              //zavrsava se transakcija
              tx.commit();
@@ -181,24 +193,17 @@ public class Aktor extends Element {
       }  
         
         //upisivanje vrednosti iz objekta iz baze
-        this.crtezID=aktIzBaze.getId().getCrtezId();
-        this.ID=aktIzBaze.getId().getId();
-        this.naziv=aktIzBaze.getNaziv();
-        this.okvir= new RectangleFigure(aktIzBaze.getPocetnaKoorX(),aktIzBaze.getPocetnaKoorY(),aktIzBaze.getSirina(),aktIzBaze.getVisina());
-    }
-
-    /**
-     * @return the naziv
-     */
-    public String getNaziv() {
-        return naziv;
-    }
-
-    /**
-     * @param naziv the naziv to set
-     */
-    public void setNaziv(String naziv) {
-        this.naziv = naziv;
+        this.crtezID=ucIzBaze.getId().getCrtezId();
+	this.ID=ucIzBaze.getId().getId();
+        this.tipVeze=UseCaseConnType.valueOf(ucIzBaze.getTipVeze());
+        //od koga useCase
+	this.odKoga=new UseCase();
+        int[] idComp={this.crtezID,ucIzBaze.getOdKogaId()};
+        this.odKoga.getByID(idComp, sessionFactory);
+        //do koga useCase
+	this.doKoga=new UseCase();
+        int[] idComp2={this.crtezID,ucIzBaze.getDoKogaId()};
+        this.doKoga.getByID(idComp2, sessionFactory);
     }
 
 }

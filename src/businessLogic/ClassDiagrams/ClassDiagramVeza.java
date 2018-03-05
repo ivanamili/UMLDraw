@@ -1,5 +1,7 @@
-package businessLogic;
+package businessLogic.ClassDiagrams;
 
+import businessLogic.AbstractClassHierarchy.ClassDiagramElement;
+import businessLogic.AbstractClassHierarchy.Veza;
 import enumerations.ClassConnTypeEnum;
 import org.hibernate.Query;
 import org.hibernate.Session;

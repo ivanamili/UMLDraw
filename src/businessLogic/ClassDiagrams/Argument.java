@@ -1,22 +1,22 @@
-package businessLogic;
+package businessLogic.ClassDiagrams;
 
-import enumerations.VisibilityTypeEnum;
+import businessLogic.IDatabaseStore;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import store.entity.AtributDb;
-import store.entity.AtributDbId;
+import store.entity.ArgumentDb;
+import store.entity.ArgumentDbId;
 
-public class Atribut implements IDatabaseStore {
+
+public class Argument implements IDatabaseStore {
 
 	private int crtezID;
 	private int klasaID;
+	private int metodID;
 	private int ID;
 	private String naziv;
 	private String tip;
-	private VisibilityTypeEnum vidljivost;
-	private boolean isStatic;
 
 	public int getCrtezID() {
 		return this.crtezID;
@@ -42,6 +42,18 @@ public class Atribut implements IDatabaseStore {
 		this.klasaID = klasaID;
 	}
 
+	public int getMetodID() {
+		return this.metodID;
+	}
+
+	/**
+	 * 
+	 * @param metodID
+	 */
+	public void setMetodID(int metodID) {
+		this.metodID = metodID;
+	}
+
 	public int getID() {
 		return this.ID;
 	}
@@ -54,7 +66,17 @@ public class Atribut implements IDatabaseStore {
 		this.ID=ID;
 	}
 
-	
+	public String getNaziv() {
+		return this.naziv;
+	}
+
+	/**
+	 * 
+	 * @param naziv
+	 */
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
 
 	public String getTip() {
 		return this.tip;
@@ -68,40 +90,15 @@ public class Atribut implements IDatabaseStore {
 		this.tip = tip;
 	}
 
-	public VisibilityTypeEnum getVidljivost() {
-		return this.vidljivost;
-	}
-
-	/**
-	 * 
-	 * @param vidljivost
-	 */
-	public void setVidljivost(VisibilityTypeEnum vidljivost) {
-		this.vidljivost = vidljivost;
-	}
-
-	public boolean getIsStatic() {
-		return this.isStatic;
-	}
-
-	/**
-	 * 
-	 * @param isStatic
-	 */
-	public void setIsStatic(boolean isStatic) {
-		this.isStatic = isStatic;
-	}
+	
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        
-        AtributDb attrZaBazu= new AtributDb();
-        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
-        attrZaBazu.setNaziv(this.getNaziv());
+        ArgumentDb attrZaBazu= new ArgumentDb();
+        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
         attrZaBazu.setTip(this.tip);
-        attrZaBazu.setVidljivost(this.vidljivost.name());
-        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
-		
+        
         Session session=null;
         Transaction tx = null;        
         try {
@@ -124,13 +121,11 @@ public class Atribut implements IDatabaseStore {
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        AtributDb attrZaBazu= new AtributDb();
-        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
-        attrZaBazu.setNaziv(this.getNaziv());
+        ArgumentDb attrZaBazu= new ArgumentDb();
+        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
         attrZaBazu.setTip(this.tip);
-        attrZaBazu.setVidljivost(this.vidljivost.name());
-        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
-		
+        
         Session session=null;
         Transaction tx = null;        
         try {
@@ -153,13 +148,11 @@ public class Atribut implements IDatabaseStore {
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        AtributDb attrZaBazu= new AtributDb();
-        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
-        attrZaBazu.setNaziv(this.getNaziv());
+        ArgumentDb attrZaBazu= new ArgumentDb();
+        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
         attrZaBazu.setTip(this.tip);
-        attrZaBazu.setVidljivost(this.vidljivost.name());
-        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
-		
+        
         Session session=null;
         Transaction tx = null;        
         try {
@@ -181,22 +174,24 @@ public class Atribut implements IDatabaseStore {
     }
 
     @Override
+    //prvi je crtezId, pa klasaId, pa metodId i na kraju Id samog argumenta
     public void getByID(int[] idComponents, SessionFactory sessionFactory) {
         Session session=null;
         Transaction tx = null;
-        AtributDb atrIzBaze=null;
+        ArgumentDb argIzBaze=null;
         try {
             //session factory se dobija preko parametra, pa se otvara sesija
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
              
-            Query query=session.createQuery("from AtributDb atr where atr.id.crtezId = :crtezID and atr.id.klasaId = :klasaID and atr.id.attributId = :attributID");
+            Query query=session.createQuery("from ArgumentDb arg where arg.id.crtezId = :crtezID and arg.id.klasaId = :klasaID and arg.id.metodId = :metodID and arg.id.id = :ID");
             query.setParameter("crtezID",idComponents[0]);
             query.setParameter("klasaID", idComponents[1]);
-            query.setParameter("attributID", idComponents[2]);
+            query.setParameter("metodID", idComponents[2]);
+            query.setParameter("ID", idComponents[3]);
             
-            atrIzBaze=(AtributDb)query.uniqueResult();
+            argIzBaze=(ArgumentDb)query.uniqueResult();
          
              //zavrsava se transakcija
              tx.commit();
@@ -208,27 +203,12 @@ public class Atribut implements IDatabaseStore {
       }  
         
         //upisivanje vrednosti iz objekta iz baze
-        this.crtezID=atrIzBaze.getId().getCrtezId();
-	this.klasaID=atrIzBaze.getId().getKlasaId();
-	this.ID=atrIzBaze.getId().getAttributId();
-        this.naziv=atrIzBaze.getNaziv();
-	this.tip=atrIzBaze.getTip();
-	this.vidljivost=VisibilityTypeEnum.valueOf(atrIzBaze.getVidljivost());
-	this.isStatic=atrIzBaze.getIsStatic()!=0;
-    }
-
-    /**
-     * @return the naziv
-     */
-    public String getNaziv() {
-        return naziv;
-    }
-
-    /**
-     * @param naziv the naziv to set
-     */
-    public void setNaziv(String naziv) {
-        this.naziv = naziv;
+        this.crtezID=argIzBaze.getId().getCrtezId();
+	this.klasaID=argIzBaze.getId().getKlasaId();
+	this.metodID=argIzBaze.getId().getMetodId();
+	this.ID=argIzBaze.getId().getId();
+        this.naziv=argIzBaze.getNaziv();
+	this.tip=argIzBaze.getTip();
     }
 
 }

@@ -1,5 +1,8 @@
-package businessLogic;
+package businessLogic.CommonClasses;
 
+import businessLogic.AbstractClassHierarchy.Veza;
+import businessLogic.AbstractClassHierarchy.Element;
+import businessLogic.IDatabaseStore;
 import enumerations.DiagramTypeEnum;
 import java.util.ArrayList;
 import org.hibernate.SessionFactory;

@@ -1,21 +1,17 @@
-package businessLogic;
+package businessLogic.UseCaseDiagrams;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import store.entity.ArgumentDb;
-import store.entity.ArgumentDbId;
+import businessLogic.AbstractClassHierarchy.Element;
+import java.awt.geom.Rectangle2D;
+import org.hibernate.*;
+import org.jhotdraw.draw.EllipseFigure;
+import store.entity.*;
 
-
-public class Argument implements IDatabaseStore {
+public class UseCase extends Element {
 
 	private int crtezID;
-	private int klasaID;
-	private int metodID;
 	private int ID;
 	private String naziv;
-	private String tip;
+	private EllipseFigure elipsa;
 
 	public int getCrtezID() {
 		return this.crtezID;
@@ -27,30 +23,6 @@ public class Argument implements IDatabaseStore {
 	 */
 	public void setCrtezID(int crtezID) {
 		this.crtezID = crtezID;
-	}
-
-	public int getKlasaID() {
-		return this.klasaID;
-	}
-
-	/**
-	 * 
-	 * @param klasaID
-	 */
-	public void setKlasaID(int klasaID) {
-		this.klasaID = klasaID;
-	}
-
-	public int getMetodID() {
-		return this.metodID;
-	}
-
-	/**
-	 * 
-	 * @param metodID
-	 */
-	public void setMetodID(int metodID) {
-		this.metodID = metodID;
 	}
 
 	public int getID() {
@@ -77,27 +49,31 @@ public class Argument implements IDatabaseStore {
 		this.naziv = naziv;
 	}
 
-	public String getTip() {
-		return this.tip;
+	public EllipseFigure getElipsa() {
+		return this.elipsa;
 	}
 
 	/**
 	 * 
-	 * @param tip
+	 * @param elipsa
 	 */
-	public void setTip(String tip) {
-		this.tip = tip;
+	public void setElipsa(EllipseFigure elipsa) {
+		this.elipsa = elipsa;
 	}
-
-	
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        ArgumentDb attrZaBazu= new ArgumentDb();
-        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
-        attrZaBazu.setNaziv(this.naziv);
-        attrZaBazu.setTip(this.tip);
         
+        UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(this.crtezID,this.ID));
+        attrZaBazu.setNaziv(this.naziv);
+	Rectangle2D.Double bounds=this.elipsa.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
+        
+		
         Session session=null;
         Transaction tx = null;        
         try {
@@ -120,11 +96,16 @@ public class Argument implements IDatabaseStore {
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        ArgumentDb attrZaBazu= new ArgumentDb();
-        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+       UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(this.crtezID,this.ID));
         attrZaBazu.setNaziv(this.naziv);
-        attrZaBazu.setTip(this.tip);
+	Rectangle2D.Double bounds=this.elipsa.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
         
+		
         Session session=null;
         Transaction tx = null;        
         try {
@@ -147,11 +128,16 @@ public class Argument implements IDatabaseStore {
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        ArgumentDb attrZaBazu= new ArgumentDb();
-        attrZaBazu.setId(new ArgumentDbId(this.crtezID,this.klasaID,this.metodID,this.ID));
+        UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(this.crtezID,this.ID));
         attrZaBazu.setNaziv(this.naziv);
-        attrZaBazu.setTip(this.tip);
+	Rectangle2D.Double bounds=this.elipsa.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
         
+		
         Session session=null;
         Transaction tx = null;        
         try {
@@ -173,24 +159,21 @@ public class Argument implements IDatabaseStore {
     }
 
     @Override
-    //prvi je crtezId, pa klasaId, pa metodId i na kraju Id samog argumenta
     public void getByID(int[] idComponents, SessionFactory sessionFactory) {
-        Session session=null;
+         Session session=null;
         Transaction tx = null;
-        ArgumentDb argIzBaze=null;
+        UseCaseDb izBaze=null;
         try {
             //session factory se dobija preko parametra, pa se otvara sesija
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
              
-            Query query=session.createQuery("from ArgumentDb arg where arg.id.crtezId = :crtezID and arg.id.klasaId = :klasaID and arg.id.metodId = :metodID and arg.id.id = :ID");
+            Query query=session.createQuery("from UseCaseDb usecase where usecase.id.crtezId = :crtezID and usecase.id.id = :id");
             query.setParameter("crtezID",idComponents[0]);
-            query.setParameter("klasaID", idComponents[1]);
-            query.setParameter("metodID", idComponents[2]);
-            query.setParameter("ID", idComponents[3]);
+            query.setParameter("id", idComponents[1]);
             
-            argIzBaze=(ArgumentDb)query.uniqueResult();
+            izBaze=(UseCaseDb)query.uniqueResult();
          
              //zavrsava se transakcija
              tx.commit();
@@ -202,12 +185,10 @@ public class Argument implements IDatabaseStore {
       }  
         
         //upisivanje vrednosti iz objekta iz baze
-        this.crtezID=argIzBaze.getId().getCrtezId();
-	this.klasaID=argIzBaze.getId().getKlasaId();
-	this.metodID=argIzBaze.getId().getMetodId();
-	this.ID=argIzBaze.getId().getId();
-        this.naziv=argIzBaze.getNaziv();
-	this.tip=argIzBaze.getTip();
+        this.crtezID=izBaze.getId().getCrtezId();
+        this.ID=izBaze.getId().getId();
+        this.naziv=izBaze.getNaziv();
+        this.elipsa= new EllipseFigure(izBaze.getPocetnaKoorX(),izBaze.getPocetnaKoorY(),izBaze.getSirina(),izBaze.getVisina());
     }
 
 }

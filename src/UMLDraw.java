@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import businessLogic.ClassDiagrams.Klasa;
+import businessLogic.ClassDiagrams.ClassDiagramVeza;
 import businessLogic.*;
 import enumerations.ClassConnTypeEnum;
 import enumerations.UseCaseConnType;

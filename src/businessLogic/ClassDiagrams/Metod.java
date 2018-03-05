@@ -1,5 +1,6 @@
-package businessLogic;
+package businessLogic.ClassDiagrams;
 
+import businessLogic.IDatabaseStore;
 import enumerations.VisibilityTypeEnum;
 import java.util.ArrayList;
 import java.util.Iterator;

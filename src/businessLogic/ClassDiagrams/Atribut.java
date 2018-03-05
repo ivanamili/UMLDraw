@@ -1,20 +1,23 @@
-package businessLogic;
+package businessLogic.ClassDiagrams;
 
-import enumerations.UseCaseConnType;
+import businessLogic.IDatabaseStore;
+import enumerations.VisibilityTypeEnum;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import store.entity.UseCaseKonekcijaDb;
-import store.entity.UseCaseKonekcijaDbId;
+import store.entity.AtributDb;
+import store.entity.AtributDbId;
 
-public class UseCaseVeza extends Veza {
+public class Atribut implements IDatabaseStore {
 
 	private int crtezID;
+	private int klasaID;
 	private int ID;
-	private UseCase odKoga;
-	private UseCase doKoga;
-	private UseCaseConnType tipVeze;
+	private String naziv;
+	private String tip;
+	private VisibilityTypeEnum vidljivost;
+	private boolean isStatic;
 
 	public int getCrtezID() {
 		return this.crtezID;
@@ -26,6 +29,18 @@ public class UseCaseVeza extends Veza {
 	 */
 	public void setCrtezID(int crtezID) {
 		this.crtezID = crtezID;
+	}
+
+	public int getKlasaID() {
+		return this.klasaID;
+	}
+
+	/**
+	 * 
+	 * @param klasaID
+	 */
+	public void setKlasaID(int klasaID) {
+		this.klasaID = klasaID;
 	}
 
 	public int getID() {
@@ -40,51 +55,53 @@ public class UseCaseVeza extends Veza {
 		this.ID=ID;
 	}
 
-	public UseCase getOdKoga() {
-		return this.odKoga;
-	}
-
-	/**
-	 * 
-	 * @param odKoga
-	 */
-	public void setOdKoga(UseCase odKoga) {
-		this.odKoga = odKoga;
-	}
-
-	public UseCase getDoKoga() {
-		return this.doKoga;
-	}
-
-	/**
-	 * 
-	 * @param doKoga
-	 */
-	public void setDoKoga(UseCase doKoga) {
-		this.doKoga = doKoga;
-	}
-
-	public UseCaseConnType getTipVeze() {
-		return this.tipVeze;
-	}
-
-	/**
-	 * 
-	 * @param tipVeze
-	 */
-	public void setTipVeze(UseCaseConnType tipVeze) {
-		this.tipVeze = tipVeze;
-	}
 	
+
+	public String getTip() {
+		return this.tip;
+	}
+
+	/**
+	 * 
+	 * @param tip
+	 */
+	public void setTip(String tip) {
+		this.tip = tip;
+	}
+
+	public VisibilityTypeEnum getVidljivost() {
+		return this.vidljivost;
+	}
+
+	/**
+	 * 
+	 * @param vidljivost
+	 */
+	public void setVidljivost(VisibilityTypeEnum vidljivost) {
+		this.vidljivost = vidljivost;
+	}
+
+	public boolean getIsStatic() {
+		return this.isStatic;
+	}
+
+	/**
+	 * 
+	 * @param isStatic
+	 */
+	public void setIsStatic(boolean isStatic) {
+		this.isStatic = isStatic;
+	}
 
     @Override
     public void save(SessionFactory sessionFactory) {
-        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
-        attrZaBazu.setId(new UseCaseKonekcijaDbId(this.ID,this.crtezID));
-        attrZaBazu.setOdKogaId(this.odKoga.getID());
-        attrZaBazu.setDoKogaId(this.doKoga.getID());
-        attrZaBazu.setTipVeze(this.tipVeze.name());
         
+        AtributDb attrZaBazu= new AtributDb();
+        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        attrZaBazu.setTip(this.tip);
+        attrZaBazu.setVidljivost(this.vidljivost.name());
+        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
 		
         Session session=null;
         Transaction tx = null;        
@@ -108,12 +125,12 @@ public class UseCaseVeza extends Veza {
 
     @Override
     public void update(SessionFactory sessionFactory) {
-        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
-        attrZaBazu.setId(new UseCaseKonekcijaDbId(this.ID,this.crtezID));
-        attrZaBazu.setOdKogaId(this.odKoga.getID());
-        attrZaBazu.setDoKogaId(this.doKoga.getID());
-        attrZaBazu.setTipVeze(this.tipVeze.name());
-        
+        AtributDb attrZaBazu= new AtributDb();
+        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        attrZaBazu.setTip(this.tip);
+        attrZaBazu.setVidljivost(this.vidljivost.name());
+        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
 		
         Session session=null;
         Transaction tx = null;        
@@ -137,12 +154,12 @@ public class UseCaseVeza extends Veza {
 
     @Override
     public void delete(SessionFactory sessionFactory) {
-        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
-        attrZaBazu.setId(new UseCaseKonekcijaDbId(this.ID,this.crtezID));
-        attrZaBazu.setOdKogaId(this.odKoga.getID());
-        attrZaBazu.setDoKogaId(this.doKoga.getID());
-        attrZaBazu.setTipVeze(this.tipVeze.name());
-        
+        AtributDb attrZaBazu= new AtributDb();
+        attrZaBazu.setId(new AtributDbId(this.crtezID,this.klasaID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        attrZaBazu.setTip(this.tip);
+        attrZaBazu.setVidljivost(this.vidljivost.name());
+        attrZaBazu.setIsStatic((byte)(this.isStatic?1:0));
 		
         Session session=null;
         Transaction tx = null;        
@@ -168,19 +185,19 @@ public class UseCaseVeza extends Veza {
     public void getByID(int[] idComponents, SessionFactory sessionFactory) {
         Session session=null;
         Transaction tx = null;
-        UseCaseKonekcijaDb ucIzBaze=null;
+        AtributDb atrIzBaze=null;
         try {
             //session factory se dobija preko parametra, pa se otvara sesija
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
              
-            Query query=session.createQuery("from UseCaseKonekcijaDb uc where uc.id.crtezId = :crtezID and uc.id.id = :id");
+            Query query=session.createQuery("from AtributDb atr where atr.id.crtezId = :crtezID and atr.id.klasaId = :klasaID and atr.id.attributId = :attributID");
             query.setParameter("crtezID",idComponents[0]);
-            query.setParameter("id", idComponents[1]);
-             
+            query.setParameter("klasaID", idComponents[1]);
+            query.setParameter("attributID", idComponents[2]);
             
-	ucIzBaze=(UseCaseKonekcijaDb)query.uniqueResult();
+            atrIzBaze=(AtributDb)query.uniqueResult();
          
              //zavrsava se transakcija
              tx.commit();
@@ -192,17 +209,27 @@ public class UseCaseVeza extends Veza {
       }  
         
         //upisivanje vrednosti iz objekta iz baze
-        this.crtezID=ucIzBaze.getId().getCrtezId();
-	this.ID=ucIzBaze.getId().getId();
-        this.tipVeze=UseCaseConnType.valueOf(ucIzBaze.getTipVeze());
-        //od koga useCase
-	this.odKoga=new UseCase();
-        int[] idComp={this.crtezID,ucIzBaze.getOdKogaId()};
-        this.odKoga.getByID(idComp, sessionFactory);
-        //do koga useCase
-	this.doKoga=new UseCase();
-        int[] idComp2={this.crtezID,ucIzBaze.getDoKogaId()};
-        this.doKoga.getByID(idComp2, sessionFactory);
+        this.crtezID=atrIzBaze.getId().getCrtezId();
+	this.klasaID=atrIzBaze.getId().getKlasaId();
+	this.ID=atrIzBaze.getId().getAttributId();
+        this.naziv=atrIzBaze.getNaziv();
+	this.tip=atrIzBaze.getTip();
+	this.vidljivost=VisibilityTypeEnum.valueOf(atrIzBaze.getVidljivost());
+	this.isStatic=atrIzBaze.getIsStatic()!=0;
+    }
+
+    /**
+     * @return the naziv
+     */
+    public String getNaziv() {
+        return naziv;
+    }
+
+    /**
+     * @param naziv the naziv to set
+     */
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
     }
 
 }

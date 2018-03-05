@@ -1,24 +1,20 @@
-package businessLogic;
-
-import org.hibernate.Query;
+package businessLogic.UseCaseDiagrams;
+import businessLogic.AbstractClassHierarchy.Element;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.jhotdraw.draw.EllipseFigure;
-import org.jhotdraw.draw.RectangleFigure;
+import org.jhotdraw.draw.*;
 import store.entity.AktorDb;
 import store.entity.AktorDbId;
-import store.entity.AktorKonekcijaDb;
-import store.entity.AktorKonekcijaDbId;
-import store.entity.UseCaseDb;
-import store.entity.UseCaseDbId;
+import java.awt.geom.Rectangle2D;
+import org.hibernate.Query;
 
-public class AktorVeza extends Veza {
+public class Aktor extends Element {
 
 	private int crtezID;
 	private int ID;
-	private Aktor aktor;
-	private UseCase useCase;
+	private RectangleFigure okvir;
+        private String naziv;
 
 	public int getCrtezID() {
 		return this.crtezID;
@@ -44,65 +40,30 @@ public class AktorVeza extends Veza {
 		this.ID=ID;
 	}
 
-	public Aktor getAktor() {
-		return this.aktor;
+	public RectangleFigure getOkvir() {
+		return this.okvir;
 	}
 
 	/**
 	 * 
-	 * @param aktor
+	 * @param okvir
 	 */
-	public void setAktor(Aktor aktor) {
-		this.aktor = aktor;
-	}
-
-	public UseCase getUseCase() {
-		return this.useCase;
-	}
-
-	/**
-	 * 
-	 * @param useCase
-	 */
-	public void setUseCase(UseCase useCase) {
-		this.useCase = useCase;
-	}
-
-	public void getAttribute() {
-		// TODO - implement AktorVeza.getAttribute
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param attribute
-	 */
-	public void setAttribute(int attribute) {
-		// TODO - implement AktorVeza.setAttribute
-		throw new UnsupportedOperationException();
-	}
-
-	public void getAttribute2() {
-		// TODO - implement AktorVeza.getAttribute2
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param attribute2
-	 */
-	public void setAttribute2(int attribute2) {
-		// TODO - implement AktorVeza.setAttribute2
-		throw new UnsupportedOperationException();
+	public void setOkvir(RectangleFigure okvir) {
+		this.okvir = okvir;
 	}
 
     @Override
     public void save(SessionFactory sessionFactory) {
         
-        AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
-        attrZaBazu.setId(new AktorKonekcijaDbId(this.ID,this.crtezID));
-        attrZaBazu.setAktorId(this.aktor.getID());
-        attrZaBazu.setUceCaseId(this.useCase.getID());
+        AktorDb attrZaBazu= new AktorDb();
+        attrZaBazu.setId(new AktorDbId(this.crtezID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        Rectangle2D.Double bounds=this.okvir.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);
+        
 		
         Session session=null;
         Transaction tx = null;        
@@ -127,10 +88,15 @@ public class AktorVeza extends Veza {
     @Override
     public void update(SessionFactory sessionFactory) {
         
-         AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
-        attrZaBazu.setId(new AktorKonekcijaDbId(this.ID,this.crtezID));
-        attrZaBazu.setAktorId(this.aktor.getID());
-        attrZaBazu.setUceCaseId(this.useCase.getID());
+        AktorDb attrZaBazu= new AktorDb();
+        attrZaBazu.setId(new AktorDbId(this.crtezID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        Rectangle2D.Double bounds=this.okvir.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);
+        
 		
         Session session=null;
         Transaction tx = null;        
@@ -149,16 +115,21 @@ public class AktorVeza extends Veza {
          e.printStackTrace(); 
       } finally {
          session.close(); 
-      }
+      }      
     }
 
     @Override
     public void delete(SessionFactory sessionFactory) {
         
-        AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
-        attrZaBazu.setId(new AktorKonekcijaDbId(this.ID,this.crtezID));
-        attrZaBazu.setAktorId(this.aktor.getID());
-        attrZaBazu.setUceCaseId(this.useCase.getID());
+        AktorDb attrZaBazu= new AktorDb();
+        attrZaBazu.setId(new AktorDbId(this.crtezID,this.ID));
+        attrZaBazu.setNaziv(this.getNaziv());
+        Rectangle2D.Double bounds=this.okvir.getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);
+        
 		
         Session session=null;
         Transaction tx = null;        
@@ -177,25 +148,29 @@ public class AktorVeza extends Veza {
          e.printStackTrace(); 
       } finally {
          session.close(); 
-      }
+      }      
     }
 
     @Override
+    //prvi id je idCrteza a drugi id je id samog aktora
+    //nacin koriscenja je prvo kreirati Aktor objekat defaultnim konstruktorom (prazan aktor objekat)
+    //a zatim ga "popuniti" pozivom ove metode
     public void getByID(int[] idComponents, SessionFactory sessionFactory) {
-       Session session=null;
+        
+        Session session=null;
         Transaction tx = null;
-        AktorKonekcijaDb aktKIzBaze=null;
+        AktorDb aktIzBaze=null;
         try {
             //session factory se dobija preko parametra, pa se otvara sesija
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
              
-            Query query=session.createQuery("from AktorKonekcijaDb aktk where aktk.id.crtezId = :crtezID and aktk.id.id = :id");
+            Query query=session.createQuery("from AktorDb akt where akt.id.crtezId = :crtezID and akt.id.id = :id");
             query.setParameter("crtezID",idComponents[0]);
             query.setParameter("id", idComponents[1]);
             
-            aktKIzBaze=(AktorKonekcijaDb)query.uniqueResult();
+            aktIzBaze=(AktorDb)query.uniqueResult();
          
              //zavrsava se transakcija
              tx.commit();
@@ -207,18 +182,24 @@ public class AktorVeza extends Veza {
       }  
         
         //upisivanje vrednosti iz objekta iz baze
-        this.crtezID=aktKIzBaze.getId().getCrtezId();
-        this.ID=aktKIzBaze.getId().getId();
-        
-        //Aktor
-        this.aktor=new Aktor();
-        int[] idComp={this.crtezID,aktKIzBaze.getAktorId()};
-        this.aktor.getByID(idComp, sessionFactory);
-        
-        //UseCase
-        this.useCase=new UseCase();
-        int[] idComp2={this.crtezID,aktKIzBaze.getUceCaseId()};
-        this.useCase.getByID(idComp2, sessionFactory);
+        this.crtezID=aktIzBaze.getId().getCrtezId();
+        this.ID=aktIzBaze.getId().getId();
+        this.naziv=aktIzBaze.getNaziv();
+        this.okvir= new RectangleFigure(aktIzBaze.getPocetnaKoorX(),aktIzBaze.getPocetnaKoorY(),aktIzBaze.getSirina(),aktIzBaze.getVisina());
+    }
+
+    /**
+     * @return the naziv
+     */
+    public String getNaziv() {
+        return naziv;
+    }
+
+    /**
+     * @param naziv the naziv to set
+     */
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
     }
 
 }
