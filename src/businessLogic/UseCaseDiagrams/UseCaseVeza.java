@@ -1,6 +1,6 @@
 package businessLogic.UseCaseDiagrams;
 
-import businessLogic.AbstractClassHierarchy.Veza;
+import businessLogic.AbstractClassHierarchy.*;
 import enumerations.UseCaseConnType;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -9,7 +9,7 @@ import org.hibernate.Transaction;
 import store.entity.UseCaseKonekcijaDb;
 import store.entity.UseCaseKonekcijaDbId;
 
-public class UseCaseVeza extends Veza {
+public class UseCaseVeza extends UseCaseDiagramVeza {
 
 	private int crtezID;
 	private int ID;

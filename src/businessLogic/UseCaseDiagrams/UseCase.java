@@ -1,12 +1,12 @@
 package businessLogic.UseCaseDiagrams;
 
-import businessLogic.AbstractClassHierarchy.Element;
+import businessLogic.AbstractClassHierarchy.*;
 import java.awt.geom.Rectangle2D;
 import org.hibernate.*;
 import org.jhotdraw.draw.EllipseFigure;
 import store.entity.*;
 
-public class UseCase extends Element {
+public class UseCase extends UseCaseDiagramElement {
 
 	private int crtezID;
 	private int ID;

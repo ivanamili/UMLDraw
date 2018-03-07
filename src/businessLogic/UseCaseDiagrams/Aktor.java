@@ -1,5 +1,5 @@
 package businessLogic.UseCaseDiagrams;
-import businessLogic.AbstractClassHierarchy.Element;
+import businessLogic.AbstractClassHierarchy.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -9,7 +9,7 @@ import store.entity.AktorDbId;
 import java.awt.geom.Rectangle2D;
 import org.hibernate.Query;
 
-public class Aktor extends Element {
+public class Aktor extends UseCaseDiagramElement {
 
 	private int crtezID;
 	private int ID;

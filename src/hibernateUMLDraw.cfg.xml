@@ -47,7 +47,7 @@ Contributor(s):
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">ivanamili</property>
     <property name="hibernate.show_sql">true</property>
-    <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
+    <property name="hibernate.query.factory_class">org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory</property>
     <mapping resource="store/entity/KlasaDb.hbm.xml"/>
     <mapping resource="store/entity/InterfejsDb.hbm.xml"/>
     <mapping resource="store/entity/MetodDb.hbm.xml"/>

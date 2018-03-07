@@ -30,7 +30,7 @@
         <property name="isStatic" type="java.lang.Boolean">
             <column name="IsStatic" />
         </property>
-        <set name="atributDbs" table="atribut_db" inverse="true" lazy="true" fetch="select">
+        <set name="atributDbs" table="atribut_db" inverse="true" lazy="true" fetch="select" cascade="all">
             <key>
                 <column name="CrtezID" not-null="true" />
                 <column name="KlasaID" not-null="true" />

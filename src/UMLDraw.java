@@ -3,26 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import businessLogic.ClassDiagrams.Klasa;
-import businessLogic.ClassDiagrams.ClassDiagramVeza;
+
 import businessLogic.*;
-import enumerations.ClassConnTypeEnum;
-import enumerations.UseCaseConnType;
-import enumerations.VisibilityTypeEnum;
+import businessLogic.ClassDiagrams.*;
+import enumerations.*;
 import java.awt.geom.Rectangle2D;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.*;
 import org.jhotdraw.draw.AttributeKey;
 import store.entity.*;
 
 import org.jhotdraw.draw.EllipseFigure;
 import org.jhotdraw.draw.RectangleFigure;
+import store.manager.PersistenceManager;
 
 /**
  *
@@ -33,71 +28,72 @@ public class UMLDraw {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)throws IOException, ClassNotFoundException {
         
-        EllipseFigure rec= new EllipseFigure(999,10,30,20);
-        Rectangle2D.Double x= rec.getBounds();
+//       Object obj = new ClassDiagramVeza();
+//       Class cla= obj.getClass();
+//       
+//       ByteArrayOutputStream bos= new ByteArrayOutputStream();
+//       ObjectOutputStream out= new ObjectOutputStream(bos);
+//       out.writeObject(obj);
+//       
+//       ByteArrayInputStream bis= new ByteArrayInputStream(bos.toByteArray());
+//       ObjectInputStream in= new ObjectInputStream(bis);
+//       Object obj2= in.readObject();
+//       
+//        System.out.println(obj2 instanceof ClassDiagramVeza);
         
-       
-        SessionFactory factory;
-        Session session=null;
-        Transaction tx = null;
-        factory = NewHibernateUtil.getSessionFactory();
+        PersistenceManager manager= new PersistenceManager();
+        Atribut attr=new Atribut();
+        attr.setCrtezID(0);
+        attr.setKlasaID(0);
+        attr.setID(0);
+        attr.setNaziv("ovo zaboravljeno");
+        attr.setIsStatic(true);
+        attr.setTip("bar");
+        attr.setVidljivost(VisibilityTypeEnum.PRIVATE);
         
-        int[] idComp={0,1919};
+        int[] ids={0,1000};
         
-//          Interfejs it= new Interfejs();
-//          it.setNaziv("IIIIIIII");
-//          it.setCrtezID(0);
-//          it.setID(1000);
-//          
-//          Metod met= new Metod();
-//          met.setNaziv("metodaIme");
-//          met.setPovratnaVrednost("void");
-//          met.setIsAbstract(true);
-//          met.setIsStatic(false);
-//          met.setVidljivost(VisibilityTypeEnum.PRIVATE);
-//          met.setArgumentiCounter(0);
-//          it.dodajMetodu(met);
-//          
-//          met= new Metod();
-//          met.setNaziv("METMETMETODA");
-//          met.setPovratnaVrednost("INT");
-//          met.setIsAbstract(true);
-//          met.setIsStatic(false);
-//          met.setVidljivost(VisibilityTypeEnum.PUBLIC);
-//          met.setArgumentiCounter(0);
-//          
-//          Argument arg= new Argument();
-//          arg.setNaziv("testARgument");
-//          arg.setTip("string");
-//          
-//          it.dodajMetodu(met);
-//          met.dodajArgument(arg);
-          
-          //it.save(factory);
-          //klas.save(factory);
-          
-          ClassDiagramVeza veza= new ClassDiagramVeza();
-          veza.setCrtezID(0);
-          veza.setID(1919);
-          veza.setTip(ClassConnTypeEnum.COMPOSITION);
-          Klasa k= new Klasa();
-          k.setID(90);
-          k.setCrtezID(0);
-          veza.setOdKoga(k);
-          
-         Klasa k1= new Klasa();
-          k1.setID(55);
-          k1.setCrtezID(0);
-          veza.setDoKoga(k1);
-          
-          //veza.save(factory);
-          
-          ClassDiagramVeza vez2=new ClassDiagramVeza();
-          vez2.getByID(idComp, factory);
-        System.out.println("Success!");
+        Argument arg=new Argument();
+        arg.setCrtezID(0);
+        arg.setKlasaID(1000);
+        arg.setMetodID(1);
+        arg.setID(69);
+        arg.setNaziv("ATRIBBBBJUT");
+        arg.setTip("enum");
+//        
+        Metod met=new Metod();
+        met.setCrtezID(0);
+        met.setKlasaIliInterfejsID(0);
+        met.setID(50);
+        met.setNaziv("METODA ZA BRISANJE");
+        met.setVidljivost(VisibilityTypeEnum.PUBLIC);
+        met.setPovratnaVrednost("void");
+        met.setIsStatic(true);
+        met.setIsAbstract(false);
         
+        Klasa klas=new Klasa();
+        klas.setCrtezID(0);
+        klas.setID(999);
+        klas.setIme("KLASA ZA BRISANJE");
+        klas.setIsStatic(true);
+        
+        Interfejs interf=new Interfejs();
+        interf.setCrtezID(0);
+        interf.setID(1919);
+        interf.setNaziv("PROMENJENO IME");
+        
+        ClassDiagramVeza vezzz=new ClassDiagramVeza();
+        vezzz.setCrtezID(0);
+        vezzz.setID(11);
+        vezzz.setTip(ClassConnTypeEnum.IMPLEMENTATION);
+        vezzz.setOdKoga(klas);
+        vezzz.setDoKoga(interf);
+        
+        Interfejs k= (Interfejs)manager.getById(ids, RuntimeClassEnum.INTERFEJS);
+        manager.delete(k, RuntimeClassEnum.INTERFEJS);
+        manager.close();
     }
     
 }

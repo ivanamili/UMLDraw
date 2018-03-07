@@ -15,8 +15,8 @@ public class CrtezDb  implements java.io.Serializable {
      private KorisnikDb korisnikDb;
      private String naslov;
      private String tip;
-     private Integer counter1;
-     private Integer counter2;
+     private Integer counter1;//za klase
+     private Integer counter2;//za veze
      private Set dijagramKonekcijaDbs = new HashSet(0);
      private Set interfejsDbs = new HashSet(0);
      private Set klasaDbs = new HashSet(0);
