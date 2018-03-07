@@ -19,8 +19,7 @@ public class ClassDiagramVeza extends Veza implements Serializable{
 	private ClassDiagramElement doKoga;
         private ClassConnTypeEnum tip;
         
-        public ClassDiagramVeza()
-        {
+        public ClassDiagramVeza(){
             this.odKoga=null;
             this.doKoga=null;
         }
@@ -45,36 +44,19 @@ public class ClassDiagramVeza extends Veza implements Serializable{
 	public void setDoKoga(ClassDiagramElement doKoga) {
 		this.doKoga = doKoga;
 	}
-
   
-   
-    
-    /**
-     * @return the tip
-     */
-    public ClassConnTypeEnum getTip() {
-        return tip;
-    }
-
-    /**
-     * @param tip the tip to set
-     */
-    public void setTip(ClassConnTypeEnum tip) {
-        this.tip = tip;
-    }
-
-    /**
-     * @return the ID
-     */
-    public int getID() {
-        return ID;
-    }
-
-    /**
-     * @param ID the ID to set
-     */
-    public void setID(int ID) {
-        this.ID = ID;
-    }
+        public ClassConnTypeEnum getTip() {
+            return tip;
+        }
+        public void setTip(ClassConnTypeEnum tip) {
+            this.tip = tip;
+        }
+        
+        public int getID() {
+            return ID;
+        }
+        public void setID(int ID) {
+            this.ID = ID;
+        }
 
 }

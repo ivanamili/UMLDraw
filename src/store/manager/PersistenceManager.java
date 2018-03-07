@@ -6,13 +6,13 @@
 package store.manager;
 
 import businessLogic.ClassDiagrams.*;
-import enumerations.ClassConnTypeEnum;
-import enumerations.RuntimeClassEnum;
-import enumerations.VisibilityTypeEnum;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import businessLogic.UseCaseDiagrams.*;
+import enumerations.*;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
 import org.hibernate.*;
+import org.jhotdraw.draw.EllipseFigure;
+import org.jhotdraw.draw.RectangleFigure;
 import store.entity.*;
 
 /**
@@ -55,7 +55,7 @@ public class PersistenceManager {
     //******************************************************
     //JAVNE METODE KOJE CE SE POZIVATI IZ SPOLJNEG SVETA
     //Njihov zadatak jeste da na osnovu tipa objekta koji je definisan RuntimeClassEnum vrednoscu enumeracije
-    //proslede objekat odgovarajucoj metodi na dalju obradu
+    //proslede objekat odgovarajucoj private metodi na dalju obradu
     public void save(Object obj, RuntimeClassEnum objectClass)
     {
         switch(objectClass)
@@ -66,6 +66,10 @@ public class PersistenceManager {
             case KLASA: save((Klasa)obj);break;
             case INTERFEJS: save((Interfejs)obj);break;
             case CLASS_DIAGRAM_VEZA: save((ClassDiagramVeza)obj);break;
+            case AKTOR: save((Aktor)obj);break;
+            case AKTOR_VEZA:save((AktorVeza)obj);break;
+            case USE_CASE: save((UseCase)obj);break;
+            case USE_CASE_VEZA: save((UseCaseVeza)obj);break;
         }
     }
     
@@ -79,6 +83,10 @@ public class PersistenceManager {
             case KLASA: update((Klasa)obj);break;
             case INTERFEJS: update((Interfejs)obj);break;
             case CLASS_DIAGRAM_VEZA: update((ClassDiagramVeza)obj);break;
+            case AKTOR: update((Aktor)obj);break;
+            case AKTOR_VEZA:update((AktorVeza)obj);break;
+            case USE_CASE: update((UseCase)obj);break;
+            case USE_CASE_VEZA: update((UseCaseVeza)obj);break;
         }
     }
     public void delete(Object obj, RuntimeClassEnum objectClass)
@@ -91,6 +99,10 @@ public class PersistenceManager {
             case KLASA: delete((Klasa)obj);break;
             case INTERFEJS: delete ((Interfejs)obj);break;
             case CLASS_DIAGRAM_VEZA: delete((ClassDiagramVeza)obj);break;
+            case AKTOR: delete((Aktor)obj);break;
+            case AKTOR_VEZA:delete((AktorVeza)obj);break;
+            case USE_CASE: delete((UseCase)obj);break;
+            case USE_CASE_VEZA: delete((UseCaseVeza)obj);break;
         }
     }
     
@@ -104,10 +116,27 @@ public class PersistenceManager {
             case KLASA: return getKlasaByID(idComponents);
             case INTERFEJS: return getInterfejsByID(idComponents);
             case CLASS_DIAGRAM_VEZA: return getClassVezaByID(idComponents);
+            case AKTOR: return getAktorByID(idComponents);
+            case AKTOR_VEZA: return getAktorVezaByID(idComponents);
+            case USE_CASE: return getUseCaseByID(idComponents);
+            case USE_CASE_VEZA: return getUseCaseVezaByID(idComponents);
         }
         return null;
     }
     //******************************************
+    
+    //!!!!!!!!!!NAPOMENE!!!!!!!!!!!!!!!!!!!!
+    /*
+        Atributi koji se zovu Counter pa nesto NISU BROJACI KOLIKO NECEGA IMA 
+        (jos jedna posledica lose definisane baze)
+        njihova vrednost se koristi pri dodeljivanju ID-a odgovarajuceg elementa
+        tako da uvek imaju vrednost POSLEDNJE dodatog elementa (bez obzira koliko je njih izbrisano)
+        to znaci da prilikom SAVE treba POVECAVATI ZA 1
+        ALI kod DELETE NE TREBA SMANJIVATI!!!!!!!!
+    
+        Ovo je da bi, nakon cuvanja u bazi i zatvaranja aplikacije, korisnig mogao ponovo da ucita celokupni crtez i da nastavi
+        sa crtanjem gde je stao.
+    */
     
     //*********************************************
     //PRIVATNE METODE, ZA SVAKI TIP OBJEKTA PO 4
@@ -187,15 +216,9 @@ public class PersistenceManager {
             session = sessionFactory.openSession();
             //zapocinje se transakcija        
              tx = session.beginTransaction();
-
-            
+             
             session.delete(attrZaBazu);
-         
-            //update broja atributa u klasi
-            Query query= session.createQuery("update KlasaDb k set k.atributCounter = k.atributCounter -1 where k.id.crtezId= :crtezID and k.id.klasaId= :klasaID ");
-            query.setParameter("crtezID",objToDelete.getCrtezID());
-            query.setParameter("klasaID", objToDelete.getKlasaID());
-            query.executeUpdate();
+            
              //zavrsava se transakcija
              tx.commit();
       } catch (Exception e) {
@@ -317,11 +340,6 @@ public class PersistenceManager {
              tx = session.beginTransaction();
 
             session.delete(attrZaBazu);
-            Query query= session.createQuery("update MetodDb k set k.atributCounter = k.atributCounter -1 where k.id.crtezId= :crtezID and k.id.klasaIliInterfejsId= :klasaID and k.id.id = :id ");
-            query.setParameter("crtezID",objToDelete.getCrtezID());
-            query.setParameter("klasaID", objToDelete.getKlasaID());
-            query.setParameter("id",objToDelete.getMetodID());
-            query.executeUpdate();
          
              //zavrsava se transakcija
              tx.commit();
@@ -474,21 +492,7 @@ public class PersistenceManager {
              tx = session.beginTransaction();
 
             session.delete(zaBazu);
-            //ALI TREBA smanjiti BROJAC U KLASI ILI INTERFEJSU KOME METODA PRIPADA!
-            //ako je metod clanica KLASE
-            Query query= session.createQuery("update KlasaDb k set k.metodCounter = k.metodCounter -1 where k.id.crtezId= :crtezID and k.id.klasaId= :klasaID");
-            query.setParameter("crtezID",objToDelete.getCrtezID());
-            query.setParameter("klasaID", objToDelete.getKlasaIliInterjfejsID());
-            int result=query.executeUpdate();
-            
-            if(result==0)
-            {
-                query= session.createQuery("update InterfejsDb k set k.metodCounter = k.metodCounter -1 where k.id.crtezId= :crtezID and k.id.interfejsId= :klasaID");
-                query.setParameter("crtezID",objToDelete.getCrtezID());
-                query.setParameter("klasaID", objToDelete.getKlasaIliInterjfejsID());
-                query.executeUpdate();
-            }
-            
+                        
             //zbog on delete cascade on sam brise sve referenciranje argumente!
          
              //zavrsava se transakcija
@@ -649,17 +653,11 @@ public class PersistenceManager {
 
             session.delete(zaBazu);
              //zavrsava se transakcija
-             
-             //treba updateovati brojac klasa i interfejsa u crtezu, jer je dodata nova klasa
-             //brojac COUNTER1
-            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 -1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToDelete.getCrtezID());
-            query.executeUpdate();
-            
+           
             //atributi ce zbog on delete cascade sami da se izbrisu
             //ali metode nece
             //RUCNO BRISANJE METODA
-            query= session.createQuery("delete MetodDb m where m.id.crtezId = :crtezID and m.id.klasaIliInterfejsId=:klasaID");
+            Query query= session.createQuery("delete MetodDb m where m.id.crtezId = :crtezID and m.id.klasaIliInterfejsId=:klasaID");
             query.setParameter("crtezID",objToDelete.getCrtezID());
             query.setParameter("klasaID",objToDelete.getID());
             query.executeUpdate();
@@ -835,15 +833,10 @@ public class PersistenceManager {
 
             session.delete(zaBazu);
             
-            //treba updateovati brojac klasa i interfejsa u crtezu, jer je obrisan interfejs
-            //brojac COUNTER1
-            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 -1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToDelete.getCrtezID());
-            query.executeUpdate();
-            
+                        
             //takodje treba obrisati i metode koje pripadaju interfejsu
             //RUCNO BRISANJE METODA
-            query= session.createQuery("delete MetodDb m where m.id.crtezId = :crtezID and m.id.klasaIliInterfejsId=:klasaID");
+            Query query= session.createQuery("delete MetodDb m where m.id.crtezId = :crtezID and m.id.klasaIliInterfejsId=:klasaID");
             query.setParameter("crtezID",objToDelete.getCrtezID());
             query.setParameter("klasaID",objToDelete.getID());
             query.executeUpdate();
@@ -947,6 +940,12 @@ public class PersistenceManager {
              tx = session.beginTransaction();
 
             session.save(attrZaBazu);
+            
+            //treba updateovati brojac veza u crtezu, jer je dodata nova veza
+             //brojac COUNTER2
+            Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
+            query.setParameter("crtezID",objToSave.getCrtezID());
+            query.executeUpdate();
          
              //zavrsava se transakcija
              tx.commit();
@@ -1047,8 +1046,7 @@ public class PersistenceManager {
         returnObject.setCrtezID(dkIzBaze.getId().getCrtezId());
 	returnObject.setID(dkIzBaze.getId().getVezeId());
         returnObject.setTip(ClassConnTypeEnum.valueOf(dkIzBaze.getTipVeze()));
-	int[] idComp=new int[2];
-        idComp[0]=returnObject.getCrtezID();
+	
         
         //u polja od koga i do koga se kreiraju samo objekti sa id-evima, ne prave se novi objekti
         if(dkIzBaze.getOdKogaTip().equals("klasa"))
@@ -1065,5 +1063,514 @@ public class PersistenceManager {
        
        return returnObject;
     }
+    
+    //**************************************
+    
+    //AKTOR
+    private void save(Aktor objToSave) {
+        
+        AktorDb attrZaBazu= new AktorDb();
+        attrZaBazu.setId(new AktorDbId(objToSave.getCrtezID(),objToSave.getID()));
+        attrZaBazu.setNaziv(objToSave.getNaziv());
+        Rectangle2D.Double bounds=objToSave.getOkvir().getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+            
+            //treba updateovati brojac aktera i useCase-ova u crtezu, jer je dodat novu akter
+             //brojac COUNTER1
+            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
+            query.setParameter("crtezID",objToSave.getCrtezID());
+            query.executeUpdate();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void update(Aktor objToUpdate) {
+        
+        AktorDb attrZaBazu= new AktorDb();
+        attrZaBazu.setId(new AktorDbId(objToUpdate.getCrtezID(),objToUpdate.getID()));
+        attrZaBazu.setNaziv(objToUpdate.getNaziv());
+        Rectangle2D.Double bounds=objToUpdate.getOkvir().getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void delete(Aktor objToDelete) {
+        
+        AktorDb attrZaBazu= new AktorDb();
+        attrZaBazu.setId(new AktorDbId(objToDelete.getCrtezID(),objToDelete.getID()));
+        	
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+            //zbog ON DELETE CASCADE u bazi, on automatcki brise AktorVeza objekte koji ga referenciraju
+            //tj brisanjem aktera brisu se i sve veze koje vode do njega
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private Aktor getAktorByID(int[] idComponents) {
+        
+        Session session=null;
+        Transaction tx = null;
+        AktorDb aktIzBaze=null;
+        Aktor returnObject=new Aktor();
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from AktorDb akt where akt.id.crtezId = :crtezID and akt.id.id = :id");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("id", idComponents[1]);
+            
+            aktIzBaze=(AktorDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        returnObject.setCrtezID(aktIzBaze.getId().getCrtezId());
+        returnObject.setID(aktIzBaze.getId().getId());
+        returnObject.setNaziv(aktIzBaze.getNaziv());
+        returnObject.setOkvir(new RectangleFigure(aktIzBaze.getPocetnaKoorX(),aktIzBaze.getPocetnaKoorY(),aktIzBaze.getSirina(),aktIzBaze.getVisina()));
+        
+        return returnObject;
+    }
+    
+    //AKTOR VEZA 
+    private void save(AktorVeza objToSave ) {
+        
+        AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
+        attrZaBazu.setId(new AktorKonekcijaDbId(objToSave.getID(),objToSave.getCrtezID()));
+        attrZaBazu.setAktorId(objToSave.getAktor().getID());
+        attrZaBazu.setUceCaseId(objToSave.getUseCase().getID());
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+            
+             //treba updateovati brojac veza u crtezu, jer je dodata nova veza
+             //brojac COUNTER2
+            Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
+            query.setParameter("crtezID",objToSave.getCrtezID());
+            query.executeUpdate();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void update(AktorVeza objToUpdate ) {
+        
+        AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
+        attrZaBazu.setId(new AktorKonekcijaDbId(objToUpdate.getID(),objToUpdate.getCrtezID()));
+        attrZaBazu.setAktorId(objToUpdate.getAktor().getID());
+        attrZaBazu.setUceCaseId(objToUpdate.getUseCase().getID());
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+                    
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void delete(AktorVeza objToDelete ) {
+        
+        AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
+        attrZaBazu.setId(new AktorKonekcijaDbId(objToDelete.getID(),objToDelete.getCrtezID()));
+       	
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+            
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private AktorVeza getAktorVezaByID(int[] idComponents) {
+        
+        Session session=null;
+        Transaction tx = null;
+        AktorKonekcijaDb aktKIzBaze=null;
+        AktorVeza returnObject= new AktorVeza();
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from AktorKonekcijaDb aktk where aktk.id.crtezId = :crtezID and aktk.id.id = :id");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("id", idComponents[1]);
+            
+            aktKIzBaze=(AktorKonekcijaDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        returnObject.setCrtezID(aktKIzBaze.getId().getCrtezId());
+        returnObject.setID(aktKIzBaze.getId().getId());
+        
+        //Aktor-upisuju se samo id-jevi. pretpostavljam da ce jhotDraw zahtevati reference, pa zato
+        returnObject.setAktor(new Aktor(returnObject.getCrtezID(),aktKIzBaze.getAktorId()));
+        
+        //UseCase - ista filozofija kao gore
+        returnObject.setUseCase(new UseCase(returnObject.getCrtezID(),aktKIzBaze.getUceCaseId()));
+        
+        return returnObject;
+        
+    }
+    
+    //USE CASE
+    private void save(UseCase objToSave) {
+        
+        UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(objToSave.getCrtezID(),objToSave.getID()));
+        attrZaBazu.setNaziv(objToSave.getNaziv());
+	Rectangle2D.Double bounds=objToSave.getElipsa().getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+            
+            //treba updateovati brojac aktera i useCase-ova u crtezu, jer je dodat novi use case
+             //brojac COUNTER1
+            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
+            query.setParameter("crtezID",objToSave.getCrtezID());
+            query.executeUpdate();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void update(UseCase objToUpdate) {
+        
+        UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(objToUpdate.getCrtezID(),objToUpdate.getID()));
+        attrZaBazu.setNaziv(objToUpdate.getNaziv());
+	Rectangle2D.Double bounds=objToUpdate.getElipsa().getBounds();
+        attrZaBazu.setPocetnaKoorX(bounds.x);
+        attrZaBazu.setPocetnaKoorY(bounds.y);
+        attrZaBazu.setVisina(bounds.height);
+        attrZaBazu.setSirina(bounds.width);	
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+            
+            //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void delete(UseCase objToDelete) {
+        
+        UseCaseDb attrZaBazu= new UseCaseDb();
+        attrZaBazu.setId(new UseCaseDbId(objToDelete.getCrtezID(),objToDelete.getID()));
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+            
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private UseCase getUseCaseByID(int[] idComponents) {
+         Session session=null;
+        Transaction tx = null;
+        UseCaseDb izBaze=null;
+        UseCase returnObject=new UseCase();
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from UseCaseDb usecase where usecase.id.crtezId = :crtezID and usecase.id.id = :id");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("id", idComponents[1]);
+            
+            izBaze=(UseCaseDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        returnObject.setCrtezID(izBaze.getId().getCrtezId());
+        returnObject.setID(izBaze.getId().getId());
+        returnObject.setNaziv(izBaze.getNaziv());
+        returnObject.setElipsa( new EllipseFigure(izBaze.getPocetnaKoorX(),izBaze.getPocetnaKoorY(),izBaze.getSirina(),izBaze.getVisina()));
+        
+        return returnObject;
+    }
+    
+    //USE CASE VEZA
+    private void save(UseCaseVeza objToSave) {
+        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
+        attrZaBazu.setId(new UseCaseKonekcijaDbId(objToSave.getID(),objToSave.getCrtezID()));
+        attrZaBazu.setOdKogaId(objToSave.getOdKoga().getID());
+        attrZaBazu.setDoKogaId(objToSave.getDoKoga().getID());
+        attrZaBazu.setTipVeze(objToSave.getTipVeze().name());
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.save(attrZaBazu);
+            //treba updateovati brojac veza u crtezu, jer je dodata nova veza
+             //brojac COUNTER2
+            Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
+            query.setParameter("crtezID",objToSave.getCrtezID());
+            query.executeUpdate();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void update(UseCaseVeza objToUpdate) {
+        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
+        attrZaBazu.setId(new UseCaseKonekcijaDbId(objToUpdate.getID(),objToUpdate.getCrtezID()));
+        attrZaBazu.setOdKogaId(objToUpdate.getOdKoga().getID());
+        attrZaBazu.setDoKogaId(objToUpdate.getDoKoga().getID());
+        attrZaBazu.setTipVeze(objToUpdate.getTipVeze().name());
+        
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.update(attrZaBazu);
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void delete(UseCaseVeza objToDelete) {
+        UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
+        attrZaBazu.setId(new UseCaseKonekcijaDbId(objToDelete.getID(),objToDelete.getCrtezID()));
+      
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.delete(attrZaBazu);
+            
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private UseCaseVeza getUseCaseVezaByID(int[] idComponents) {
+        Session session=null;
+        Transaction tx = null;
+        UseCaseKonekcijaDb ucIzBaze=null;
+        UseCaseVeza returnObject=new UseCaseVeza();
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from UseCaseKonekcijaDb uc where uc.id.crtezId = :crtezID and uc.id.id = :id");
+            query.setParameter("crtezID",idComponents[0]);
+            query.setParameter("id", idComponents[1]);
+             
+            
+	ucIzBaze=(UseCaseKonekcijaDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze
+        returnObject.setCrtezID(ucIzBaze.getId().getCrtezId());
+	returnObject.setID(ucIzBaze.getId().getId());
+        returnObject.setTipVeze(UseCaseConnType.valueOf(ucIzBaze.getTipVeze()));
+        
+        //od koga useCase
+	returnObject.setOdKoga(new UseCase(returnObject.getCrtezID(),ucIzBaze.getOdKogaId()));
+      
+        //do koga useCase
+	returnObject.setDoKoga(new UseCase(returnObject.getCrtezID(),ucIzBaze.getDoKogaId()));
+        
+        return returnObject;
+    }
+
 
 }

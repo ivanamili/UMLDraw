@@ -21,4 +21,8 @@ public enum RuntimeClassEnum {
     KLASA,
     INTERFEJS,
     CLASS_DIAGRAM_VEZA,
+    AKTOR,
+    AKTOR_VEZA,
+    USE_CASE,
+    USE_CASE_VEZA,
 }

@@ -6,6 +6,7 @@
 
 import businessLogic.*;
 import businessLogic.ClassDiagrams.*;
+import businessLogic.UseCaseDiagrams.*;
 import enumerations.*;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
@@ -53,7 +54,7 @@ public class UMLDraw {
         attr.setTip("bar");
         attr.setVidljivost(VisibilityTypeEnum.PRIVATE);
         
-        int[] ids={0,1000};
+        int[] ids={1,1};
         
         Argument arg=new Argument();
         arg.setCrtezID(0);
@@ -91,8 +92,48 @@ public class UMLDraw {
         vezzz.setOdKoga(klas);
         vezzz.setDoKoga(interf);
         
-        Interfejs k= (Interfejs)manager.getById(ids, RuntimeClassEnum.INTERFEJS);
-        manager.delete(k, RuntimeClassEnum.INTERFEJS);
+        Aktor akt=new Aktor();
+        akt.setCrtezID(1);
+        akt.setID(9);
+        akt.setNaziv("GHOST");
+        akt.setOkvir(new RectangleFigure(10,10,10,10));
+        
+        
+        
+        UseCase use=new UseCase();
+        use.setCrtezID(1);
+        use.setID(10);
+        use.setNaziv("PROBA USE CASE");
+        use.setElipsa(new EllipseFigure(2,2,2,2));
+        
+        
+        AktorVeza veza=new AktorVeza();
+        veza.setCrtezID(1);
+        veza.setID(1111);
+        veza.setAktor(akt);
+        veza.setUseCase(use);
+        
+        int[] one={0,1};
+        int[] two={0,2};
+        
+        UseCase jedan,dva;
+        jedan=(UseCase)manager.getById(one, RuntimeClassEnum.USE_CASE);
+        dva=(UseCase)manager.getById(one, RuntimeClassEnum.USE_CASE);
+        
+        UseCaseVeza konekc=new UseCaseVeza();
+        konekc.setCrtezID(0);
+        konekc.setID(909090);
+        konekc.setOdKoga(jedan);
+        konekc.setDoKoga(dva);
+        konekc.setTipVeze(UseCaseConnType.INCLUDE);
+        
+        //manager.save(konekc,RuntimeClassEnum.USE_CASE_VEZA);
+        manager.delete(konekc, RuntimeClassEnum.USE_CASE_VEZA);
+        
+        int[] trazi={0,99};
+        UseCaseVeza blatruc=(UseCaseVeza) manager.getById(trazi, RuntimeClassEnum.USE_CASE_VEZA);
+        
+        
         manager.close();
     }
     
