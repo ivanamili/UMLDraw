@@ -2,12 +2,11 @@ package businessLogic.CommonClasses;
 
 import businessLogic.AbstractClassHierarchy.Veza;
 import businessLogic.AbstractClassHierarchy.Element;
-import businessLogic.IDatabaseStore;
 import enumerations.DiagramTypeEnum;
 import java.util.ArrayList;
-import org.hibernate.SessionFactory;
 
-public class Crtez implements IDatabaseStore {
+
+public class Crtez {
 
 	private int ID;
 	private String naslov;
@@ -17,15 +16,20 @@ public class Crtez implements IDatabaseStore {
 	private int konekcijaCounter;
 	private ArrayList<Element> elementi;
 	private ArrayList<Veza> veze;
+        
+        public Crtez()
+        {
+            this.elementi=new ArrayList<Element>();
+            this.veze= new ArrayList<Veza>();
+            this.elemCounter=0;
+            this.konekcijaCounter=0;
+            this.ID=0;
+        }
+        
 
 	public int getID() {
 		return this.ID;
 	}
-
-	/**
-	 * 
-	 * @param ID
-	 */
 	public void setID(int ID) {
 		this.ID=ID;
 	}
@@ -33,37 +37,20 @@ public class Crtez implements IDatabaseStore {
 	public String getNaslov() {
 		return this.naslov;
 	}
-
-	/**
-	 * 
-	 * @param naslov
-	 */
 	public void setNaslov(String naslov) {
 		this.naslov = naslov;
 	}
 
 	public DiagramTypeEnum getTip() {
-		// TODO - implement Crtez.getTip
-		throw new UnsupportedOperationException();
+		return this.tip;
 	}
-
-	/**
-	 * 
-	 * @param tip
-	 */
 	public void setTip(DiagramTypeEnum tip) {
-		// TODO - implement Crtez.setTip
-		throw new UnsupportedOperationException();
+		this.tip=tip;
 	}
 
 	public String getImeAutora() {
 		return this.imeAutora;
 	}
-
-	/**
-	 * 
-	 * @param imeAutora
-	 */
 	public void setImeAutora(String imeAutora) {
 		this.imeAutora = imeAutora;
 	}
@@ -71,11 +58,6 @@ public class Crtez implements IDatabaseStore {
 	public int getElemCounter() {
 		return this.elemCounter;
 	}
-
-	/**
-	 * 
-	 * @param elemCounter
-	 */
 	public void setElemCounter(int elemCounter) {
 		this.elemCounter = elemCounter;
 	}
@@ -83,97 +65,48 @@ public class Crtez implements IDatabaseStore {
 	public int getKonekcijaCounter() {
 		return this.konekcijaCounter;
 	}
-
-	/**
-	 * 
-	 * @param konekcijaCounter
-	 */
 	public void setKonekcijaCounter(int konekcijaCounter) {
 		this.konekcijaCounter = konekcijaCounter;
 	}
 
-	public Element[] getElementi() {
-		// TODO - implement Crtez.getElementi
-		throw new UnsupportedOperationException();
+	public ArrayList<Element> getElementi() {
+		return this.elementi;
+	}
+	public void setElementi(ArrayList<Element> elementi) {
+		this.elementi=elementi;
 	}
 
-	/**
-	 * 
-	 * @param elementi
-	 */
-	public void setElementi(Element[] elementi) {
-		// TODO - implement Crtez.setElementi
-		throw new UnsupportedOperationException();
+	public ArrayList<Veza> getVeze() {
+		return this.veze;
+	}
+	public void setVeze(ArrayList<Veza> veze) {
+		this.veze=veze;
 	}
 
-	public Veza[] getVeze() {
-		// TODO - implement Crtez.getVeze
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param veze
-	 */
-	public void setVeze(Veza[] veze) {
-		// TODO - implement Crtez.setVeze
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param elem
-	 */
+	
 	public void dodajElement(Element elem) {
-		// TODO - implement Crtez.dodajElement
-		throw new UnsupportedOperationException();
+		this.elementi.add(elem);
+                this.elemCounter++;
 	}
 
-	/**
-	 * 
-	 * @param id
-	 */
+	
 	public void obrisiElement(int id) {
 		// TODO - implement Crtez.obrisiElement
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * 
-	 * @param veza
-	 */
+	
 	public void dodajVezu(Veza veza) {
-		// TODO - implement Crtez.dodajVezu
-		throw new UnsupportedOperationException();
+		this.veze.add(veza);
+                this.konekcijaCounter++;
 	}
 
-	/**
-	 * 
-	 * @param id
-	 */
+	
 	public void obrisiVezu(Veza id) {
 		// TODO - implement Crtez.obrisiVezu
 		throw new UnsupportedOperationException();
 	}
 
-    @Override
-    public void save(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void update(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete(SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void getByID(int[] idComponents, SessionFactory sessionFactory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
 }

@@ -6,6 +6,7 @@
 
 import businessLogic.*;
 import businessLogic.ClassDiagrams.*;
+import businessLogic.CommonClasses.*;
 import businessLogic.UseCaseDiagrams.*;
 import enumerations.*;
 import java.awt.geom.Rectangle2D;
@@ -113,25 +114,23 @@ public class UMLDraw {
         veza.setAktor(akt);
         veza.setUseCase(use);
         
-        int[] one={0,1};
+        int[] one={2};
         int[] two={0,2};
         
-        UseCase jedan,dva;
-        jedan=(UseCase)manager.getById(one, RuntimeClassEnum.USE_CASE);
-        dva=(UseCase)manager.getById(one, RuntimeClassEnum.USE_CASE);
         
-        UseCaseVeza konekc=new UseCaseVeza();
-        konekc.setCrtezID(0);
-        konekc.setID(909090);
-        konekc.setOdKoga(jedan);
-        konekc.setDoKoga(dva);
-        konekc.setTipVeze(UseCaseConnType.INCLUDE);
         
-        //manager.save(konekc,RuntimeClassEnum.USE_CASE_VEZA);
-        manager.delete(konekc, RuntimeClassEnum.USE_CASE_VEZA);
+        Korisnik koris=new Korisnik();
+        koris.setIme("Bla bla truc");
+        koris.setSifra("2djdjdjdjd");
         
-        int[] trazi={0,99};
-        UseCaseVeza blatruc=(UseCaseVeza) manager.getById(trazi, RuntimeClassEnum.USE_CASE_VEZA);
+       
+        Crtez crt= new Crtez();
+        crt.setID(7);
+        crt.setImeAutora("Ivana");
+        crt.setNaslov("Prvi crtez");
+        crt.setTip(DiagramTypeEnum.CLASS);
+        
+        Crtez c= (Crtez) manager.getById(one, RuntimeClassEnum.CRTEZ);
         
         
         manager.close();

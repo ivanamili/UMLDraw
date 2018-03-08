@@ -25,4 +25,6 @@ public enum RuntimeClassEnum {
     AKTOR_VEZA,
     USE_CASE,
     USE_CASE_VEZA,
+    KORISNIK,
+    CRTEZ
 }

@@ -1,27 +1,26 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Jan 9, 2018 4:38:38 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="store.entity.KorisnikDb" table="korisnik_db" catalog="jhotdraw" optimistic-lock="version">
-        <id name="id" type="int">
-            <column name="id" />
-            <generator class="identity" />
-        </id>
-        <many-to-one name="crtezDb" class="store.entity.CrtezDb" insert="true" fetch="select">
-            <column name="TrenutniCrtezID" />
-        </many-to-one>
-        <property name="sifra" type="string">
-            <column name="Sifra" />
-        </property>
-        <property name="ime" type="string">
-            <column name="Ime" />
-        </property>
-        <set name="crtezDbs" table="crtez_db" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="ImeAutora" />
-            </key>
-            <one-to-many class="store.entity.CrtezDb" />
-        </set>
-    </class>
+  <class catalog="jhotdraw" name="store.entity.KorisnikDb" optimistic-lock="version" table="korisnik_db">
+    <id name="id" type="int">
+      <column name="id"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="store.entity.CrtezDb" fetch="select" insert="true" name="crtezDb">
+      <column name="TrenutniCrtezID"/>
+    </many-to-one>
+    <property name="sifra" type="string">
+      <column name="Sifra"/>
+    </property>
+    <property name="ime" type="string">
+      <column name="Ime"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="crtezDbs" table="crtez_db">
+      <key>
+        <column name="ImeAutora"/>
+      </key>
+      <one-to-many class="store.entity.CrtezDb"/>
+    </set>
+  </class>
 </hibernate-mapping>

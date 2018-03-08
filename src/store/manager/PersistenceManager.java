@@ -6,6 +6,7 @@
 package store.manager;
 
 import businessLogic.ClassDiagrams.*;
+import businessLogic.CommonClasses.*;
 import businessLogic.UseCaseDiagrams.*;
 import enumerations.*;
 import java.awt.geom.Rectangle2D;
@@ -70,9 +71,10 @@ public class PersistenceManager {
             case AKTOR_VEZA:save((AktorVeza)obj);break;
             case USE_CASE: save((UseCase)obj);break;
             case USE_CASE_VEZA: save((UseCaseVeza)obj);break;
+            case KORISNIK: save((Korisnik)obj);break;
+            case CRTEZ: save((Crtez)obj);break;
         }
     }
-    
     public void update(Object obj,RuntimeClassEnum objectClass)
     {
         switch(objectClass)
@@ -87,6 +89,8 @@ public class PersistenceManager {
             case AKTOR_VEZA:update((AktorVeza)obj);break;
             case USE_CASE: update((UseCase)obj);break;
             case USE_CASE_VEZA: update((UseCaseVeza)obj);break;
+            case KORISNIK: update((Korisnik)obj);break;
+            case CRTEZ: update((Crtez)obj);break;
         }
     }
     public void delete(Object obj, RuntimeClassEnum objectClass)
@@ -103,6 +107,8 @@ public class PersistenceManager {
             case AKTOR_VEZA:delete((AktorVeza)obj);break;
             case USE_CASE: delete((UseCase)obj);break;
             case USE_CASE_VEZA: delete((UseCaseVeza)obj);break;
+            case KORISNIK: delete((Korisnik)obj);break;
+            case CRTEZ: delete((Crtez)obj);break;
         }
     }
     
@@ -120,13 +126,16 @@ public class PersistenceManager {
             case AKTOR_VEZA: return getAktorVezaByID(idComponents);
             case USE_CASE: return getUseCaseByID(idComponents);
             case USE_CASE_VEZA: return getUseCaseVezaByID(idComponents);
+            case KORISNIK: return getKorisnikByID(idComponents);
+            case CRTEZ: return getCrtezByID(idComponents);
         }
         return null;
     }
     //******************************************
     
     //!!!!!!!!!!NAPOMENE!!!!!!!!!!!!!!!!!!!!
-    /*
+    /**
+     * NAPOMENA VEZANA ZA ATRIBUTE KLASE CRTEZ!
         Atributi koji se zovu Counter pa nesto NISU BROJACI KOLIKO NECEGA IMA 
         (jos jedna posledica lose definisane baze)
         njihova vrednost se koristi pri dodeljivanju ID-a odgovarajuceg elementa
@@ -136,7 +145,7 @@ public class PersistenceManager {
     
         Ovo je da bi, nakon cuvanja u bazi i zatvaranja aplikacije, korisnig mogao ponovo da ucita celokupni crtez i da nastavi
         sa crtanjem gde je stao.
-    */
+    **/
     
     //*********************************************
     //PRIVATNE METODE, ZA SVAKI TIP OBJEKTA PO 4
@@ -1571,6 +1580,335 @@ public class PersistenceManager {
         
         return returnObject;
     }
+    
+    //KORISNIK
+    /**NAPOMENE STA TREBA DODATI
+     * save i update ne rade sa id-em trenutnog crteza
+     * kao ni getbyid, to treba mozda dodati
+     * fale i metode koje ce da omoguce pretrazivanje korisnika i logovanje     *  
+     */
+    private void save(Korisnik objToSave) {
+        
+        KorisnikDb attrZaBazu= new KorisnikDb();
+        attrZaBazu.setIme(objToSave.getIme());
+        attrZaBazu.setSifra(objToSave.getSifra());
+        //attrZaBazu.setCrtezDb(new CrtezDb(objToSave.getTrenutniCrtez().getID()));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
 
+            session.save(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void update(Korisnik objToUpdate) {
+        
+        KorisnikDb attrZaBazu= new KorisnikDb();
+        attrZaBazu.setIme(objToUpdate.getIme());
+        attrZaBazu.setSifra(objToUpdate.getSifra());
+        //attrZaBazu.setCrtezDb(new CrtezDb(objToUpdate.getTrenutniCrtez().getID()));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
 
-}
+            Query q=session.createQuery("select k.id from KorisnikDb k where k.ime like :ime");
+             q.setParameter("ime", objToUpdate.getIme());
+             
+             int id=(int)q.uniqueResult();
+             attrZaBazu.setId(id);
+
+            session.update(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void delete(Korisnik objToDelete) {
+        
+        KorisnikDb attrZaBazu= new KorisnikDb();
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            Query q=session.createQuery("select k.id from KorisnikDb k where k.ime like :ime");
+            q.setParameter("ime", objToDelete.getIme());
+             
+            int id=(int)q.uniqueResult();
+            attrZaBazu.setId(id);
+
+            session.delete(attrZaBazu);
+         
+            //AKO TREBA BRISATI SVE CRTEZE KOJE JE KORISNIK NAPRAVIO, DODATI ON DELETE CASCADE U BAZU!
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private Korisnik getKorisnikByID(int[] idComponents) {
+        Session session=null;
+        Transaction tx = null;
+        KorisnikDb koIzBaze=null;
+        Korisnik returnObject= new Korisnik();
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from KorisnikDb ko where ko.id = :id");
+            query.setParameter("id",idComponents[0]);
+            
+            koIzBaze=(KorisnikDb)query.uniqueResult();
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }  
+        
+        //upisivanje vrednosti iz objekta iz baze        
+        returnObject.setIme(koIzBaze.getIme());
+        returnObject.setSifra(koIzBaze.getSifra());
+	
+        //referenca na crtez msm da nece da nam treba
+        
+        return returnObject;
+    }
+    
+    //CRTEZ
+    private void save(Crtez objToSave) {
+        
+        CrtezDb crtezZaBazu= new CrtezDb();
+        crtezZaBazu.setNaslov(objToSave.getNaslov());
+        crtezZaBazu.setTip(objToSave.getTip().name());
+        crtezZaBazu.setCounter1(objToSave.getElemCounter());
+        crtezZaBazu.setCounter2(objToSave.getKonekcijaCounter());
+        crtezZaBazu.setImeAutora(objToSave.getImeAutora());
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+             
+            session.save(crtezZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void update(Crtez objToUpdate) {
+        
+        CrtezDb crtezZaBazu= new CrtezDb();
+        crtezZaBazu.setId(objToUpdate.getID());
+        crtezZaBazu.setNaslov(objToUpdate.getNaslov());
+        crtezZaBazu.setTip(objToUpdate.getTip().name());
+        crtezZaBazu.setCounter1(objToUpdate.getElemCounter());
+        crtezZaBazu.setCounter2(objToUpdate.getKonekcijaCounter());
+        crtezZaBazu.setImeAutora(objToUpdate.getImeAutora());
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+             
+            session.update(crtezZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    private void delete(Crtez objToDelete) {
+        
+        CrtezDb crtezZaBazu= new CrtezDb();
+        crtezZaBazu.setId(objToDelete.getID());
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+             
+            session.delete(crtezZaBazu);
+            
+            //Zbog on delete cascade sve ce samo da se pobrise OSIM METODA I ARGUMENATA
+            //argument je za metodu vezan sa on delete cascade, pa treba da pobrisemo samo metode koje pripadaju crtezu
+            //i to samo ako je crtez Class diagram! ako nije, on onda nema metode 
+            
+            if(objToDelete.getTip()==DiagramTypeEnum.CLASS)
+            {
+                //RUCNO BRISANJE METODA
+                Query query= session.createQuery("delete MetodDb m where m.id.crtezId = :crtezID");
+                query.setParameter("crtezID",objToDelete.getID());
+                query.executeUpdate();
+            }
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    //pribavlja ceo crtez SA SVIM ELEMENTIMA
+    private Crtez getCrtezByID(int[] idComponents){
+        
+        Session session=null;
+        Transaction tx = null;
+        CrtezDb koIzBaze=null;
+        Crtez returnObject= new Crtez();
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+             
+            Query query=session.createQuery("from CrtezDb ko where ko.id = :id");
+            query.setParameter("id",idComponents[0]);
+            
+            koIzBaze=(CrtezDb)query.uniqueResult();
+            
+            returnObject.setTip(DiagramTypeEnum.valueOf(koIzBaze.getTip()));
+            Iterator i;
+            int[] idComp= new int[2];
+            idComp[0]=koIzBaze.getId();
+            
+            if(returnObject.getTip()==DiagramTypeEnum.USECASE)
+            {
+                //pribavi sve aktore
+                i= koIzBaze.getAktorDbs().iterator();
+                while(i.hasNext())
+                {
+                    idComp[1]=((AktorDb)i.next()).getId().getId();
+                    returnObject.getElementi().add(getAktorByID(idComp));
+                }
+                
+                //pribavi sve use-case
+                i= koIzBaze.getUseCaseDbs().iterator();
+                while(i.hasNext())
+                {
+                    idComp[1]=((UseCaseDb)i.next()).getId().getId();
+                    returnObject.getElementi().add(getUseCaseByID(idComp));
+                }
+                
+                //pribavi sve AktorVeze
+                 i= koIzBaze.getAktorKonekcijaDbs().iterator();
+                while(i.hasNext())
+                {
+                    idComp[1]=((AktorKonekcijaDb)i.next()).getId().getId();
+                    returnObject.getVeze().add(getAktorVezaByID(idComp));
+                }
+                
+                //pribavi sve UseCase veze
+                 i= koIzBaze.getUseCaseKonekcijaDbs().iterator();
+                while(i.hasNext())
+                {
+                    idComp[1]=((UseCaseKonekcijaDb)i.next()).getId().getId();
+                    returnObject.getVeze().add(getUseCaseVezaByID(idComp));
+                }
+            }
+            else if(returnObject.getTip()==DiagramTypeEnum.CLASS)
+            {
+                //dodaj sve klase
+                i= koIzBaze.getKlasaDbs().iterator();
+                while(i.hasNext())
+                {
+                    idComp[1]=((KlasaDb)i.next()).getId().getKlasaId();
+                    returnObject.getElementi().add(getKlasaByID(idComp));
+                }
+                //dodaj sve interfejse
+                i= koIzBaze.getInterfejsDbs().iterator();
+                while(i.hasNext())
+                {
+                    idComp[1]=((InterfejsDb)i.next()).getId().getInterfejsId();
+                    returnObject.getElementi().add(getInterfejsByID(idComp));
+                }
+                //sve veze iz dijagrama
+                 i= koIzBaze.getDijagramKonekcijaDbs().iterator();
+                while(i.hasNext())
+                {
+                    idComp[1]=((DijagramKonekcijaDb)i.next()).getId().getVezeId();
+                    returnObject.getVeze().add(getClassVezaByID(idComp));
+                }
+            }
+            
+
+                    //zavrsava se transakcija
+                    tx.commit();
+             } catch (Exception e) {
+                if (tx!=null) tx.rollback();
+                e.printStackTrace(); 
+             } finally {
+                session.close(); 
+             }  
+               returnObject.setID(koIzBaze.getId());
+               returnObject.setImeAutora(koIzBaze.getImeAutora());
+               returnObject.setNaslov(koIzBaze.getNaslov());
+               returnObject.setElemCounter(koIzBaze.getCounter1());
+               returnObject.setKonekcijaCounter(koIzBaze.getCounter2());
+               
+               //treba funkcija koja ce veze da poveze sa objektima. 
+               //najbolje da se to radi na klijentskoj strani, jer ko zna kako ce to
+               //da ispadne kad prodje kroz mrezu!
+
+               return returnObject;
+        }//NIJE TESTIRANO!
+    }
+    
+   

@@ -12,7 +12,7 @@ public class CrtezDb  implements java.io.Serializable {
 
 
      private int id;
-     private KorisnikDb korisnikDb;
+     private String imeAutora;
      private String naslov;
      private String tip;
      private Integer counter1;//za klase
@@ -33,9 +33,9 @@ public class CrtezDb  implements java.io.Serializable {
     public CrtezDb(int id) {
         this.id = id;
     }
-    public CrtezDb(int id, KorisnikDb korisnikDb, String naslov, String tip, Integer counter1, Integer counter2, Set dijagramKonekcijaDbs, Set interfejsDbs, Set klasaDbs, Set useCaseKonekcijaDbs, Set aktorDbs, Set aktorKonekcijaDbs, Set korisnikDbs, Set useCaseDbs) {
+    public CrtezDb(int id, String korisnikDb, String naslov, String tip, Integer counter1, Integer counter2, Set dijagramKonekcijaDbs, Set interfejsDbs, Set klasaDbs, Set useCaseKonekcijaDbs, Set aktorDbs, Set aktorKonekcijaDbs, Set korisnikDbs, Set useCaseDbs) {
        this.id = id;
-       this.korisnikDb = korisnikDb;
+       this.imeAutora = korisnikDb;
        this.naslov = naslov;
        this.tip = tip;
        this.counter1 = counter1;
@@ -57,12 +57,12 @@ public class CrtezDb  implements java.io.Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    public KorisnikDb getKorisnikDb() {
-        return this.korisnikDb;
+    public String getImeAutora() {
+        return this.imeAutora;
     }
     
-    public void setKorisnikDb(KorisnikDb korisnikDb) {
-        this.korisnikDb = korisnikDb;
+    public void setImeAutora(String korisnikDb) {
+        this.imeAutora = korisnikDb;
     }
     public String getNaslov() {
         return this.naslov;

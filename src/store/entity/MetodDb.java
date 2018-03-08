@@ -29,7 +29,7 @@ public class MetodDb  implements java.io.Serializable {
         this.id = id;
         this.klasaDb = klasaDb;
     }
-    public MetodDb(MetodDbId id, KlasaDb klasaDb, String naziv, String vidljivost, Byte isStatic, Byte isAbstract, String povratnaVrednost, Integer atributCounter, Set argumentDbs) {
+    public MetodDb(MetodDbId id, KlasaDb klasaDb,String naziv,String vidljivost, Byte isStatic, Byte isAbstract,String povratnaVrednost, Integer atributCounter, Set argumentDbs) {
        this.id = id;
        this.klasaDb = klasaDb;
        this.naziv = naziv;
@@ -66,7 +66,7 @@ public class MetodDb  implements java.io.Serializable {
         return this.vidljivost;
     }
     
-    public void setVidljivost(String vidljivost) {
+    public void setVidljivost( String vidljivost) {
         this.vidljivost = vidljivost;
     }
     public Byte getIsStatic() {
