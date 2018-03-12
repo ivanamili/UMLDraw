@@ -54,7 +54,7 @@
     </set>
     <set fetch="select" inverse="true" lazy="true" name="aktorKonekcijaDbs" table="aktor_konekcija_db">
       <key>
-        <column name="ID" not-null="true"/>
+        <column name="CrtezID" not-null="true"/>
       </key>
       <one-to-many class="store.entity.AktorKonekcijaDb"/>
     </set>

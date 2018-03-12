@@ -58,5 +58,20 @@ public class ClassDiagramVeza extends Veza implements Serializable{
         public void setID(int ID) {
             this.ID = ID;
         }
+        
+         @Override
+        public int getVezaId() {
+            return this.ID;
+        }
+        
+        @Override
+        public void setVezaId(int id){
+            this.ID=id;
+        }
+        
+        @Override
+        public void setCrtezIdentifikator(int id) {
+            this.crtezID=id;
+        }
 
 }

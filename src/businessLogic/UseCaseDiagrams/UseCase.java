@@ -45,5 +45,20 @@ public class UseCase extends UseCaseDiagramElement {
 	public void setElipsa(EllipseFigure elipsa) {
 		this.elipsa = elipsa;
 	}
+        
+        @Override
+        public int getElemId() {
+            return this.ID;
+        }
+        
+        @Override
+        public void setElemId(int id){
+            this.ID=id;
+        }
+        
+        @Override
+        public void setCrtezIdentifikator(int id) {
+            this.crtezID=id;
+        }
 
 }

@@ -126,5 +126,10 @@ public class Klasa extends ClassDiagramElement {
         public void setElemId(int id){
             this.ID=id;
         }
+        
+        @Override
+        public void setCrtezIdentifikator(int id) {
+            this.crtezID=id;
+        }
 
 }

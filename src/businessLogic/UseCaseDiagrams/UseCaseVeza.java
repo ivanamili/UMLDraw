@@ -51,6 +51,21 @@ public class UseCaseVeza extends UseCaseDiagramVeza {
 	public void setTipVeze(UseCaseConnType tipVeze) {
 		this.tipVeze = tipVeze;
 	}
+        
+        @Override
+        public int getVezaId() {
+            return this.ID;
+        }
+        
+        @Override
+        public void setVezaId(int id){
+            this.ID=id;
+        }
+        
+        @Override
+        public void setCrtezIdentifikator(int id) {
+            this.crtezID=id;
+        }
 	
 
 }

@@ -54,5 +54,20 @@ public class AktorVeza extends UseCaseDiagramVeza {
 	public void setUseCase(UseCase useCase) {
 		this.useCase = useCase;
 	}
+        
+         @Override
+        public int getVezaId() {
+            return this.ID;
+        }
+        
+        @Override
+        public void setVezaId(int id){
+            this.ID=id;
+        }
+        
+        @Override
+        public void setCrtezIdentifikator(int id) {
+            this.crtezID=id;
+        }
 
 }

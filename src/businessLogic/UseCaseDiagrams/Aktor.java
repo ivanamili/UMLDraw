@@ -40,23 +40,27 @@ public class Aktor extends UseCaseDiagramElement {
 		this.okvir = okvir;
 	}
 
-   
-    
-    
-    
+        public String getNaziv() {
+            return naziv;
+        }
 
-    /**
-     * @return the naziv
-     */
-    public String getNaziv() {
-        return naziv;
-    }
-
-    /**
-     * @param naziv the naziv to set
-     */
-    public void setNaziv(String naziv) {
-        this.naziv = naziv;
-    }
+        public void setNaziv(String naziv) {
+            this.naziv = naziv;
+        }
+        
+        @Override
+        public int getElemId() {
+            return this.ID;
+        }
+        
+        @Override
+        public void setElemId(int id){
+            this.ID=id;
+        }
+        
+        @Override
+        public void setCrtezIdentifikator(int id) {
+            this.crtezID=id;
+        }
 
 }

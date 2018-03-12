@@ -5,6 +5,8 @@
  */
 package store.manager;
 
+import businessLogic.AbstractClassHierarchy.Element;
+import businessLogic.AbstractClassHierarchy.Veza;
 import businessLogic.ClassDiagrams.*;
 import businessLogic.CommonClasses.*;
 import businessLogic.UseCaseDiagrams.*;
@@ -61,16 +63,16 @@ public class PersistenceManager {
     {
         switch(objectClass)
         {
-            case ATRIBUT: save((Atribut)obj); break;
-            case ARGUMENT: save((Argument)obj); break;
-            case METOD: save((Metod)obj);break;
-            case KLASA: save((Klasa)obj);break;
-            case INTERFEJS: save((Interfejs)obj);break;
-            case CLASS_DIAGRAM_VEZA: save((ClassDiagramVeza)obj);break;
-            case AKTOR: save((Aktor)obj);break;
-            case AKTOR_VEZA:save((AktorVeza)obj);break;
-            case USE_CASE: save((UseCase)obj);break;
-            case USE_CASE_VEZA: save((UseCaseVeza)obj);break;
+            case ATRIBUT: save((Atribut)obj,false); break;
+            case ARGUMENT: save((Argument)obj,false); break;
+            case METOD: save((Metod)obj,false);break;
+            case KLASA: save((Klasa)obj,false);break;
+            case INTERFEJS: save((Interfejs)obj,false);break;
+            case CLASS_DIAGRAM_VEZA: save((ClassDiagramVeza)obj,false);break;
+            case AKTOR: save((Aktor)obj,false);break;
+            case AKTOR_VEZA:save((AktorVeza)obj,false);break;
+            case USE_CASE: save((UseCase)obj,false);break;
+            case USE_CASE_VEZA: save((UseCaseVeza)obj,false);break;
             case KORISNIK: save((Korisnik)obj);break;
             case CRTEZ: save((Crtez)obj);break;
         }
@@ -150,8 +152,9 @@ public class PersistenceManager {
     //*********************************************
     //PRIVATNE METODE, ZA SVAKI TIP OBJEKTA PO 4
     
+    
     //ATRIBUT
-    private void save(Atribut objToSave) {
+    private void save(Atribut objToSave,boolean saveAll) {
         
         AtributDb attrZaBazu= new AtributDb();
         attrZaBazu.setId(new AtributDbId(objToSave.getCrtezID(),objToSave.getKlasaID(),objToSave.getID()));
@@ -170,12 +173,14 @@ public class PersistenceManager {
 
              //cuvanje atributa
             session.save(attrZaBazu);
-            
-            //update broja atributa u klasi
-            Query query= session.createQuery("update KlasaDb k set k.atributCounter = k.atributCounter +1 where k.id.crtezId= :crtezID and k.id.klasaId= :klasaID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.setParameter("klasaID", objToSave.getKlasaID());
-            query.executeUpdate();
+            if(!saveAll)
+            {
+                //update broja atributa u klasi
+                Query query= session.createQuery("update KlasaDb k set k.atributCounter = k.atributCounter +1 where k.id.crtezId= :crtezID and k.id.klasaId= :klasaID ");
+                query.setParameter("crtezID",objToSave.getCrtezID());
+                query.setParameter("klasaID", objToSave.getKlasaID());
+                query.executeUpdate();
+            }
              //zavrsava se transakcija
              tx.commit();
       } catch (Exception e) {
@@ -280,7 +285,7 @@ public class PersistenceManager {
     }
     
     //ARGUMENT
-    private void save(Argument objToSave) {
+    private void save(Argument objToSave,boolean saveAll) {
         ArgumentDb attrZaBazu= new ArgumentDb();
         attrZaBazu.setId(new ArgumentDbId(objToSave.getCrtezID(),objToSave.getKlasaID(),objToSave.getMetodID(),objToSave.getID()));
         attrZaBazu.setNaziv(objToSave.getNaziv());
@@ -295,11 +300,14 @@ public class PersistenceManager {
              tx = session.beginTransaction();
 
             session.save(attrZaBazu);
-            Query query= session.createQuery("update MetodDb k set k.atributCounter = k.atributCounter +1 where k.id.crtezId= :crtezID and k.id.klasaIliInterfejsId= :klasaID and k.id.id = :id ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.setParameter("klasaID", objToSave.getKlasaID());
-            query.setParameter("id",objToSave.getMetodID());
-            query.executeUpdate();
+            if(!saveAll)
+            {
+                Query query= session.createQuery("update MetodDb k set k.atributCounter = k.atributCounter +1 where k.id.crtezId= :crtezID and k.id.klasaIliInterfejsId= :klasaID and k.id.id = :id ");
+                query.setParameter("crtezID",objToSave.getCrtezID());
+                query.setParameter("klasaID", objToSave.getKlasaID());
+                query.setParameter("id",objToSave.getMetodID());
+                query.executeUpdate();
+            }
          
              //zavrsava se transakcija
              tx.commit();
@@ -399,7 +407,7 @@ public class PersistenceManager {
     }
     
     //METOD
-    private void save(Metod objToSave) {
+    private void save(Metod objToSave,boolean saveAll) {
         //popunjavanje osnovnih podataka objekta za bazu
         MetodDb zaBazu=new MetodDb();
         zaBazu.setId(new MetodDbId(objToSave.getCrtezID(),objToSave.getKlasaIliInterjfejsID(),objToSave.getID()));
@@ -420,25 +428,24 @@ public class PersistenceManager {
              tx = session.beginTransaction();
 
             session.save(zaBazu);
-            //ne treba proslediti poziv child elementima, jer se elementi uvek cuvaju i salju od najnizeg moguceg
-            //tj kad se kreira argument, on ce biti poslat i on ce se sacuvati, tako da kad se cuva metoda potrebno
-            //je sacuvati samo atribute same te metode, bez argumenata. Oni se naknadno dodaju
             
-            //ALI TREBA POVECATI BROJAC U KLASI ILI INTERFEJSU KOME METODA PRIPADA!
-            //ako je metod clanica KLASE
-            Query query= session.createQuery("update KlasaDb k set k.metodCounter = k.metodCounter +1 where k.id.crtezId= :crtezID and k.id.klasaId= :klasaID");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.setParameter("klasaID", objToSave.getKlasaIliInterjfejsID());
-            int result=query.executeUpdate();
-            
-            if(result==0)
+            if(!saveAll)
             {
-                query= session.createQuery("update InterfejsDb k set k.metodCounter = k.metodCounter +1 where k.id.crtezId= :crtezID and k.id.interfejsId= :klasaID");
+                //ALI TREBA POVECATI BROJAC U KLASI ILI INTERFEJSU KOME METODA PRIPADA!
+                //ako je metod clanica KLASE
+                Query query= session.createQuery("update KlasaDb k set k.metodCounter = k.metodCounter +1 where k.id.crtezId= :crtezID and k.id.klasaId= :klasaID");
                 query.setParameter("crtezID",objToSave.getCrtezID());
                 query.setParameter("klasaID", objToSave.getKlasaIliInterjfejsID());
-                query.executeUpdate();
+                int result=query.executeUpdate();
+
+                if(result==0)
+                {
+                    query= session.createQuery("update InterfejsDb k set k.metodCounter = k.metodCounter +1 where k.id.crtezId= :crtezID and k.id.interfejsId= :klasaID");
+                    query.setParameter("crtezID",objToSave.getCrtezID());
+                    query.setParameter("klasaID", objToSave.getKlasaIliInterjfejsID());
+                    query.executeUpdate();
+                }
             }
-            
          
              //zavrsava se transakcija
              tx.commit();
@@ -448,6 +455,15 @@ public class PersistenceManager {
       } finally {
          session.close(); 
       } 
+        
+        if(saveAll)
+        {
+            Iterator i= objToSave.getArgumenti().iterator();
+            while(i.hasNext())
+            {
+                save((Argument)i.next(),true);
+            }
+        }
     }
     private void update(Metod objToUpdate) {
         //popunjavanje osnovnih podataka objekta za bazu
@@ -573,7 +589,7 @@ public class PersistenceManager {
     }
     
     //KLASA
-    private void save(Klasa objToSave) {
+    private void save(Klasa objToSave,boolean saveAll) {
         //popunjavanje osnovnih podataka objekta za bazu
         KlasaDb zaBazu=new KlasaDb();
         zaBazu.setId(new KlasaDbId(objToSave.getCrtezID(),objToSave.getID()));
@@ -596,11 +612,14 @@ public class PersistenceManager {
             session.save(zaBazu);
              //zavrsava se transakcija
              
-             //treba updateovati brojac klasa i interfejsa u crtezu, jer je dodata nova klasa
-             //brojac COUNTER1
-            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.executeUpdate();
+             if(!saveAll)
+             {
+                //treba updateovati brojac klasa i interfejsa u crtezu, jer je dodata nova klasa
+                //brojac COUNTER1
+               Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
+               query.setParameter("crtezID",objToSave.getCrtezID());
+               query.executeUpdate();
+             }
              
              tx.commit();
       } catch (Exception e) {
@@ -609,9 +628,16 @@ public class PersistenceManager {
       } finally {
          session.close(); 
       }  
-        
-        //nije potrebno cuvati metode i atribute (nece ni biti prosledjeni preko mreze)
-        //ukoliko je to neophodno moguce je dodati ovde kod ili poziv metode koja ce to da radi
+        if(saveAll)
+        {
+            Iterator i= objToSave.getAtributi().iterator();
+            while(i.hasNext())
+                save((Atribut)i.next(),true);
+            
+            i=objToSave.getMetode().iterator();
+            while(i.hasNext())
+                save((Metod)i.next(),true);
+        }
     }
     private void update(Klasa objToUpdate) {
         //popunjavanje osnovnih podataka objekta za bazu
@@ -764,7 +790,7 @@ public class PersistenceManager {
     }
     
     //INTERFEJS
-    private void save(Interfejs objToSave) {
+    private void save(Interfejs objToSave,boolean saveAll) {
         
         InterfejsDb zaBazu= new InterfejsDb();
         zaBazu.setId(new InterfejsDbId(objToSave.getCrtezID(),objToSave.getID()));
@@ -781,11 +807,14 @@ public class PersistenceManager {
 
             session.save(zaBazu);
             
-            //treba updateovati brojac klasa i interfejsa u crtezu, jer je dodat novi interfejs
-             //brojac COUNTER1
-            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.executeUpdate();
+            if(!saveAll)
+            {
+                //treba updateovati brojac klasa i interfejsa u crtezu, jer je dodat novi interfejs
+                 //brojac COUNTER1
+                Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
+                query.setParameter("crtezID",objToSave.getCrtezID());
+                query.executeUpdate();
+            }
             
              //zavrsava se transakcija
              tx.commit();
@@ -795,8 +824,12 @@ public class PersistenceManager {
       } finally {
          session.close(); 
       } 
-        //metode se ne cuvaju.
-        //ako je neophodno ovde dodati kod ili poziv metode za to
+        if(saveAll)
+        {
+            Iterator i=objToSave.getMetode().iterator();
+            while(i.hasNext())
+                save((Metod)i.next(),true);
+        }
     }
     private void update(Interfejs objToUpdate) {
         
@@ -923,7 +956,7 @@ public class PersistenceManager {
     }
     
     //CLASS DIAGRAM VEZA
-    private void save(ClassDiagramVeza objToSave) {
+    private void save(ClassDiagramVeza objToSave,boolean saveAll) {
         DijagramKonekcijaDb attrZaBazu= new DijagramKonekcijaDb();
         attrZaBazu.setId(new DijagramKonekcijaDbId(objToSave.getCrtezID(), objToSave.getID()));
         attrZaBazu.setTipVeze(objToSave.getTip().name());
@@ -950,12 +983,14 @@ public class PersistenceManager {
 
             session.save(attrZaBazu);
             
-            //treba updateovati brojac veza u crtezu, jer je dodata nova veza
-             //brojac COUNTER2
-            Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.executeUpdate();
-         
+            if(!saveAll)
+            {
+                //treba updateovati brojac veza u crtezu, jer je dodata nova veza
+                 //brojac COUNTER2
+                Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
+                query.setParameter("crtezID",objToSave.getCrtezID());
+                query.executeUpdate();
+            }
              //zavrsava se transakcija
              tx.commit();
       } catch (Exception e) {
@@ -1076,7 +1111,7 @@ public class PersistenceManager {
     //**************************************
     
     //AKTOR
-    private void save(Aktor objToSave) {
+    private void save(Aktor objToSave,boolean saveAll) {
         
         AktorDb attrZaBazu= new AktorDb();
         attrZaBazu.setId(new AktorDbId(objToSave.getCrtezID(),objToSave.getID()));
@@ -1098,12 +1133,14 @@ public class PersistenceManager {
 
             session.save(attrZaBazu);
             
-            //treba updateovati brojac aktera i useCase-ova u crtezu, jer je dodat novu akter
-             //brojac COUNTER1
-            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.executeUpdate();
-         
+            if(!saveAll)
+            {
+                //treba updateovati brojac aktera i useCase-ova u crtezu, jer je dodat novu akter
+                 //brojac COUNTER1
+                Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
+                query.setParameter("crtezID",objToSave.getCrtezID());
+                query.executeUpdate();
+            }
              //zavrsava se transakcija
              tx.commit();
       } catch (Exception e) {
@@ -1207,7 +1244,7 @@ public class PersistenceManager {
     }
     
     //AKTOR VEZA 
-    private void save(AktorVeza objToSave ) {
+    private void save(AktorVeza objToSave,boolean saveAll ) {
         
         AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
         attrZaBazu.setId(new AktorKonekcijaDbId(objToSave.getID(),objToSave.getCrtezID()));
@@ -1223,13 +1260,14 @@ public class PersistenceManager {
              tx = session.beginTransaction();
 
             session.save(attrZaBazu);
-            
-             //treba updateovati brojac veza u crtezu, jer je dodata nova veza
-             //brojac COUNTER2
-            Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.executeUpdate();
-         
+            if(!saveAll)
+            {
+                //treba updateovati brojac veza u crtezu, jer je dodata nova veza
+                //brojac COUNTER2
+               Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
+               query.setParameter("crtezID",objToSave.getCrtezID());
+               query.executeUpdate();
+            }
              //zavrsava se transakcija
              tx.commit();
       } catch (Exception e) {
@@ -1331,7 +1369,7 @@ public class PersistenceManager {
     }
     
     //USE CASE
-    private void save(UseCase objToSave) {
+    private void save(UseCase objToSave,boolean saveAll) {
         
         UseCaseDb attrZaBazu= new UseCaseDb();
         attrZaBazu.setId(new UseCaseDbId(objToSave.getCrtezID(),objToSave.getID()));
@@ -1353,12 +1391,14 @@ public class PersistenceManager {
 
             session.save(attrZaBazu);
             
-            //treba updateovati brojac aktera i useCase-ova u crtezu, jer je dodat novi use case
-             //brojac COUNTER1
-            Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.executeUpdate();
-         
+            if(!saveAll)
+            {
+                //treba updateovati brojac aktera i useCase-ova u crtezu, jer je dodat novi use case
+                 //brojac COUNTER1
+                Query query= session.createQuery("update CrtezDb k set k.counter1 = k.counter1 +1 where k.id = :crtezID ");
+                query.setParameter("crtezID",objToSave.getCrtezID());
+                query.executeUpdate();
+            }
              //zavrsava se transakcija
              tx.commit();
       } catch (Exception e) {
@@ -1459,7 +1499,7 @@ public class PersistenceManager {
     }
     
     //USE CASE VEZA
-    private void save(UseCaseVeza objToSave) {
+    private void save(UseCaseVeza objToSave,boolean saveAll) {
         UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
         attrZaBazu.setId(new UseCaseKonekcijaDbId(objToSave.getID(),objToSave.getCrtezID()));
         attrZaBazu.setOdKogaId(objToSave.getOdKoga().getID());
@@ -1476,12 +1516,14 @@ public class PersistenceManager {
              tx = session.beginTransaction();
 
             session.save(attrZaBazu);
-            //treba updateovati brojac veza u crtezu, jer je dodata nova veza
-             //brojac COUNTER2
-            Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
-            query.setParameter("crtezID",objToSave.getCrtezID());
-            query.executeUpdate();
-         
+            if(!saveAll)
+            {
+                //treba updateovati brojac veza u crtezu, jer je dodata nova veza
+                 //brojac COUNTER2
+                Query query= session.createQuery("update CrtezDb k set k.counter2 = k.counter2 +1 where k.id = :crtezID ");
+                query.setParameter("crtezID",objToSave.getCrtezID());
+                query.executeUpdate();
+            }
              //zavrsava se transakcija
              tx.commit();
       } catch (Exception e) {
@@ -1908,7 +1950,77 @@ public class PersistenceManager {
                //da ispadne kad prodje kroz mrezu!
 
                return returnObject;
-        }//NIJE TESTIRANO!
+        }
+    //funkcija koja cuva celokupni crtez. podrazumeva da je crtez vec kreiran u bazi
+    //te update-uje sve podatke samog crteza i cuva podatke svih elemenata na crtezu
+    public void saveAll(Crtez objToSave) {
+        
+        CrtezDb crtezZaBazu= new CrtezDb();
+        crtezZaBazu.setId(objToSave.getID());
+        crtezZaBazu.setNaslov(objToSave.getNaslov());
+        crtezZaBazu.setTip(objToSave.getTip().name());
+        crtezZaBazu.setCounter1(objToSave.getElemCounter());
+        crtezZaBazu.setCounter2(objToSave.getKonekcijaCounter());
+        crtezZaBazu.setImeAutora(objToSave.getImeAutora());
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+            session.update(crtezZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }     
+        
+        //cuvati sve komponente
+        Iterator i= objToSave.getElementi().iterator();
+        Iterator j= objToSave.getVeze().iterator();
+        
+        if(objToSave.getTip()==DiagramTypeEnum.CLASS)
+        {
+            while(i.hasNext())
+            {
+                Element next=(Element)i.next();
+                if(next instanceof Klasa )
+                    save((Klasa)next,true);
+                else
+                    save((Interfejs)next,true);
+            }
+            
+            while(j.hasNext())
+                save((ClassDiagramVeza)j.next(),true);
+        }
+        else if (objToSave.getTip()==DiagramTypeEnum.USECASE)
+        {
+            while(i.hasNext())
+            {
+                Element next=(Element)i.next();
+                if(next instanceof Aktor )
+                    save((Aktor)next,true);
+                else
+                    save((UseCase)next,true);
+            }
+            
+            while(j.hasNext())
+            {
+                Veza next=(Veza)j.next();
+                if(next instanceof AktorVeza )
+                    save((AktorVeza)next,true);
+                else
+                    save((UseCaseVeza)next,true);
+            }
+        }
+    }
+    
     }
     
    

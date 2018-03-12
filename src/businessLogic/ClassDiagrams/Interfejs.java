@@ -80,4 +80,10 @@ public class Interfejs extends ClassDiagramElement {
             this.ID=id;
         }
 
+        @Override
+        public void setCrtezIdentifikator(int id) {
+            this.crtezID=id;
+        }
+        
+
 }

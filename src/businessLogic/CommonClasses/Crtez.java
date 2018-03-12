@@ -2,6 +2,7 @@ package businessLogic.CommonClasses;
 
 import businessLogic.AbstractClassHierarchy.Veza;
 import businessLogic.AbstractClassHierarchy.Element;
+import businessLogic.ClassDiagrams.Metod;
 import enumerations.DiagramTypeEnum;
 import java.util.ArrayList;
 
@@ -85,26 +86,28 @@ public class Crtez {
 
 	
 	public void dodajElement(Element elem) {
+                elem.setCrtezIdentifikator(ID);
+                elem.setElemId(elemCounter);
 		this.elementi.add(elem);
                 this.elemCounter++;
 	}
 
 	
 	public void obrisiElement(int id) {
-		// TODO - implement Crtez.obrisiElement
-		throw new UnsupportedOperationException();
+		this.elementi.removeIf((Element obj) -> obj.getElemId() == id);
 	}
 
 	
 	public void dodajVezu(Veza veza) {
+                veza.setCrtezIdentifikator(ID);
+                veza.setVezaId(konekcijaCounter);
 		this.veze.add(veza);
                 this.konekcijaCounter++;
 	}
 
 	
-	public void obrisiVezu(Veza id) {
-		// TODO - implement Crtez.obrisiVezu
-		throw new UnsupportedOperationException();
+	public void obrisiVezu(int id) {
+		this.veze.removeIf((Veza obj) -> obj.getVezaId() == id);
 	}
 
     

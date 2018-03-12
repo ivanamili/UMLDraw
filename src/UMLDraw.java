@@ -47,7 +47,7 @@ public class UMLDraw {
         
         PersistenceManager manager= new PersistenceManager();
         Atribut attr=new Atribut();
-        attr.setCrtezID(0);
+        attr.setCrtezID(8);
         attr.setKlasaID(0);
         attr.setID(0);
         attr.setNaziv("ovo zaboravljeno");
@@ -55,39 +55,44 @@ public class UMLDraw {
         attr.setTip("bar");
         attr.setVidljivost(VisibilityTypeEnum.PRIVATE);
         
-        int[] ids={1,1};
+        
         
         Argument arg=new Argument();
-        arg.setCrtezID(0);
-        arg.setKlasaID(1000);
-        arg.setMetodID(1);
+        arg.setCrtezID(8);
+        arg.setKlasaID(0);
+        arg.setMetodID(0);
         arg.setID(69);
         arg.setNaziv("ATRIBBBBJUT");
         arg.setTip("enum");
 //        
         Metod met=new Metod();
-        met.setCrtezID(0);
+        met.setCrtezID(8);
         met.setKlasaIliInterfejsID(0);
-        met.setID(50);
+        met.setID(0);
         met.setNaziv("METODA ZA BRISANJE");
         met.setVidljivost(VisibilityTypeEnum.PUBLIC);
         met.setPovratnaVrednost("void");
         met.setIsStatic(true);
         met.setIsAbstract(false);
         
+        met.dodajArgument(arg);
+        
         Klasa klas=new Klasa();
-        klas.setCrtezID(0);
-        klas.setID(999);
+        klas.setCrtezID(8);
+        klas.setID(0);
         klas.setIme("KLASA ZA BRISANJE");
         klas.setIsStatic(true);
         
+        klas.dodajAtribut(attr);
+        klas.dodajMetodu(met);
+        
         Interfejs interf=new Interfejs();
-        interf.setCrtezID(0);
+        interf.setCrtezID(8);
         interf.setID(1919);
         interf.setNaziv("PROMENJENO IME");
         
         ClassDiagramVeza vezzz=new ClassDiagramVeza();
-        vezzz.setCrtezID(0);
+        vezzz.setCrtezID(8);
         vezzz.setID(11);
         vezzz.setTip(ClassConnTypeEnum.IMPLEMENTATION);
         vezzz.setOdKoga(klas);
@@ -114,6 +119,11 @@ public class UMLDraw {
         veza.setAktor(akt);
         veza.setUseCase(use);
         
+        UseCaseVeza vezica=new UseCaseVeza();
+        vezica.setOdKoga(use);
+        vezica.setDoKoga(use);
+        vezica.setTipVeze(UseCaseConnType.INCLUDE);
+        
         int[] one={2};
         int[] two={0,2};
         
@@ -123,14 +133,19 @@ public class UMLDraw {
         koris.setIme("Bla bla truc");
         koris.setSifra("2djdjdjdjd");
         
-       
         Crtez crt= new Crtez();
-        crt.setID(7);
+        crt.setID(8);
         crt.setImeAutora("Ivana");
-        crt.setNaslov("Prvi crtez");
-        crt.setTip(DiagramTypeEnum.CLASS);
+        crt.setNaslov("Drugi crtez");
+        crt.setTip(DiagramTypeEnum.USECASE);
+//        crt.dodajElement(akt);
+//        crt.dodajElement(use);
+//        crt.dodajVezu(veza);
+        crt.dodajVezu(vezica);
         
-        Crtez c= (Crtez) manager.getById(one, RuntimeClassEnum.CRTEZ);
+        manager.saveAll(crt);
+        
+        
         
         
         manager.close();
