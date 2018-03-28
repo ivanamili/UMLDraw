@@ -125,9 +125,7 @@ public class MyDrawApplicationModel extends DefaultApplicationModel {
     public java.util.List<JToolBar> createToolBars(Application a, Project pr) {
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.draw.Labels");
         ResourceBundleUtil labels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.samples.pert.Labels");
-        PertProject p = (PertProject) pr;
-        
-       
+        UseCaseProject p = (UseCaseProject) pr;
         
         DrawingEditor editor;
         if (p == null) {

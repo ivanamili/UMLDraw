@@ -5,6 +5,7 @@
  */
 package draw;
 
+import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.UseCaseDiagrams.UseCase;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -27,7 +28,13 @@ import org.jhotdraw.samples.pert.figures.TaskFigure;
  *
  * @author Korisnik
  */
-public class UseCaseFigure extends GraphicalCompositeFigure {
+public class UseCaseFigure extends GraphicalCompositeFigure implements IDataFigure {
+
+    @Override
+    //vraca useCase
+    public AbstractDiagramElement getDataObject() {
+        return this.useCase;
+    }
     
     //ADAPTERI KOJI MENJAJU UseCase objekat kako se menja i polozaj i ime figure
      private static class UseCaseNameAdapter extends AbstractFigureListener {
@@ -44,24 +51,7 @@ public class UseCaseFigure extends GraphicalCompositeFigure {
         }
     }
      
-      private static class UseCaseFigureAdapter extends AbstractFigureListener {
-        private UseCaseFigure target;
-        public UseCaseFigureAdapter(UseCaseFigure target) {
-            this.target = target;
-        }
-        public void figureAttributeChanged(FigureEvent e) {
-            if(e.getNewValue() instanceof String)
-                target.useCase.setNaziv((String)e.getNewValue());
-            // We could fire a property change event here, in case
-            // some other object would like to observe us.
-            //target.firePropertyChange("name", e.getOldValue(), e.getNewValue());
-        }
-        
-        public void figureChanged(FigureEvent e)
-        {
-            Object o=e.getFigure();
-        }
-    }
+      
     
     private UseCase useCase;
     
@@ -99,7 +89,7 @@ public class UseCaseFigure extends GraphicalCompositeFigure {
         
         //menja name u useCase-u kada se promeni ime figure
         ucName.addFigureListener(new UseCaseNameAdapter(this));
-        this.addFigureListener(new UseCaseFigureAdapter(this));
+        
         
         
     }
@@ -114,7 +104,7 @@ public class UseCaseFigure extends GraphicalCompositeFigure {
         UseCaseFigure that = (UseCaseFigure) super.clone();
         that.useCase.setElipsa((EllipseFigure)that.getPresentationFigure());
         that.getNameFigure().addFigureListener(new UseCaseNameAdapter(that));
-        that.addFigureListener(new UseCaseFigureAdapter(that));
+        
         return that;
     }
      

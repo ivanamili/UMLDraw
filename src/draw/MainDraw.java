@@ -27,7 +27,7 @@ public class MainDraw {
         model.setName("UMLDraw u pokusaju");
         model.setVersion("0.5");
         model.setCopyright("Copyright IvanaMilivojevic");
-        model.setProjectClassName("org.jhotdraw.samples.pert.PertProject");
+        model.setProjectClassName("draw.UseCaseProject");
         app.setModel(model);
         app.launch(args);
     }

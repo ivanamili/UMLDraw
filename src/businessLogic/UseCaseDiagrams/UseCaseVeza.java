@@ -53,12 +53,12 @@ public class UseCaseVeza extends UseCaseDiagramVeza {
 	}
         
         @Override
-        public int getVezaId() {
+        public int getElemId() {
             return this.ID;
         }
         
         @Override
-        public void setVezaId(int id){
+        public void setElemId(int id){
             this.ID=id;
         }
         

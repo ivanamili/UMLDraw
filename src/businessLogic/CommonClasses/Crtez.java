@@ -1,5 +1,6 @@
 package businessLogic.CommonClasses;
 
+import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.AbstractClassHierarchy.Veza;
 import businessLogic.AbstractClassHierarchy.Element;
 import businessLogic.ClassDiagrams.Metod;
@@ -83,7 +84,23 @@ public class Crtez {
 	public void setVeze(ArrayList<Veza> veze) {
 		this.veze=veze;
 	}
-
+        
+        public void dodaj(AbstractDiagramElement elem)
+        {
+            if(elem instanceof Element)
+                this.dodajElement((Element)elem);
+            else if (elem instanceof Veza)
+                this.dodajVezu((Veza)elem);
+        }
+        
+        public void obrisi(AbstractDiagramElement elem)
+        {
+            int idToRemove=elem.getElemId();
+            if(elem instanceof Element)
+                this.obrisiElement(idToRemove);
+            else if (elem instanceof Veza)
+                this.obrisiVezu(idToRemove);
+        }
 	
 	public void dodajElement(Element elem) {
                 elem.setCrtezIdentifikator(ID);
@@ -94,20 +111,30 @@ public class Crtez {
 
 	
 	public void obrisiElement(int id) {
-		this.elementi.removeIf((Element obj) -> obj.getElemId() == id);
+		for(Element e : this.elementi)
+                {
+                    if(e.getElemId()==id)
+                        this.elementi.remove(e);
+                    break;
+                }
 	}
 
 	
 	public void dodajVezu(Veza veza) {
                 veza.setCrtezIdentifikator(ID);
-                veza.setVezaId(konekcijaCounter);
+                veza.setElemId(konekcijaCounter);
 		this.veze.add(veza);
                 this.konekcijaCounter++;
 	}
 
 	
 	public void obrisiVezu(int id) {
-		this.veze.removeIf((Veza obj) -> obj.getVezaId() == id);
+		for(Veza e : this.veze)
+                {
+                    if(e.getElemId()==id)
+                        this.veze.remove(e);
+                    break;
+                }
 	}
 
     
