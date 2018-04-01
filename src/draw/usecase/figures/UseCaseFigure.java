@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package draw;
+package draw.usecase.figures;
 
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.UseCaseDiagrams.UseCase;
+import draw.commonClasses.IDataFigure;
+import draw.usecase.auxiliaryClasses.UseCaseNameTextFigure;
+import draw.usecase.auxiliaryClasses.UseCaseVerticalLayouter;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
@@ -36,7 +39,8 @@ public class UseCaseFigure extends GraphicalCompositeFigure implements IDataFigu
         return this.useCase;
     }
     
-    //ADAPTERI KOJI MENJAJU UseCase objekat kako se menja i polozaj i ime figure
+    //ADAPTERI KOJI MENJAJU UseCase objekat kako se menja ime figure
+    //kada se promeni polozaj elipsa se sama promeni jer i useCase i figura IMAJU REFERENCE NA ISTU ELIPSU!
      private static class UseCaseNameAdapter extends AbstractFigureListener {
         private UseCaseFigure target;
         public UseCaseNameAdapter(UseCaseFigure target) {

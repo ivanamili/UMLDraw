@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package draw;
+package draw.usecase;
 
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultOSXApplication;
@@ -22,12 +22,12 @@ public class MainDraw {
         
         
         
-        MyDrawApplicationModel model = new MyDrawApplicationModel();
+        UseCaseApplicationModel model = new UseCaseApplicationModel();
         
         model.setName("UMLDraw u pokusaju");
         model.setVersion("0.5");
         model.setCopyright("Copyright IvanaMilivojevic");
-        model.setProjectClassName("draw.UseCaseProject");
+        model.setProjectClassName("draw.usecase.UseCaseProject");
         app.setModel(model);
         app.launch(args);
     }

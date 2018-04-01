@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package draw;
+package draw.usecase;
 
+import draw.usecase.figures.AktorFigure;
+import draw.usecase.figures.UseCaseFigure;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -42,7 +44,7 @@ import org.jhotdraw.util.ResourceBundleUtil;
  *
  * @author Korisnik
  */
-public class MyDrawApplicationModel extends DefaultApplicationModel {
+public class UseCaseApplicationModel extends DefaultApplicationModel {
     private final static double[] scaleFactors = {5, 4, 3, 2, 1.5, 1.25, 1, 0.75, 0.5, 0.25, 0.10};
     private DefaultDrawingEditor sharedEditor;
     private HashMap<String,Action> actions;
@@ -61,7 +63,7 @@ public class MyDrawApplicationModel extends DefaultApplicationModel {
         }
     }
     
-    public MyDrawApplicationModel() {
+    public UseCaseApplicationModel() {
     }
     
     public void initApplication(Application a) {
@@ -90,30 +92,44 @@ public class MyDrawApplicationModel extends DefaultApplicationModel {
     
     private void addCreationButtonsTo(JToolBar tb, final DrawingEditor editor) {
         // AttributeKeys for the entitie sets
-        HashMap<AttributeKey,Object> attributes;
+        HashMap<AttributeKey,Object> attributes;        
+        
         
         ResourceBundleUtil labels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.samples.pert.Labels");
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.draw.Labels");
+        ResourceBundleUtil useCaseLabels=ResourceBundleUtil.getLAFBundle("draw.usecase.UsecaseLabels");
+        
+        int orrientation=tb.getOrientation();
         
         ToolBarButtonFactory.addSelectionToolTo(tb, editor);
         tb.addSeparator();
        
-        attributes = new HashMap<AttributeKey,Object>();
-        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
-        attributes.put(AttributeKeys.STROKE_COLOR, Color.red);
-        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
-        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new TaskFigure(), attributes), "createTask", labels);
+//        attributes = new HashMap<AttributeKey,Object>();
+//        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
+//        attributes.put(AttributeKeys.STROKE_COLOR, Color.red);
+//        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
+//        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new TaskFigure(), attributes), "createTask", labels);
+//
+//        attributes = new HashMap<AttributeKey,Object>();
+//        attributes.put(AttributeKeys.STROKE_COLOR, new Color(0x000099));
+//        ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new DependencyFigure(), attributes), "createDependency", labels);
+//        tb.addSeparator();
 
-        attributes = new HashMap<AttributeKey,Object>();
-        attributes.put(AttributeKeys.STROKE_COLOR, new Color(0x000099));
-        ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new DependencyFigure(), attributes), "createDependency", labels);
-        tb.addSeparator();
+        //USE CASE TOOL
         attributes = new HashMap<AttributeKey,Object>();
         attributes.put(AttributeKeys.FILL_COLOR, Color.white);
         attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
         attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
         
-        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new UseCaseFigure(), attributes), "createTask", labels);
+        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new UseCaseFigure(), attributes), "createUseCase", useCaseLabels);
+        
+        //AKTOR TOOL
+        attributes = new HashMap<AttributeKey,Object>();
+        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
+        attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
+        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
+        
+        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new AktorFigure(), attributes), "createUseCase", useCaseLabels);
         
         
     }
@@ -138,20 +154,23 @@ public class MyDrawApplicationModel extends DefaultApplicationModel {
         JToolBar tb;
         tb = new JToolBar();
         addCreationButtonsTo(tb, editor);
-        tb.setName("Draw");
+        tb.setName("Use Case tools");
         list.add(tb);
+        
+        
         JToolBar bar = new JToolBar();
         JButton b;
         
-        b = bar.add(new PickAttributesAction(editor));
-        b.setFocusable(false);
-        b = bar.add(new ApplyAttributesAction(editor));
-        b.setFocusable(false);
-        bar.addSeparator();
-        
-        ToolBarButtonFactory.addColorButtonsTo(bar, editor);
-        bar.addSeparator();
-        ToolBarButtonFactory.addFontButtonsTo(bar, editor);
+        //OVDE SU KONTROLE ZA COPY PASTE STILOVA KAO I ZA BOJE I SLOVA
+//        b = bar.add(new PickAttributesAction(editor));
+//        b.setFocusable(false);
+//        b = bar.add(new ApplyAttributesAction(editor));
+//        b.setFocusable(false);
+//        bar.addSeparator();
+//        
+//        ToolBarButtonFactory.addColorButtonsTo(bar, editor);
+//        bar.addSeparator();
+//        ToolBarButtonFactory.addFontButtonsTo(bar, editor);
         
         
         

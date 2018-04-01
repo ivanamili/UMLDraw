@@ -1,6 +1,7 @@
 
-package draw;
+package draw.usecase;
 
+import draw.commonClasses.UmlDrawing;
 import java.util.prefs.*;
 import org.jhotdraw.gui.*;
 import org.jhotdraw.io.*;
