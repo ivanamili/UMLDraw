@@ -960,18 +960,20 @@ public class PersistenceManager {
         DijagramKonekcijaDb attrZaBazu= new DijagramKonekcijaDb();
         attrZaBazu.setId(new DijagramKonekcijaDbId(objToSave.getCrtezID(), objToSave.getID()));
         attrZaBazu.setTipVeze(objToSave.getTip().name());
-        attrZaBazu.setOdKogaId(objToSave.getOdKoga().getElemId());
-        attrZaBazu.setDoKogaId(objToSave.getDoKoga().getElemId());
+        attrZaBazu.setOdKogaId(objToSave.getOdKoga());
+        attrZaBazu.setDoKogaId(objToSave.getDoKoga());
         
-        if(objToSave.getOdKoga() instanceof Klasa)
-            attrZaBazu.setOdKogaTip("klasa");
-        else
-            attrZaBazu.setOdKogaTip("interfejs");
-        
-        if(objToSave.getDoKoga() instanceof Klasa)
-            attrZaBazu.setDoKogaTip("klasa");
-        else
-            attrZaBazu.setDoKogaTip("interfejs");
+        //NEPOTREBNO IZBRISATI NAKON TESTIRANJA
+        //nije potrebno jer se pamte samo id-evi PROMENA BEZ TESTIRANJA
+//        if(objToSave.getOdKoga() instanceof Klasa)
+//            attrZaBazu.setOdKogaTip("klasa");
+//        else
+//            attrZaBazu.setOdKogaTip("interfejs");
+//        
+//        if(objToSave.getDoKoga() instanceof Klasa)
+//            attrZaBazu.setDoKogaTip("klasa");
+//        else
+//            attrZaBazu.setDoKogaTip("interfejs");
 		
         Session session=null;
         Transaction tx = null;        
@@ -1004,18 +1006,19 @@ public class PersistenceManager {
         DijagramKonekcijaDb attrZaBazu= new DijagramKonekcijaDb();
         attrZaBazu.setId(new DijagramKonekcijaDbId(objToUpdate.getCrtezID(), objToUpdate.getID()));
         attrZaBazu.setTipVeze(objToUpdate.getTip().name());
-        attrZaBazu.setOdKogaId(objToUpdate.getOdKoga().getElemId());
-        attrZaBazu.setDoKogaId(objToUpdate.getDoKoga().getElemId());
+        attrZaBazu.setOdKogaId(objToUpdate.getOdKoga());
+        attrZaBazu.setDoKogaId(objToUpdate.getDoKoga());
         
-        if(objToUpdate.getOdKoga() instanceof Klasa)
-            attrZaBazu.setOdKogaTip("klasa");
-        else
-            attrZaBazu.setOdKogaTip("interfejs");
-        
-        if(objToUpdate.getDoKoga() instanceof Klasa)
-            attrZaBazu.setDoKogaTip("klasa");
-        else
-            attrZaBazu.setDoKogaTip("interfejs");
+        //nepotrebno IZBRISATI NAKON TESTIRANJA
+//        if(objToUpdate.getOdKoga() instanceof Klasa)
+//            attrZaBazu.setOdKogaTip("klasa");
+//        else
+//            attrZaBazu.setOdKogaTip("interfejs");
+//        
+//        if(objToUpdate.getDoKoga() instanceof Klasa)
+//            attrZaBazu.setDoKogaTip("klasa");
+//        else
+//            attrZaBazu.setDoKogaTip("interfejs");
 		
         Session session=null;
         Transaction tx = null;        
@@ -1091,19 +1094,19 @@ public class PersistenceManager {
 	returnObject.setID(dkIzBaze.getId().getVezeId());
         returnObject.setTip(ClassConnTypeEnum.valueOf(dkIzBaze.getTipVeze()));
 	
-        
+        //NEPOTREBNO, POBRISATI KOMENTARE NAKON TESTIRANJA
         //u polja od koga i do koga se kreiraju samo objekti sa id-evima, ne prave se novi objekti
-        if(dkIzBaze.getOdKogaTip().equals("klasa"))
-            returnObject.setOdKoga(new Klasa());
-        else
-            returnObject.setOdKoga(new Interfejs());        
-        returnObject.getOdKoga().setElemId(dkIzBaze.getOdKogaId());
+//        if(dkIzBaze.getOdKogaTip().equals("klasa"))
+//            returnObject.setOdKoga(new Klasa());
+//        else
+//            returnObject.setOdKoga(new Interfejs());        
+        returnObject.setOdKoga(dkIzBaze.getOdKogaId());
         
-        if(dkIzBaze.getDoKogaTip().equals("klasa"))
-            returnObject.setDoKoga(new Klasa());
-        else
-            returnObject.setDoKoga(new Interfejs());        
-       returnObject.getDoKoga().setElemId(dkIzBaze.getDoKogaId());
+//        if(dkIzBaze.getDoKogaTip().equals("klasa"))
+//            returnObject.setDoKoga(new Klasa());
+//        else
+//            returnObject.setDoKoga(new Interfejs());        
+       returnObject.setDoKoga(dkIzBaze.getDoKogaId());
        
        return returnObject;
     }
@@ -1243,13 +1246,13 @@ public class PersistenceManager {
         return returnObject;
     }
     
-    //AKTOR VEZA 
+    //AKTOR VEZA - modifikovano bez testiranja(reference zamenjene id vrednostima jer se u bazi samo id i pamti)
     private void save(AktorVeza objToSave,boolean saveAll ) {
         
         AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
         attrZaBazu.setId(new AktorKonekcijaDbId(objToSave.getID(),objToSave.getCrtezID()));
-        attrZaBazu.setAktorId(objToSave.getAktor().getID());
-        attrZaBazu.setUceCaseId(objToSave.getUseCase().getID());
+        attrZaBazu.setAktorId(objToSave.getAktor());
+        attrZaBazu.setUceCaseId(objToSave.getUseCase());
 		
         Session session=null;
         Transaction tx = null;        
@@ -1281,8 +1284,8 @@ public class PersistenceManager {
         
         AktorKonekcijaDb attrZaBazu= new AktorKonekcijaDb();
         attrZaBazu.setId(new AktorKonekcijaDbId(objToUpdate.getID(),objToUpdate.getCrtezID()));
-        attrZaBazu.setAktorId(objToUpdate.getAktor().getID());
-        attrZaBazu.setUceCaseId(objToUpdate.getUseCase().getID());
+        attrZaBazu.setAktorId(objToUpdate.getAktor());
+        attrZaBazu.setUceCaseId(objToUpdate.getUseCase());
 		
         Session session=null;
         Transaction tx = null;        
@@ -1359,10 +1362,14 @@ public class PersistenceManager {
         returnObject.setID(aktKIzBaze.getId().getId());
         
         //Aktor-upisuju se samo id-jevi. pretpostavljam da ce jhotDraw zahtevati reference, pa zato
-        returnObject.setAktor(new Aktor(returnObject.getCrtezID(),aktKIzBaze.getAktorId()));
+        // PREPRAVLJENO DA se aktor u AktorKonekcija predstavlja samo sa id vrednoscu.
+        //na osnovu id-ja je moguce dobiti referencu na trazeni objekat, ako je potrebno
+        //reference ionako vise nemaju smisla nakon sto se objekat posalje preko mreze
+        returnObject.setAktor(aktKIzBaze.getAktorId());
         
         //UseCase - ista filozofija kao gore
-        returnObject.setUseCase(new UseCase(returnObject.getCrtezID(),aktKIzBaze.getUceCaseId()));
+        //PREPRAVLJENO ISTO KAO GORE. use case je samo int vrednost id-ja
+        returnObject.setUseCase(aktKIzBaze.getUceCaseId());
         
         return returnObject;
         
@@ -1498,12 +1505,12 @@ public class PersistenceManager {
         return returnObject;
     }
     
-    //USE CASE VEZA
+    //USE CASE VEZA - modifikovano bez testiranja (reference zamenjene id vrednostima jer se u bazi samo id i pamti)
     private void save(UseCaseVeza objToSave,boolean saveAll) {
         UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
         attrZaBazu.setId(new UseCaseKonekcijaDbId(objToSave.getID(),objToSave.getCrtezID()));
-        attrZaBazu.setOdKogaId(objToSave.getOdKoga().getID());
-        attrZaBazu.setDoKogaId(objToSave.getDoKoga().getID());
+        attrZaBazu.setOdKogaId(objToSave.getOdKoga());
+        attrZaBazu.setDoKogaId(objToSave.getDoKoga());
         attrZaBazu.setTipVeze(objToSave.getTipVeze().name());
         
 		
@@ -1536,8 +1543,8 @@ public class PersistenceManager {
     private void update(UseCaseVeza objToUpdate) {
         UseCaseKonekcijaDb attrZaBazu= new UseCaseKonekcijaDb();
         attrZaBazu.setId(new UseCaseKonekcijaDbId(objToUpdate.getID(),objToUpdate.getCrtezID()));
-        attrZaBazu.setOdKogaId(objToUpdate.getOdKoga().getID());
-        attrZaBazu.setDoKogaId(objToUpdate.getDoKoga().getID());
+        attrZaBazu.setOdKogaId(objToUpdate.getOdKoga());
+        attrZaBazu.setDoKogaId(objToUpdate.getDoKoga());
         attrZaBazu.setTipVeze(objToUpdate.getTipVeze().name());
         
 		
@@ -1615,10 +1622,10 @@ public class PersistenceManager {
         returnObject.setTipVeze(UseCaseConnType.valueOf(ucIzBaze.getTipVeze()));
         
         //od koga useCase
-	returnObject.setOdKoga(new UseCase(returnObject.getCrtezID(),ucIzBaze.getOdKogaId()));
+	returnObject.setOdKoga(ucIzBaze.getOdKogaId());
       
         //do koga useCase
-	returnObject.setDoKoga(new UseCase(returnObject.getCrtezID(),ucIzBaze.getDoKogaId()));
+	returnObject.setDoKoga(ucIzBaze.getDoKogaId());
         
         return returnObject;
     }

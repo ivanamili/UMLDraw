@@ -24,11 +24,5 @@
         <property name="doKogaId" type="java.lang.Integer">
             <column name="DoKogaID" />
         </property>
-        <property name="odKogaTip" type="string">
-            <column name="OdKogaTip" />
-        </property>
-        <property name="doKogaTip" type="string">
-            <column name="DoKogaTip" />
-        </property>
     </class>
 </hibernate-mapping>

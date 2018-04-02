@@ -5,6 +5,7 @@
  */
 package draw.usecase;
 
+import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
 import draw.usecase.figures.UseCaseFigure;
 import java.awt.Color;
@@ -28,6 +29,7 @@ import org.jhotdraw.draw.ConnectionTool;
 import org.jhotdraw.draw.CreationTool;
 import org.jhotdraw.draw.DefaultDrawingEditor;
 import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.LineConnectionFigure;
 import org.jhotdraw.draw.TextAreaFigure;
 import org.jhotdraw.draw.TextAreaTool;
 import org.jhotdraw.draw.Tool;
@@ -97,6 +99,7 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         
         ResourceBundleUtil labels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.samples.pert.Labels");
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.draw.Labels");
+        //za nase nazive kontrola, i ostale potrepstine
         ResourceBundleUtil useCaseLabels=ResourceBundleUtil.getLAFBundle("draw.usecase.UsecaseLabels");
         
         int orrientation=tb.getOrientation();
@@ -115,12 +118,12 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
 //        ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new DependencyFigure(), attributes), "createDependency", labels);
 //        tb.addSeparator();
 
+
         //USE CASE TOOL
         attributes = new HashMap<AttributeKey,Object>();
         attributes.put(AttributeKeys.FILL_COLOR, Color.white);
         attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
         attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
-        
         ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new UseCaseFigure(), attributes), "createUseCase", useCaseLabels);
         
         //AKTOR TOOL
@@ -128,9 +131,11 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         attributes.put(AttributeKeys.FILL_COLOR, Color.white);
         attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
         attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
+        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new AktorFigure(), attributes), "createAktor", useCaseLabels);
         
-        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new AktorFigure(), attributes), "createUseCase", useCaseLabels);
-        
+        //AKTOR KONEKCIJA TOOL
+        ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new AktorConnectionFigure()), "createAKonekcija", useCaseLabels);
+
         
     }
     /**

@@ -15,9 +15,13 @@ import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureEvent;
 
 /**
- *
- * @author Korisnik
- */
+*Drawing koji sadrzi u sebi crtez.
+*kada se doda nova figura, REFERENCA na business objekat pridruzen figuri se dodaje u crtez objekat
+*ovo je neophodno kako bi, kada treba da posaljemo ceo crtez na server radi cuvanja u bazu, mi imamo
+*sve objekte crteza koje bazi trebaju na jednom mestu.
+*kako sam Crtez sadrzi reference business objekata, kako se oni budu menjali (a za njihovo azuriranje su zaduzene figure
+*koje ih sadrze) promene ce automatsi biti vidljive i u crtezu
+* */
 public class UmlDrawing extends DefaultDrawing implements DrawingListener{
     
     private Crtez UmlCrtez;

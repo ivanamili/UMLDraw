@@ -111,12 +111,7 @@ public class Crtez {
 
 	
 	public void obrisiElement(int id) {
-		for(Element e : this.elementi)
-                {
-                    if(e.getElemId()==id)
-                        this.elementi.remove(e);
-                    break;
-                }
+           this.elementi.removeIf((Element obj) -> obj.getElemId() == id);
 	}
 
 	
@@ -129,12 +124,7 @@ public class Crtez {
 
 	
 	public void obrisiVezu(int id) {
-		for(Veza e : this.veze)
-                {
-                    if(e.getElemId()==id)
-                        this.veze.remove(e);
-                    break;
-                }
+		this.veze.removeIf((Veza obj) -> obj.getElemId() == id);
 	}
 
     

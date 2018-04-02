@@ -60,5 +60,17 @@ public class UseCase extends UseCaseDiagramElement {
         public void setCrtezIdentifikator(int id) {
             this.crtezID=id;
         }
+        
+        @Override
+        public Object clone(){
+            UseCase that= new UseCase();
+            that.setCrtezID(this.crtezID);
+            that.setElemId(this.ID);
+            that.setNaziv(this.naziv);
+            that.setElipsa(this.elipsa.clone());
+            
+            return that;
+        }
+
 
 }

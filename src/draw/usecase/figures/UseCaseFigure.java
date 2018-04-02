@@ -26,12 +26,13 @@ import org.jhotdraw.draw.TextFigure;
 import org.jhotdraw.draw.VerticalLayouter;
 import org.jhotdraw.geom.Insets2DDouble;
 import org.jhotdraw.samples.pert.figures.TaskFigure;
+import draw.commonClasses.DefaultDiagramElementFigure;
 
 /**
  *
  * @author Korisnik
  */
-public class UseCaseFigure extends GraphicalCompositeFigure implements IDataFigure {
+public class UseCaseFigure extends DefaultDiagramElementFigure{
 
     @Override
     //vraca useCase
@@ -106,6 +107,7 @@ public class UseCaseFigure extends GraphicalCompositeFigure implements IDataFigu
      //tool koristi ovo da kreira prototip. treba DODATI ADAPTERE!
      public UseCaseFigure clone() {
         UseCaseFigure that = (UseCaseFigure) super.clone();
+        that.useCase= (UseCase)this.useCase.clone();
         that.useCase.setElipsa((EllipseFigure)that.getPresentationFigure());
         that.getNameFigure().addFigureListener(new UseCaseNameAdapter(that));
         

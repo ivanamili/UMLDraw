@@ -15,13 +15,12 @@ public class ClassDiagramVeza extends Veza implements Serializable{
 
 	private int crtezID;
 	private int ID;
-	private ClassDiagramElement odKoga;
-	private ClassDiagramElement doKoga;
+	private int odKoga;//id elementa koji je pocetak veze (StartFigure)
+	private int doKoga;//id elementa koji je kraj veze (EndFigure)
         private ClassConnTypeEnum tip;
         
         public ClassDiagramVeza(){
-            this.odKoga=null;
-            this.doKoga=null;
+            
         }
 
 	public int getCrtezID() {
@@ -31,17 +30,17 @@ public class ClassDiagramVeza extends Veza implements Serializable{
 		this.crtezID = crtezID;
 	}
         
-	public ClassDiagramElement getOdKoga() {
+	public int getOdKoga() {
 		return this.odKoga;
 	}
-	public void setOdKoga(ClassDiagramElement odKoga) {
+	public void setOdKoga(int odKoga) {
 		this.odKoga=odKoga;
 	}
 
-	public ClassDiagramElement getDoKoga() {
+	public int getDoKoga() {
 		return this.doKoga;
 	}
-	public void setDoKoga(ClassDiagramElement doKoga) {
+	public void setDoKoga(int doKoga) {
 		this.doKoga = doKoga;
 	}
   

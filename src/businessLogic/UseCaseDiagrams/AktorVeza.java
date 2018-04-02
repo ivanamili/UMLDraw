@@ -18,13 +18,12 @@ public class AktorVeza extends UseCaseDiagramVeza {
 
 	private int crtezID;
 	private int ID;
-	private Aktor aktor;
-	private UseCase useCase;
+	private int aktor;//id aktora
+	private int useCase;//id useCase-a
         
         public AktorVeza()
         {
-            this.aktor=null;
-            this.useCase=null;
+            
         }
 
 	public int getCrtezID() {
@@ -41,17 +40,17 @@ public class AktorVeza extends UseCaseDiagramVeza {
 		this.ID=ID;
 	}
 
-	public Aktor getAktor() {
+	public int getAktor() {
 		return this.aktor;
 	}
-	public void setAktor(Aktor aktor) {
+	public void setAktor(int aktor) {
 		this.aktor = aktor;
 	}
 
-	public UseCase getUseCase() {
+	public int getUseCase() {
 		return this.useCase;
 	}
-	public void setUseCase(UseCase useCase) {
+	public void setUseCase(int useCase) {
 		this.useCase = useCase;
 	}
         
@@ -68,6 +67,17 @@ public class AktorVeza extends UseCaseDiagramVeza {
         @Override
         public void setCrtezIdentifikator(int id) {
             this.crtezID=id;
+        }
+        
+        @Override
+        public Object clone(){
+            AktorVeza that=new AktorVeza();
+            that.setCrtezID(this.crtezID);
+            that.setID(this.ID);
+            that.setAktor(this.aktor);
+            that.setUseCase(this.useCase);
+            
+            return that;
         }
 
 }

@@ -62,5 +62,17 @@ public class Aktor extends UseCaseDiagramElement {
         public void setCrtezIdentifikator(int id) {
             this.crtezID=id;
         }
+        @Override
+        public Object clone(){
+            Aktor that= new Aktor();
+            that.setCrtezID(this.crtezID);
+            that.setElemId(this.ID);
+            that.setNaziv(this.naziv);
+            that.setOkvir(this.okvir.clone());
+            
+            return that;
+        }
+
+       
 
 }

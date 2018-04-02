@@ -13,8 +13,8 @@ public class UseCaseVeza extends UseCaseDiagramVeza {
 
 	private int crtezID;
 	private int ID;
-	private UseCase odKoga;
-	private UseCase doKoga;
+	private int odKoga;//id elementa koji je start veze tj od koga veza pocinje (StartFigure)
+	private int doKoga;//id elementa koji je end veze tj na kome se veza zavrsava (EndFigure)
 	private UseCaseConnType tipVeze;
 
 	public int getCrtezID() {
@@ -31,17 +31,17 @@ public class UseCaseVeza extends UseCaseDiagramVeza {
 		this.ID=ID;
 	}
 
-	public UseCase getOdKoga() {
+	public int getOdKoga() {
 		return this.odKoga;
 	}
-	public void setOdKoga(UseCase odKoga) {
+	public void setOdKoga(int odKoga) {
 		this.odKoga = odKoga;
 	}
 
-	public UseCase getDoKoga() {
+	public int getDoKoga() {
 		return this.doKoga;
 	}
-	public void setDoKoga(UseCase doKoga) {
+	public void setDoKoga(int doKoga) {
 		this.doKoga = doKoga;
 	}
 
