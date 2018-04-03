@@ -7,6 +7,7 @@ package draw.usecase;
 
 import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
+import draw.usecase.figures.IncludeConnectionFigure;
 import draw.usecase.figures.UseCaseFigure;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
@@ -25,10 +26,12 @@ import org.jhotdraw.app.action.ProjectPropertyAction;
 import org.jhotdraw.app.action.ToggleProjectPropertyAction;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.draw.AttributeKeys;
+import org.jhotdraw.draw.ConnectionFigure;
 import org.jhotdraw.draw.ConnectionTool;
 import org.jhotdraw.draw.CreationTool;
 import org.jhotdraw.draw.DefaultDrawingEditor;
 import org.jhotdraw.draw.DrawingEditor;
+import org.jhotdraw.draw.ElbowLiner;
 import org.jhotdraw.draw.LineConnectionFigure;
 import org.jhotdraw.draw.TextAreaFigure;
 import org.jhotdraw.draw.TextAreaTool;
@@ -133,8 +136,16 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
         ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new AktorFigure(), attributes), "createAktor", useCaseLabels);
         
+        ConnectionTool cnt;
+        ConnectionFigure lc;
+        
         //AKTOR KONEKCIJA TOOL
         ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new AktorConnectionFigure()), "createAKonekcija", useCaseLabels);
+        //INCLUDE KONEKCIJA TOOL
+        ToolBarButtonFactory.addToolTo(tb, editor, cnt= new ConnectionTool(new IncludeConnectionFigure()), "createIncludeKonekcija", useCaseLabels);
+        //ovo omogucava da se linija presavija na centru automatski kako se prevlace figure i omogucava bolje rasporedjivanje
+        lc =  cnt.getPrototype();
+        lc.setLiner(new ElbowLiner());
 
         
     }

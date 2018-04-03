@@ -7,6 +7,7 @@ package draw.usecase.figures;
 
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.UseCaseDiagrams.AktorVeza;
+import draw.commonClasses.AbstractDiagramConnectionFigure;
 import draw.commonClasses.IConnectable;
 import draw.commonClasses.IDataFigure;
 import org.jhotdraw.draw.Figure;
@@ -17,7 +18,7 @@ import org.jhotdraw.samples.pert.figures.TaskFigure;
  *
  * @author Korisnik
  */
-public class AktorConnectionFigure extends LineConnectionFigure implements IDataFigure{
+public class AktorConnectionFigure extends AbstractDiagramConnectionFigure implements IDataFigure{
     
     private AktorVeza aktorVeza;
     
@@ -69,7 +70,7 @@ public class AktorConnectionFigure extends LineConnectionFigure implements IData
     
     public AktorConnectionFigure clone() {
         AktorConnectionFigure that = (AktorConnectionFigure) super.clone();
-        that.aktorVeza= (AktorVeza)this.aktorVeza.clone();
+        that.aktorVeza= (this.aktorVeza==null)? null : (AktorVeza)this.aktorVeza.clone();
         return that;
     }
 

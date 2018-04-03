@@ -66,6 +66,18 @@ public class UseCaseVeza extends UseCaseDiagramVeza {
         public void setCrtezIdentifikator(int id) {
             this.crtezID=id;
         }
+        
+        @Override
+        public Object clone(){
+            UseCaseVeza that= new UseCaseVeza();
+            that.setCrtezID(this.crtezID);
+            that.setID(this.ID);
+            that.setOdKoga(this.odKoga);
+            that.setDoKoga(this.doKoga);
+            that.setTipVeze(this.tipVeze);
+            
+            return that;
+        }
 	
 
 }

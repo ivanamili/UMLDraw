@@ -14,19 +14,20 @@ import org.jhotdraw.draw.GraphicalCompositeFigure;
 //KONEKCIJAMA
 //implementira IConnectable interfejs koji omogucava provere pri povezivanju komponenti konekcijama
 //implementira IDataFigure koji omogucava vracanje dataObjekta iz figure ali ne OVERRIDUJE METODU. to treba podklase da urade
-public abstract class DefaultDiagramElementFigure extends GraphicalCompositeFigure implements IConnectable,IDataFigure{
+public abstract class AbstractDiagramElementFigure extends GraphicalCompositeFigure implements IConnectable,IDataFigure{
     
     //omogucava da se proveri pri kreiranju veze da li je objekat vec povezan sa datim objektom
     //da bi mogle da se izbegnu kreiranja visestrukih veza izmedju istih objekata gde to nije pozeljno
+    //AKO SE CRTEZ UCITAVA IZ BAZE, OVAJ SET MORA DA SE KREIRA NAKNADNO JER SE U BAZI OVAJ NIZ NE PAMTI!
     protected HashSet<IConnectable> connectedFigures;
     
-    public DefaultDiagramElementFigure()
+    public AbstractDiagramElementFigure()
     {
         super();
         connectedFigures=new HashSet<IConnectable>();
     }
     
-    public DefaultDiagramElementFigure(Figure presentationFigure)
+    public AbstractDiagramElementFigure(Figure presentationFigure)
     {
         super(presentationFigure);
         connectedFigures=new HashSet<IConnectable>();
@@ -56,7 +57,7 @@ public abstract class DefaultDiagramElementFigure extends GraphicalCompositeFigu
     
     @Override
     public GraphicalCompositeFigure clone(){
-        DefaultDiagramElementFigure that= (DefaultDiagramElementFigure) super.clone();
+        AbstractDiagramElementFigure that= (AbstractDiagramElementFigure) super.clone();
         that.connectedFigures=new HashSet<IConnectable>();
         return that;
     }

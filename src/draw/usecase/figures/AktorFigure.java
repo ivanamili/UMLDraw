@@ -30,13 +30,13 @@ import org.jhotdraw.draw.RectangleFigure;
 import org.jhotdraw.draw.TextFigure;
 import org.jhotdraw.draw.VerticalLayouter;
 import org.jhotdraw.geom.Insets2DDouble;
-import draw.commonClasses.DefaultDiagramElementFigure;
+import draw.commonClasses.AbstractDiagramElementFigure;
 
 /**
  *
  * @author Korisnik
  */
-public class AktorFigure extends DefaultDiagramElementFigure {
+public class AktorFigure extends AbstractDiagramElementFigure {
     
     private Aktor aktor;
     
@@ -107,7 +107,7 @@ public class AktorFigure extends DefaultDiagramElementFigure {
      
      public AktorFigure clone() {
         AktorFigure that = (AktorFigure) super.clone();
-        that.aktor= (Aktor)this.aktor.clone();
+        that.aktor= (this.aktor==null)? null : (Aktor)this.aktor.clone();
         that.aktor.setOkvir((RectangleFigure)that.getPresentationFigure());
         that.getNameFigure().addFigureListener(new AktorFigure.AktorNameAdapter(that));      
         return that;

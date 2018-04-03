@@ -8,11 +8,13 @@ package draw.commonClasses;
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.AbstractClassHierarchy.*;
 import businessLogic.CommonClasses.Crtez;
+import org.jhotdraw.draw.ConnectionFigure;
 import org.jhotdraw.draw.DefaultDrawing;
 import org.jhotdraw.draw.DrawingEvent;
 import org.jhotdraw.draw.DrawingListener;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureEvent;
+import org.jhotdraw.draw.LineConnectionFigure;
 
 /**
 *Drawing koji sadrzi u sebi crtez.
@@ -52,6 +54,13 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
     
     @Override
     public void basicRemove(Figure figure) {
+        //da bi se uklonile reference u povezanim objektima
+        // memory leak jer bi te reference na povezane objekte
+        //ostajale i time sprecavale da garbage collector obrise objekte koji se inace vise nigde ne koriste
+        //a i dodavanje veze izmedju istih objekata nakon predhodnog brisanja ne bi bio moguc
+        if(figure instanceof IRemovableConnection)
+            ((IRemovableConnection)figure).fireHandleDisconnect();;
+            
         super.basicRemove(figure);
         AbstractDiagramElement elemToRemove=((IDataFigure)figure).getDataObject();
         this.UmlCrtez.obrisi(elemToRemove);
@@ -79,6 +88,7 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
     }
     
     //metode iz figure listener
+    //PREVISE KOMPLIKOVANO, PREVISE PUTA SE BACA EVENT. MOGUCE RESENJE DA DEFINISEMO NAS TIP EXCEPTION-A I DA NJEGA BACAMO
     @Override
     public void figureChanged(FigureEvent e){
         
