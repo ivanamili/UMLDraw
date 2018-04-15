@@ -8,12 +8,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.jhotdraw.draw.RectangleFigure;
 import store.entity.*;
 
 public class Interfejs extends ClassDiagramElement {
 
 	private int crtezID;
 	private int ID;
+        private RectangleFigure okvir;
 	private String naziv;
 	private int metodCounter;
 	private ArrayList<Metod> metode;
@@ -84,6 +86,14 @@ public class Interfejs extends ClassDiagramElement {
         public void setCrtezIdentifikator(int id) {
             this.crtezID=id;
         }
-        
+
+   
+        public RectangleFigure getOkvir() {
+            return okvir;
+        }
+        public void setOkvir(RectangleFigure okvir) {
+            this.okvir = okvir;
+        }
+
 
 }

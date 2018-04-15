@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package draw.usecase;
+package draw.classDiagram;
 
+import draw.usecase.*;
 import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
 import draw.usecase.figures.ExtendConnectionFigure;
@@ -50,7 +51,7 @@ import org.jhotdraw.util.ResourceBundleUtil;
  *
  * @author Korisnik
  */
-public class UseCaseApplicationModel extends DefaultApplicationModel {
+public class ClassDiagramApplicationModel extends DefaultApplicationModel {
     private final static double[] scaleFactors = {5, 4, 3, 2, 1.5, 1.25, 1, 0.75, 0.5, 0.25, 0.10};
     private DefaultDrawingEditor sharedEditor;
     private HashMap<String,Action> actions;
@@ -69,7 +70,7 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         }
     }
     
-    public UseCaseApplicationModel() {
+    public ClassDiagramApplicationModel() {
     }
     
     public void initApplication(Application a) {
@@ -104,51 +105,36 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         ResourceBundleUtil labels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.samples.pert.Labels");
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.draw.Labels");
         //za nase nazive kontrola, i ostale potrepstine
-        ResourceBundleUtil useCaseLabels=ResourceBundleUtil.getLAFBundle("draw.usecase.UsecaseLabels");
+        ResourceBundleUtil ClassDiagramLabels=ResourceBundleUtil.getLAFBundle("draw.classDiagram.ClassDiagramLabels");
         
         int orrientation=tb.getOrientation();
         
         ToolBarButtonFactory.addSelectionToolTo(tb, editor);
         tb.addSeparator();
        
-//        attributes = new HashMap<AttributeKey,Object>();
-//        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
-//        attributes.put(AttributeKeys.STROKE_COLOR, Color.red);
-//        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
-//        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new TaskFigure(), attributes), "createTask", labels);
-//
+
 //        attributes = new HashMap<AttributeKey,Object>();
 //        attributes.put(AttributeKeys.STROKE_COLOR, new Color(0x000099));
 //        ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new DependencyFigure(), attributes), "createDependency", labels);
 //        tb.addSeparator();
 
 
-        //USE CASE TOOL
-        attributes = new HashMap<AttributeKey,Object>();
-        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
-        attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
-        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
-        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new UseCaseFigure(), attributes), "createUseCase", useCaseLabels);
-        
-        //AKTOR TOOL
-        attributes = new HashMap<AttributeKey,Object>();
-        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
-        attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
-        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
-        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new AktorFigure(), attributes), "createAktor", useCaseLabels);
+//        //USE CASE TOOL
+//        attributes = new HashMap<AttributeKey,Object>();
+//        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
+//        attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
+//        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
+//        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new UseCaseFigure(), attributes), "createUseCase", useCaseLabels);
+//        
         
         ConnectionTool cnt;
         ConnectionFigure lc;
         
-        //AKTOR KONEKCIJA TOOL
-        ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new AktorConnectionFigure()), "createAKonekcija", useCaseLabels);
-        //INCLUDE KONEKCIJA TOOL
-        ToolBarButtonFactory.addToolTo(tb, editor, cnt= new ConnectionTool(new IncludeConnectionFigure()), "createIncludeKonekcija", useCaseLabels);
-        //EXTEND KONEKCIJA TOOL
-        ToolBarButtonFactory.addToolTo(tb, editor, cnt= new ConnectionTool(new ExtendConnectionFigure()), "createExtendKonekcija", useCaseLabels);
-        //ovo omogucava da se linija presavija na centru automatski kako se prevlace figure i omogucava bolje rasporedjivanje
-        //lc =  cnt.getPrototype();
-        //lc.setLiner(new ElbowLiner());
+//        ///EXTEND KONEKCIJA TOOL
+//        ToolBarButtonFactory.addToolTo(tb, editor, cnt= new ConnectionTool(new ExtendConnectionFigure()), "createExtendKonekcija", useCaseLabels);
+//        //ovo omogucava da se linija presavija na centru automatski kako se prevlace figure i omogucava bolje rasporedjivanje
+//        //lc =  cnt.getPrototype();
+//        //lc.setLiner(new ElbowLiner());
 
         
     }
@@ -160,7 +146,7 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
     public java.util.List<JToolBar> createToolBars(Application a, Project pr) {
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.draw.Labels");
         ResourceBundleUtil labels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.samples.pert.Labels");
-        UseCaseProject p = (UseCaseProject) pr;
+        ClassDiagramProject p = (ClassDiagramProject) pr;
         
         DrawingEditor editor;
         if (p == null) {
@@ -173,7 +159,7 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         JToolBar tb;
         tb = new JToolBar(JToolBar.VERTICAL);
         addCreationButtonsTo(tb, editor);
-        tb.setName("Use Case tools");
+        tb.setName("Class Diagram Tools");
         list.add(tb);
         
         return list;

@@ -588,7 +588,8 @@ public class PersistenceManager {
        
     }
     
-    //KLASA
+    //KLASA 
+    //POTREBNO PONOVNO TESTIRANJE!!!!!
     private void save(Klasa objToSave,boolean saveAll) {
         //popunjavanje osnovnih podataka objekta za bazu
         KlasaDb zaBazu=new KlasaDb();
@@ -598,6 +599,12 @@ public class PersistenceManager {
         zaBazu.setIsStatic(objToSave.getIsStatic());
         zaBazu.setMetodCounter(objToSave.getMetodCounter());
         zaBazu.setAtributCounter(objToSave.getAtributCounter());
+        //za okvir
+        Rectangle2D.Double bounds=objToSave.getOkvir().getBounds();
+        zaBazu.setPocetnaKoorX(bounds.x);
+        zaBazu.setPocetnaKoorY(bounds.y);
+        zaBazu.setVisina(bounds.height);
+        zaBazu.setSirina(bounds.width);
         
         //tek ovde pocinje cuvanje 
                 
@@ -648,7 +655,11 @@ public class PersistenceManager {
         zaBazu.setIsStatic(objToUpdate.getIsStatic());
         zaBazu.setMetodCounter(objToUpdate.getMetodCounter());
         zaBazu.setAtributCounter(objToUpdate.getAtributCounter());
-        
+        Rectangle2D.Double bounds=objToUpdate.getOkvir().getBounds();
+        zaBazu.setPocetnaKoorX(bounds.x);
+        zaBazu.setPocetnaKoorY(bounds.y);
+        zaBazu.setVisina(bounds.height);
+        zaBazu.setSirina(bounds.width);
         //tek ovde pocinje cuvanje 
                 
         Session session=null;
@@ -761,6 +772,8 @@ public class PersistenceManager {
 	returnObject.setMetodCounter(klIzBaze.getMetodCounter());
 	returnObject.setIsAbstract(klIzBaze.getIsAbstract());
 	returnObject.setIsStatic(klIzBaze.getIsStatic());
+        returnObject.setOkvir(new RectangleFigure(klIzBaze.getPocetnaKoorX(),klIzBaze.getPocetnaKoorY(),klIzBaze.getSirina(),klIzBaze.getVisina()));
+
         
         //ucitavanje atributa
         Iterator i=atrIdLista.iterator();
@@ -790,12 +803,18 @@ public class PersistenceManager {
     }
     
     //INTERFEJS
+    //POTREBNO PONOVNO TESTIRANJE!!!!!
     private void save(Interfejs objToSave,boolean saveAll) {
         
         InterfejsDb zaBazu= new InterfejsDb();
         zaBazu.setId(new InterfejsDbId(objToSave.getCrtezID(),objToSave.getID()));
         zaBazu.setNaziv(objToSave.getNaziv());
         zaBazu.setMetodCounter(objToSave.getMetodCounter());
+        Rectangle2D.Double bounds=objToSave.getOkvir().getBounds();
+        zaBazu.setPocetnaKoorX(bounds.x);
+        zaBazu.setPocetnaKoorY(bounds.y);
+        zaBazu.setVisina(bounds.height);
+        zaBazu.setSirina(bounds.width);
         
         Session session=null;
         Transaction tx = null;        
@@ -837,6 +856,12 @@ public class PersistenceManager {
         zaBazu.setId(new InterfejsDbId(objToUpdate.getCrtezID(),objToUpdate.getID()));
         zaBazu.setNaziv(objToUpdate.getNaziv());
         zaBazu.setMetodCounter(objToUpdate.getMetodCounter());
+        Rectangle2D.Double bounds=objToUpdate.getOkvir().getBounds();
+        zaBazu.setPocetnaKoorX(bounds.x);
+        zaBazu.setPocetnaKoorY(bounds.y);
+        zaBazu.setVisina(bounds.height);
+        zaBazu.setSirina(bounds.width);
+        
         
         Session session=null;
         Transaction tx = null;        
@@ -939,6 +964,8 @@ public class PersistenceManager {
 	returnObject.setID(inIzBaze.getId().getInterfejsId());
         returnObject.setNaziv(inIzBaze.getNaziv());
 	returnObject.setMetodCounter(inIzBaze.getMetodCounter());  
+        returnObject.setOkvir(new RectangleFigure(inIzBaze.getPocetnaKoorX(),inIzBaze.getPocetnaKoorY(),inIzBaze.getSirina(),inIzBaze.getVisina()));
+
         
         Iterator i=metIdLista.iterator();
         int[] idComp= new int[3];

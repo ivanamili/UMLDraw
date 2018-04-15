@@ -21,5 +21,17 @@
         <property name="metodCounter" type="java.lang.Integer">
             <column name="MetodCounter" />
         </property>
+        <property name="pocetnaKoorX" type="java.lang.Double">
+            <column name="PocetnaKoorX" precision="22" scale="0" />
+        </property>
+        <property name="pocetnaKoorY" type="java.lang.Double">
+            <column name="PocetnaKoorY" precision="22" scale="0" />
+        </property>
+        <property name="visina" type="java.lang.Double">
+            <column name="Visina" precision="22" scale="0" />
+        </property>
+        <property name="sirina" type="java.lang.Double">
+            <column name="Sirina" precision="22" scale="0" />
+        </property>
     </class>
 </hibernate-mapping>

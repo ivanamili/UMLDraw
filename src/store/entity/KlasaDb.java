@@ -18,6 +18,10 @@ public class KlasaDb  implements java.io.Serializable {
      private String ime;
      private Boolean isAbstract;
      private Boolean isStatic;
+     private Double pocetnaKoorX;
+     private Double pocetnaKoorY;
+     private Double visina;
+     private Double sirina;
      private Set atributDbs = new HashSet(0);
 
     public KlasaDb() {
@@ -89,18 +93,41 @@ public class KlasaDb  implements java.io.Serializable {
         this.atributDbs = atributDbs;
     }
 
-    /**
-     * @return the ime
-     */
     public String getIme() {
         return ime;
     }
 
-    /**
-     * @param ime the ime to set
-     */
     public void setIme(String ime) {
         this.ime = ime;
+    }
+    
+    public Double getPocetnaKoorX() {
+        return this.pocetnaKoorX;
+    }
+    
+    public void setPocetnaKoorX(Double pocetnaKoorX) {
+        this.pocetnaKoorX = pocetnaKoorX;
+    }
+    public Double getPocetnaKoorY() {
+        return this.pocetnaKoorY;
+    }
+    
+    public void setPocetnaKoorY(Double pocetnaKoorY) {
+        this.pocetnaKoorY = pocetnaKoorY;
+    }
+    public Double getVisina() {
+        return this.visina;
+    }
+    
+    public void setVisina(Double visina) {
+        this.visina = visina;
+    }
+    public Double getSirina() {
+        return this.sirina;
+    }
+    
+    public void setSirina(Double sirina) {
+        this.sirina = sirina;
     }
 
 

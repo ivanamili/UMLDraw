@@ -13,6 +13,10 @@ public class InterfejsDb  implements java.io.Serializable {
      private CrtezDb crtezDb;
      private String naziv;
      private Integer metodCounter;
+     private Double pocetnaKoorX;
+     private Double pocetnaKoorY;
+     private Double visina;
+     private Double sirina;
 
     public InterfejsDb() {
     }
@@ -56,6 +60,34 @@ public class InterfejsDb  implements java.io.Serializable {
     
     public void setMetodCounter(Integer metodCounter) {
         this.metodCounter = metodCounter;
+    }
+    public Double getPocetnaKoorX() {
+        return this.pocetnaKoorX;
+    }
+    
+    public void setPocetnaKoorX(Double pocetnaKoorX) {
+        this.pocetnaKoorX = pocetnaKoorX;
+    }
+    public Double getPocetnaKoorY() {
+        return this.pocetnaKoorY;
+    }
+    
+    public void setPocetnaKoorY(Double pocetnaKoorY) {
+        this.pocetnaKoorY = pocetnaKoorY;
+    }
+    public Double getVisina() {
+        return this.visina;
+    }
+    
+    public void setVisina(Double visina) {
+        this.visina = visina;
+    }
+    public Double getSirina() {
+        return this.sirina;
+    }
+    
+    public void setSirina(Double sirina) {
+        this.sirina = sirina;
     }
 
 

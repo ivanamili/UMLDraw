@@ -76,14 +76,14 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
     @Override
     public void figureAdded(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
-        System.out.println("Dodat element: ID "+elem.getElemId());
+        System.out.println("Dodat element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
         //dodati slanje poruke o ADD NEW FIGURE
     }
 
     @Override
     public void figureRemoved(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
-        System.out.println("Uklonjen element: ID "+elem.getElemId());
+        System.out.println("Uklonjen element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
         //dodati slanje poruke za brisanje REMOVE FIGURE
     }
     
@@ -97,6 +97,8 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
         //samo nasa figura da je uhvatimo i prosledimo dalje
         if(fig instanceof IDataFigure)
         {
+            AbstractDiagramElement elem= ((IDataFigure)e.getFigure()).getDataObject();
+            System.out.println("Figure changed: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
             //posalji poruku ostalima da je na datoj figuri doslo do promene
         }
         

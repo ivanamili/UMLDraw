@@ -19,21 +19,21 @@ import org.jhotdraw.draw.*;
  *
  * @author Korisnik
  */
-public class IncludeConnectionFigure extends AbstractDiagramConnectionFigure implements IDataFigure{
+public class ExtendConnectionFigure extends AbstractDiagramConnectionFigure implements IDataFigure{
 
     private UseCaseVeza useCaseVeza;  
     
-    public IncludeConnectionFigure(){
+    public ExtendConnectionFigure(){
         super();
         this.useCaseVeza= new UseCaseVeza();
         initFigure();
     }
     
     private void initFigure(){
-        this.useCaseVeza.setTipVeze(UseCaseConnType.INCLUDE);
+        this.useCaseVeza.setTipVeze(UseCaseConnType.EXTEND);
         
         this.setLayouter(new CenterLablelLineLayouter());
-        LabelFigure label= new LabelFigure("<<include>>");
+        LabelFigure label= new LabelFigure("<<extend>>");
         double[] dashes={4d, 4d};
         STROKE_DASHES.set(this, dashes);
 //        Insets2DDouble insets = new Insets2DDouble(15,15,15,15);
@@ -93,8 +93,8 @@ public class IncludeConnectionFigure extends AbstractDiagramConnectionFigure imp
         en.removeConnectedFigure(st);
     }
     
-    public IncludeConnectionFigure clone() {
-        IncludeConnectionFigure that = (IncludeConnectionFigure) super.clone();
+    public ExtendConnectionFigure clone() {
+        ExtendConnectionFigure that = (ExtendConnectionFigure) super.clone();
         that.useCaseVeza= (this.useCaseVeza==null)? null : (UseCaseVeza)this.useCaseVeza.clone();
         return that;
     }
