@@ -7,7 +7,12 @@ package draw.classDiagram.figures.attribute;
 
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.ClassDiagrams.Atribut;
+import draw.classDiagram.figures.ClassFigure;
 import draw.commonClasses.IDataFigure;
+import java.awt.geom.Point2D;
+import java.util.Collection;
+import java.util.LinkedList;
+import javax.swing.Action;
 import static org.jhotdraw.draw.AttributeKeys.FONT_UNDERLINED;
 import org.jhotdraw.draw.TextFigure;
 
@@ -18,9 +23,17 @@ import org.jhotdraw.draw.TextFigure;
 public class AttributeFigure extends TextFigure {
 
     private Atribut atribut;
+    private ClassFigure parent;
     
     public Atribut getAtribut(){
         return this.atribut;
+    }
+    
+    @Override
+    public Collection<Action> getActions(Point2D.Double p){
+        Collection<Action> actions= new LinkedList<Action>();
+        actions.add(new ChangeAttributeAction(this));
+        return actions;
     }
     
     public AttributeFigure(Atribut atribut){
@@ -70,6 +83,26 @@ public class AttributeFigure extends TextFigure {
             }
         }
             
+    }
+    
+    public void updateFigure(Atribut newAttribut)
+    {
+        this.atribut.update(newAttribut);
+        initFigure();
+    }
+
+    /**
+     * @return the parent
+     */
+    public ClassFigure getParent() {
+        return parent;
+    }
+
+    /**
+     * @param parent the parent to set
+     */
+    public void setParent(ClassFigure parent) {
+        this.parent = parent;
     }
     
     

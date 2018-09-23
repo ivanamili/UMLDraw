@@ -10,6 +10,8 @@ import businessLogic.ClassDiagrams.Klasa;
 import businessLogic.UseCaseDiagrams.UseCase;
 import draw.classDiagram.figures.attribute.AddAttributeAction;
 import draw.classDiagram.figures.attribute.AttributeFigure;
+import draw.classDiagram.figures.attribute.ChangeAttributeAction;
+import draw.classDiagram.figures.attribute.DeleteAttributeAction;
 import draw.commonClasses.AbstractDiagramElementFigure;
 import draw.usecase.auxiliaryClasses.UseCaseVerticalLayouter;
 import draw.usecase.figures.UseCaseFigure;
@@ -21,6 +23,7 @@ import javax.swing.Action;
 import org.jhotdraw.app.action.DuplicateAction;
 import org.jhotdraw.draw.AbstractFigureListener;
 import org.jhotdraw.draw.BoxHandleKit;
+import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureEvent;
 import org.jhotdraw.draw.GraphicalCompositeFigure;
 import org.jhotdraw.draw.Handle;
@@ -81,8 +84,18 @@ public class ClassFigure extends AbstractDiagramElementFigure {
     //!!!!!!!!!!!IMPORTANT!!!!!!!!!!!!!!!1
     @Override
     public Collection<Action> getActions(Point2D.Double p){
+        
         Collection<Action> actions= new LinkedList<Action>();
         actions.add(new AddAttributeAction(this));
+        
+        //proveri da slucajno nije klinuto na neki atribut
+        Figure possibleChild= attributes.findChild(p);
+        if(possibleChild!=null)
+        {
+            actions.add(new ChangeAttributeAction((AttributeFigure)possibleChild));
+            actions.add(new DeleteAttributeAction((AttributeFigure)possibleChild));
+        }
+        
         return actions;
     }
     
@@ -169,6 +182,9 @@ public class ClassFigure extends AbstractDiagramElementFigure {
          //kada se, nadam se, aktivira listener onFigurechanged u UmlDrawing klasi
          this.klasa.dodajAtribut(newAttribute.getAtribut());
          
+         //setuj ovu klasu kao parent-a, treba zbog brisanja atributa
+         newAttribute.setParent(this);
+         
          //dodaj komponentu na dijagram
          //ovo BI TREBALO da aktivira listener u UMLDrawing da je nesto promenjeno
          //i to bi trebalo da se uhvati na nivou cele klase.
@@ -182,6 +198,13 @@ public class ClassFigure extends AbstractDiagramElementFigure {
              System.out.println(e.getMessage());
          }
          
+     }
+     
+     public void DeleteAttribute(AttributeFigure attributeToDelete){
+         //obrisi atribut iz business objekta
+         this.klasa.obrisiAtribut(attributeToDelete.getAtribut().getID());
+         
+         this.attributes.remove(attributeToDelete);
      }
     
    

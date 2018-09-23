@@ -59,5 +59,13 @@ public class Atribut {
         public void setNaziv(String naziv) {
             this.naziv = naziv;
         }
+        
+        //pokuplja sve osim id-eva, oni se ne menjaju nikad
+        public void update(Atribut noviAtribut){
+            this.setNaziv(noviAtribut.getNaziv());
+            this.setTip(noviAtribut.getTip());
+            this.setVidljivost(noviAtribut.getVidljivost());
+            this.setIsStatic(noviAtribut.getIsStatic());
+        }
 
 }
