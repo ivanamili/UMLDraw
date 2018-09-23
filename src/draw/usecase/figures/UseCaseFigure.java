@@ -55,9 +55,6 @@ public class UseCaseFigure extends AbstractDiagramElementFigure{
             //target.firePropertyChange("name", e.getOldValue(), e.getNewValue());
         }
     }
-     
-      
-    
     private UseCase useCase;
     
     //kada se kreira novi use case koriscenjem tool-a

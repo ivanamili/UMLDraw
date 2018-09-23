@@ -5,6 +5,7 @@
  */
 package draw.classDiagram;
 
+import draw.classDiagram.figures.ClassFigure;
 import draw.usecase.*;
 import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
@@ -23,6 +24,7 @@ import javax.swing.JToolBar;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultApplicationModel;
 import org.jhotdraw.app.Project;
+import org.jhotdraw.app.action.CloseAction;
 import org.jhotdraw.app.action.ExportAction;
 import org.jhotdraw.app.action.ProjectPropertyAction;
 import org.jhotdraw.app.action.ToggleProjectPropertyAction;
@@ -71,6 +73,7 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
     }
     
     public ClassDiagramApplicationModel() {
+        this.putAction(CloseAction.ID, null);
     }
     
     public void initApplication(Application a) {
@@ -105,7 +108,7 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         ResourceBundleUtil labels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.samples.pert.Labels");
         ResourceBundleUtil drawLabels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.draw.Labels");
         //za nase nazive kontrola, i ostale potrepstine
-        ResourceBundleUtil ClassDiagramLabels=ResourceBundleUtil.getLAFBundle("draw.classDiagram.ClassDiagramLabels");
+        ResourceBundleUtil classDiagramLabels=ResourceBundleUtil.getLAFBundle("draw.classDiagram.ClassDiagramLabels");
         
         int orrientation=tb.getOrientation();
         
@@ -113,19 +116,15 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         tb.addSeparator();
        
 
-//        attributes = new HashMap<AttributeKey,Object>();
-//        attributes.put(AttributeKeys.STROKE_COLOR, new Color(0x000099));
-//        ToolBarButtonFactory.addToolTo(tb, editor, new ConnectionTool(new DependencyFigure(), attributes), "createDependency", labels);
-//        tb.addSeparator();
 
 
-//        //USE CASE TOOL
-//        attributes = new HashMap<AttributeKey,Object>();
-//        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
-//        attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
-//        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
-//        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new UseCaseFigure(), attributes), "createUseCase", useCaseLabels);
-//        
+        //USE CASE TOOL
+        attributes = new HashMap<AttributeKey,Object>();
+        attributes.put(AttributeKeys.FILL_COLOR, Color.white);
+        attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
+        attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
+        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new ClassFigure(), attributes), "createClass", classDiagramLabels);
+        
         
         ConnectionTool cnt;
         ConnectionFigure lc;

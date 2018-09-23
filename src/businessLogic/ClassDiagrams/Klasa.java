@@ -133,6 +133,20 @@ public class Klasa extends ClassDiagramElement {
         public void setCrtezIdentifikator(int id) {
             this.crtezID=id;
         }
+        
+        @Override
+        public Object clone(){
+            Klasa that= new Klasa();
+            that.setCrtezID(this.crtezID);
+            that.setID(this.ID);
+            that.setIme(this.ime);
+            that.setIsAbstract(this.isAbstract);
+            that.setIsStatic(this.isStatic);
+            that.setAtributCounter(this.atributCounter);
+            that.setMetodCounter(this.metodCounter);
+            //array liste ce da postavi default construktor
+            return that;
+        }
 
     
         public RectangleFigure getOkvir() {

@@ -63,7 +63,7 @@ public class ClassDiagramProject extends AbstractProject {
         //TREBA DA BI MMOGLO DA SE CUVA KAO XML I DA SE UCITA CRTEZ
         
         undo = new UndoRedoManager();
-        view.setDrawing(new UmlDrawing());//OVDE CE DA IDE CRTEZ!!!!!!!
+        view.setDrawing(new UmlDrawing());
         view.getDrawing().addUndoableEditListener(undo);
         initActions();
         undo.addPropertyChangeListener(new PropertyChangeListener() {
