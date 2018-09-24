@@ -7,10 +7,12 @@ package draw.classDiagram.figures.method;
 
 import businessLogic.ClassDiagrams.Argument;
 import businessLogic.ClassDiagrams.Metod;
+import draw.classDiagram.auxiliaryClasses.IMethodContainer;
 import draw.classDiagram.figures.ClassFigure;
 import java.util.ArrayList;
 import static org.jhotdraw.draw.AttributeKeys.FONT_ITALIC;
 import static org.jhotdraw.draw.AttributeKeys.FONT_UNDERLINED;
+import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.TextFigure;
 
 /**
@@ -20,7 +22,7 @@ import org.jhotdraw.draw.TextFigure;
 public class MethodFigure extends TextFigure{
     
     private Metod method;
-    private ClassFigure parent;
+    private IMethodContainer parent;
     
     public Metod getMethod(){
         return this.method;
@@ -90,14 +92,14 @@ public class MethodFigure extends TextFigure{
     /**
      * @return the parent
      */
-    public ClassFigure getParent() {
+    public IMethodContainer getParent() {
         return parent;
     }
 
     /**
      * @param parent the parent to set
      */
-    public void setParent(ClassFigure parent) {
+    public void setParent(IMethodContainer parent) {
         this.parent = parent;
     }
    

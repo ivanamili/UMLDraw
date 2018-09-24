@@ -7,6 +7,7 @@ package draw.classDiagram.figures.method;
 
 import businessLogic.ClassDiagrams.Argument;
 import businessLogic.ClassDiagrams.Metod;
+import draw.classDiagram.auxiliaryClasses.IMethodContainer;
 import draw.classDiagram.figures.ClassFigure;
 import enumerations.VisibilityTypeEnum;
 import java.awt.Dimension;
@@ -31,9 +32,9 @@ import javax.swing.JTextField;
  */
 public class AddMethodAction extends AbstractAction{
 
-    private ClassFigure callingFigure;
+    private IMethodContainer callingFigure;
     
-    public AddMethodAction(ClassFigure figure){
+    public AddMethodAction(IMethodContainer figure){
         super("New method");
         this.callingFigure=figure;
     }
@@ -111,7 +112,7 @@ public class AddMethodAction extends AbstractAction{
             }
             
             MethodFigure newFigure= new MethodFigure(noviMetod);
-            this.callingFigure.AddMethod(newFigure);
+            this.callingFigure.AddNewMethod(newFigure);
         }
     }
     

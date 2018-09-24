@@ -94,6 +94,18 @@ public class Interfejs extends ClassDiagramElement {
         public void setOkvir(RectangleFigure okvir) {
             this.okvir = okvir;
         }
+        
+         
+        @Override
+        public Object clone(){
+            Interfejs that= new Interfejs();
+            that.setCrtezID(this.crtezID);
+            that.setID(this.ID);
+            that.setNaziv(this.naziv);
+            that.setMetodCounter(this.metodCounter);
+            //array liste ce da postavi default construktor
+            return that;
+        }
 
 
 }

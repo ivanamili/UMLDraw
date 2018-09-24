@@ -6,6 +6,7 @@
 package draw.classDiagram;
 
 import draw.classDiagram.figures.ClassFigure;
+import draw.classDiagram.figures.InterfaceFigure;
 import draw.usecase.*;
 import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
@@ -123,7 +124,7 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
         attributes.put(AttributeKeys.TEXT_COLOR, Color.black);
         ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new ClassFigure(), attributes), "createClass", classDiagramLabels);
-        
+        ToolBarButtonFactory.addToolTo(tb, editor, new CreationTool(new InterfaceFigure(), attributes), "createInterface", classDiagramLabels);
         
         ConnectionTool cnt;
         ConnectionFigure lc;

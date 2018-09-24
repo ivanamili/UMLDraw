@@ -8,6 +8,7 @@ package draw.classDiagram.figures;
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.ClassDiagrams.Klasa;
 import businessLogic.UseCaseDiagrams.UseCase;
+import draw.classDiagram.auxiliaryClasses.IMethodContainer;
 import draw.classDiagram.figures.attribute.AddAttributeAction;
 import draw.classDiagram.figures.attribute.AttributeFigure;
 import draw.classDiagram.figures.attribute.ChangeAttributeAction;
@@ -43,12 +44,13 @@ import org.jhotdraw.samples.pert.figures.SeparatorLineFigure;
  *
  * @author Korisnik
  */
-public class ClassFigure extends AbstractDiagramElementFigure {
+public class ClassFigure extends AbstractDiagramElementFigure implements IMethodContainer {
     
     private Klasa klasa;
     ListFigure attributes= new ListFigure();
     ListFigure methods = new ListFigure();
-    
+
+   
     //adapter za ime klase
      private static class ClassNameAdapter extends AbstractFigureListener {
         private ClassFigure target;
@@ -120,32 +122,31 @@ public class ClassFigure extends AbstractDiagramElementFigure {
         TextFigure name= new TextFigure(){
             @Override
              public void basicSetBounds(Point2D.Double anchor, Point2D.Double lead) {
-            double width=Math.abs(lead.x-anchor.x);
-            Rectangle2D textbounds=this.getTextLayout().getBounds();
-            double x= (width-textbounds.getWidth())/2.0;
-            origin = new Point2D.Double(anchor.x+x, anchor.y);
-    }
+                double width=Math.abs(lead.x-anchor.x);
+                Rectangle2D textbounds=this.getTextLayout().getBounds();
+                double x= (width-textbounds.getWidth())/2.0;
+                origin = new Point2D.Double(anchor.x+x, anchor.y);
+            }
         };
         name.setText(this.klasa.getIme());
         //ovde treba za static i za abstract da se ubaci stil
+        LAYOUT_INSETS.set(name, defaultInsets);
         add(name);
         //menja ime klase u bussiness objektu kad se promeni tekst
         name.addFigureListener(new ClassNameAdapter(this));
         
         add(new SeparatorLineFigure());
         
-        SeparatorLineFigure sep;
-        
-        add(attributes);//child 3
-        add(sep=new SeparatorLineFigure());
-        add(methods);//child 5
+        SeparatorLineFigure sep=new SeparatorLineFigure();
+        Insets2DDouble insets = new Insets2DDouble(4,0,4,0);
+        LAYOUT_INSETS.set(sep, insets);
         
         LAYOUT_INSETS.set(attributes, defaultInsets);
         LAYOUT_INSETS.set(methods, defaultInsets);
-        LAYOUT_INSETS.set(name, defaultInsets);
         
-        Insets2DDouble insets = new Insets2DDouble(4,0,4,0);
-        LAYOUT_INSETS.set(sep, insets);
+        add(attributes);//child 3
+        add(sep);
+        add(methods);//child 5
     }
     
     public ListFigure getAttributesContainer(){
@@ -222,24 +223,22 @@ public class ClassFigure extends AbstractDiagramElementFigure {
          this.attributes.remove(attributeToDelete);
      }
      
-     public void AddMethod(MethodFigure newMethod){
-         //prvo dodavanje u model
+    @Override
+    public void AddNewMethod(MethodFigure newMethod) {
+        //prvo dodavanje u model
          this.klasa.dodajMetodu(newMethod.getMethod());
          
          //setovanje parenta zbog brisanja
-         newMethod.setParent(this);
+         newMethod.setParent((IMethodContainer)this);
          
          //dodavanje same figure u crtez
          methods.add(newMethod);
-     }
+    }
      
-     public void DeleteMethod(MethodFigure methodToDelete){
-         this.klasa.obrisiMetodu(methodToDelete.getMethod().getID());
-         this.methods.remove(methodToDelete);
-     }
-    
-   
-    
- 
-    
+    @Override
+    public void DeleteMethod(MethodFigure methodToDelete) {
+        this.klasa.obrisiMetodu(methodToDelete.getMethod().getID());
+        this.methods.remove(methodToDelete);
+    }
+     
 }
