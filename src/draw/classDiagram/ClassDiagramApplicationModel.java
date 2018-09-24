@@ -5,7 +5,11 @@
  */
 package draw.classDiagram;
 
+import draw.classDiagram.figures.AgregationConnectionFigure;
 import draw.classDiagram.figures.ClassFigure;
+import draw.classDiagram.figures.CompositionConnectionFigure;
+import draw.classDiagram.figures.GeneralisationConnectionFigure;
+import draw.classDiagram.figures.ImplementationConnectionFigure;
 import draw.classDiagram.figures.InterfaceFigure;
 import draw.usecase.*;
 import draw.usecase.figures.AktorConnectionFigure;
@@ -114,11 +118,8 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         
         ToolBarButtonFactory.addSelectionToolTo(tb, editor);
         tb.addSeparator();
-       
-
-
-
-        //USE CASE TOOL
+        
+        //klase i interfjesi
         attributes = new HashMap<AttributeKey,Object>();
         attributes.put(AttributeKeys.FILL_COLOR, Color.white);
         attributes.put(AttributeKeys.STROKE_COLOR, Color.black);
@@ -128,12 +129,26 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         
         ConnectionTool cnt;
         ConnectionFigure lc;
+        ToolBarButtonFactory.addToolTo(tb, editor, cnt= new ConnectionTool(new GeneralisationConnectionFigure()), "createGeneralisation", classDiagramLabels);
+        //ovo omogucava da se linija presavija na centru automatski kako se prevlace figure i omogucava bolje rasporedjivanje
+        lc =  cnt.getPrototype();
+        lc.setLiner(new ElbowLiner());
         
-//        ///EXTEND KONEKCIJA TOOL
-//        ToolBarButtonFactory.addToolTo(tb, editor, cnt= new ConnectionTool(new ExtendConnectionFigure()), "createExtendKonekcija", useCaseLabels);
-//        //ovo omogucava da se linija presavija na centru automatski kako se prevlace figure i omogucava bolje rasporedjivanje
-//        //lc =  cnt.getPrototype();
-//        //lc.setLiner(new ElbowLiner());
+        ConnectionTool cnt2;
+        ConnectionFigure lc2;
+        ToolBarButtonFactory.addToolTo(tb, editor,cnt2=new ConnectionTool(new ImplementationConnectionFigure()), "createImplementation", classDiagramLabels);
+        //ovo omogucava da se linija presavija na centru automatski kako se prevlace figure i omogucava bolje rasporedjivanje
+        lc2 =  cnt2.getPrototype();
+        lc2.setLiner(new ElbowLiner());
+        
+        ConnectionTool cnt3;
+        ConnectionFigure lc3;
+        ToolBarButtonFactory.addToolTo(tb, editor,cnt3=new ConnectionTool(new AgregationConnectionFigure()), "createAgregation", classDiagramLabels);
+        //ovo omogucava da se linija presavija na centru automatski kako se prevlace figure i omogucava bolje rasporedjivanje
+//        lc3 =  cnt3.getPrototype();
+//        lc3.setLiner();
+
+        ToolBarButtonFactory.addToolTo(tb, editor,new ConnectionTool(new CompositionConnectionFigure()), "createComposition", classDiagramLabels);
 
         
     }

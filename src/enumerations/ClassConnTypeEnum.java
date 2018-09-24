@@ -10,5 +10,5 @@ package enumerations;
  * @author Korisnik
  */
 public enum ClassConnTypeEnum {
-    IMPLEMENTATION,AGREGATION,ASSOTIATION,COMPOSITION
+    IMPLEMENTATION,AGREGATION,GENERALISATION,COMPOSITION
 }

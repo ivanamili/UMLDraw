@@ -2,6 +2,7 @@ package businessLogic.ClassDiagrams;
 
 import businessLogic.AbstractClassHierarchy.ClassDiagramElement;
 import businessLogic.AbstractClassHierarchy.Veza;
+import businessLogic.UseCaseDiagrams.UseCaseVeza;
 import enumerations.ClassConnTypeEnum;
 import java.io.Serializable;
 import org.hibernate.Query;
@@ -71,6 +72,18 @@ public class ClassDiagramVeza extends Veza implements Serializable{
         @Override
         public void setCrtezIdentifikator(int id) {
             this.crtezID=id;
+        }
+        
+        @Override
+        public Object clone(){
+            ClassDiagramVeza that= new ClassDiagramVeza();
+            that.setCrtezID(this.crtezID);
+            that.setID(this.ID);
+            that.setOdKoga(this.odKoga);
+            that.setDoKoga(this.doKoga);
+            that.setTip(this.tip);
+            
+            return that;
         }
 
 }
