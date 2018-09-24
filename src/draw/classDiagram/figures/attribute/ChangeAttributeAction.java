@@ -39,6 +39,7 @@ public class ChangeAttributeAction extends AbstractAction{
         attrTip.setText(this.callingFigure.getAtribut().getTip());
         
         JComboBox attrVidljivost = new JComboBox(VisibilityTypeEnum.values());
+        attrVidljivost.setSelectedItem(this.callingFigure.getAtribut().getVidljivost());
         
         JCheckBox attrIsStatic = new JCheckBox("is Static");
         attrIsStatic.setSelected(this.callingFigure.getAtribut().getIsStatic());

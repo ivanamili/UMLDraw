@@ -12,6 +12,10 @@ import draw.classDiagram.figures.attribute.AddAttributeAction;
 import draw.classDiagram.figures.attribute.AttributeFigure;
 import draw.classDiagram.figures.attribute.ChangeAttributeAction;
 import draw.classDiagram.figures.attribute.DeleteAttributeAction;
+import draw.classDiagram.figures.method.AddMethodAction;
+import draw.classDiagram.figures.method.ChangeMethodAction;
+import draw.classDiagram.figures.method.DeleteMethodAction;
+import draw.classDiagram.figures.method.MethodFigure;
 import draw.commonClasses.AbstractDiagramElementFigure;
 import draw.usecase.auxiliaryClasses.UseCaseVerticalLayouter;
 import draw.usecase.figures.UseCaseFigure;
@@ -86,15 +90,26 @@ public class ClassFigure extends AbstractDiagramElementFigure {
     public Collection<Action> getActions(Point2D.Double p){
         
         Collection<Action> actions= new LinkedList<Action>();
-        actions.add(new AddAttributeAction(this));
+        
         
         //proveri da slucajno nije klinuto na neki atribut
         Figure possibleChild= attributes.findChild(p);
-        if(possibleChild!=null)
+        if(possibleChild!=null )
         {
             actions.add(new ChangeAttributeAction((AttributeFigure)possibleChild));
             actions.add(new DeleteAttributeAction((AttributeFigure)possibleChild));
         }
+        
+        //u slucaju da je kliknuto na neki metod
+        Figure possibleChild2= methods.findChild(p);
+        if(possibleChild2!=null){
+            actions.add(new ChangeMethodAction((MethodFigure)possibleChild2));
+            actions.add(new DeleteMethodAction((MethodFigure)possibleChild2));            
+        }
+        
+        //akcije na nivou klase        
+        actions.add(new AddAttributeAction(this));
+        actions.add(new AddMethodAction(this));
         
         return actions;
     }
@@ -205,6 +220,22 @@ public class ClassFigure extends AbstractDiagramElementFigure {
          this.klasa.obrisiAtribut(attributeToDelete.getAtribut().getID());
          
          this.attributes.remove(attributeToDelete);
+     }
+     
+     public void AddMethod(MethodFigure newMethod){
+         //prvo dodavanje u model
+         this.klasa.dodajMetodu(newMethod.getMethod());
+         
+         //setovanje parenta zbog brisanja
+         newMethod.setParent(this);
+         
+         //dodavanje same figure u crtez
+         methods.add(newMethod);
+     }
+     
+     public void DeleteMethod(MethodFigure methodToDelete){
+         this.klasa.obrisiMetodu(methodToDelete.getMethod().getID());
+         this.methods.remove(methodToDelete);
      }
     
    

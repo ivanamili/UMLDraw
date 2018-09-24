@@ -106,5 +106,12 @@ public class Metod {
             this.argumentIDCounter++;
             this.argumenti.add(arg);
         }
+        
+        //updatuje samo ime, vidljivost i povratnu vrednost, ne i argumente
+        public void updateMetod(Metod newMetod){
+            this.setNaziv(newMetod.getNaziv());
+            this.setPovratnaVrednost(newMetod.getPovratnaVrednost());
+            this.setVidljivost(newMetod.getVidljivost());
+        }
 
 }

@@ -73,7 +73,6 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
     }
     
     public ClassDiagramApplicationModel() {
-        this.putAction(CloseAction.ID, null);
     }
     
     public void initApplication(Application a) {
