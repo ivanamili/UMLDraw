@@ -32,7 +32,7 @@ import store.entity.*;
     -delete
     -getByID
 */
-public class PersistenceManager {
+public class PersistenceManager implements IPersistenceManager {
     
     //za hibernate je neophodan sessionFactory objekat za kreiranje sesije
     //ovo je heavyweight objekat i kreira se samo jednom, pri kreiranju samog objekta

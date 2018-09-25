@@ -6,6 +6,11 @@ public class Korisnik {
 	private String sifra;
 	private Crtez trenutniCrtez;
         
+        public Korisnik()
+        {
+            this.trenutniCrtez=null;
+        }
+        
 	public String getIme() {
 		return this.ime;
 	}
