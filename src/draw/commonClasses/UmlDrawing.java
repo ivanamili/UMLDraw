@@ -8,6 +8,8 @@ package draw.commonClasses;
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.AbstractClassHierarchy.*;
 import businessLogic.CommonClasses.Crtez;
+import com.rabbitmq.client.ConnectionFactory;
+import javax.swing.JToolBar;
 import org.jhotdraw.draw.ConnectionFigure;
 import org.jhotdraw.draw.DefaultDrawing;
 import org.jhotdraw.draw.DrawingEvent;
@@ -15,6 +17,8 @@ import org.jhotdraw.draw.DrawingListener;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureEvent;
 import org.jhotdraw.draw.LineConnectionFigure;
+
+
 
 /**
 *Drawing koji sadrzi u sebi crtez.
@@ -27,12 +31,28 @@ import org.jhotdraw.draw.LineConnectionFigure;
 public class UmlDrawing extends DefaultDrawing implements DrawingListener{
     
     private Crtez UmlCrtez;
+    //sluzi da bi se znalo da li je korisnik taj koji crta i treba objekti da se salju
+    //ili su objekti vec stigli kroz mrezu i ne treba ponovo da se salju.
+    private boolean isDrawing;
+    
+    
+    //treba nam da bi odavde mogli da se disablujemo i enablujemo kad treba
+    private JToolBar drawingToolbar;
 
     public UmlDrawing()
     {
-        super();
+        super();        
         UmlCrtez=new Crtez();
+        isDrawing=false;
         this.addDrawingListener(this);
+    }
+    
+    public void setIsDrawing(boolean isDrawing){
+        this.isDrawing=isDrawing;
+    }
+    
+    public void setToolBar(JToolBar toolBar){
+        this.drawingToolbar=toolBar;
     }
    
     public Crtez getUmlCrtez() {
@@ -103,6 +123,14 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
         }
         
         this.UmlCrtez.getID();
+    }
+    
+    //  metode neophodne za interakciju sa editorom usled slanja i primanja objekata kroz mrezu
+    
+    public void handleDoneDrawing(){
+        if(isDrawing){
+            String tamoneksto="";
+        }
     }
     
     

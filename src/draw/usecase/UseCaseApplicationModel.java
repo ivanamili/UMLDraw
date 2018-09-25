@@ -11,6 +11,8 @@ import draw.usecase.figures.ExtendConnectionFigure;
 import draw.usecase.figures.IncludeConnectionFigure;
 import draw.usecase.figures.UseCaseFigure;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -176,6 +178,19 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         tb.setName("Use Case tools");
         list.add(tb);
         
+        //add button for finishing drawing and letting others write.
+        tb.addSeparator();
+        JButton finished= new JButton("      Done       ");
+        finished.setFont(new Font("Arial", Font.BOLD, 20));
+        //zakaci listener na funkciju iz UMLDrawing
+        finished.addActionListener((ActionEvent e) -> {
+            //kazi crtezu da je gotovo sa crtanjem
+            p.getUmlDrawing().handleDoneDrawing();
+        });        
+        tb.add(finished);
+        //da bi is drawinga mogli da disablujemo toolbar kad se crtanje zavrsi
+        //i enablujemo kada dodje red da opet crta
+        p.getUmlDrawing().setToolBar(tb);
         return list;
     }
 }

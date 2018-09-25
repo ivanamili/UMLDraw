@@ -6,6 +6,7 @@
 package draw.mainApplication;
 
 import draw.classDiagram.ClassDiagramApplicationModel;
+import draw.commonClasses.UmlDrawSDIApplication;
 import draw.usecase.UseCaseApplicationModel;
 import javax.swing.JFrame;
 import org.jhotdraw.app.Application;
@@ -83,7 +84,7 @@ public class StartupApp extends javax.swing.JFrame {
         
         Application app;
         String os = System.getProperty("os.name").toLowerCase();
-        app = new DefaultSDIApplication();
+        app = new UmlDrawSDIApplication();
         
         UseCaseApplicationModel model = new UseCaseApplicationModel();
         
@@ -101,7 +102,7 @@ public class StartupApp extends javax.swing.JFrame {
         
         Application app;
         String os = System.getProperty("os.name").toLowerCase();
-        app = new DefaultSDIApplication();
+        app = new UmlDrawSDIApplication();
         
         ClassDiagramApplicationModel model = new ClassDiagramApplicationModel();
         

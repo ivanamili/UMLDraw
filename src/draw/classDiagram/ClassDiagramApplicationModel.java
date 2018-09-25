@@ -11,6 +11,7 @@ import draw.classDiagram.figures.CompositionConnectionFigure;
 import draw.classDiagram.figures.GeneralisationConnectionFigure;
 import draw.classDiagram.figures.ImplementationConnectionFigure;
 import draw.classDiagram.figures.InterfaceFigure;
+import draw.commonClasses.DisableAllInContainer;
 import draw.usecase.*;
 import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
@@ -18,6 +19,10 @@ import draw.usecase.figures.ExtendConnectionFigure;
 import draw.usecase.figures.IncludeConnectionFigure;
 import draw.usecase.figures.UseCaseFigure;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -162,6 +167,10 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         ResourceBundleUtil labels = ResourceBundleUtil.getLAFBundle("org.jhotdraw.samples.pert.Labels");
         ClassDiagramProject p = (ClassDiagramProject) pr;
         
+        
+        
+        //OVDE IMAMO PRISTUP PROJEKTU
+        
         DrawingEditor editor;
         if (p == null) {
             editor = getSharedEditor();
@@ -174,6 +183,21 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         tb = new JToolBar(JToolBar.VERTICAL);
         addCreationButtonsTo(tb, editor);
         tb.setName("Class Diagram Tools");
+        
+        //add button for finishing drawing and letting others write.
+        tb.addSeparator();
+        JButton finished= new JButton("      Done       ");
+        finished.setFont(new Font("Arial", Font.BOLD, 20));
+        //zakaci listener na funkciju iz UMLDrawing
+        finished.addActionListener((ActionEvent e) -> {
+            //kazi crtezu da je gotovo sa crtanjem
+            p.getUmlDrawing().handleDoneDrawing();
+        });        
+        tb.add(finished);
+        //da bi is drawinga mogli da disablujemo toolbar kad se crtanje zavrsi
+        //i enablujemo kada dodje red da opet crta
+        p.getUmlDrawing().setToolBar(tb);
+        
         list.add(tb);
         
         return list;

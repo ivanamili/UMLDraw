@@ -35,6 +35,7 @@ public class ClassDiagramProject extends AbstractProject {
      * project, or a single shared editor for all projects.
      */
     private DrawingEditor editor;
+    private UmlDrawing umlDrawing;
     
     private GridConstrainer visibleConstrainer = new GridConstrainer(10, 10);
     private GridConstrainer invisibleConstrainer = new GridConstrainer(1, 1);
@@ -44,6 +45,11 @@ public class ClassDiagramProject extends AbstractProject {
      * Creates a new Project.
      */
     public ClassDiagramProject() {
+        umlDrawing=new UmlDrawing();
+    }
+    
+    public UmlDrawing getUmlDrawing(){
+        return this.umlDrawing;
     }
     
     /**
@@ -63,7 +69,8 @@ public class ClassDiagramProject extends AbstractProject {
         //TREBA DA BI MMOGLO DA SE CUVA KAO XML I DA SE UCITA CRTEZ
         
         undo = new UndoRedoManager();
-        view.setDrawing(new UmlDrawing());
+        //uzima se umlDrawing kreiran u konstruktoru da bi mogao da se dohvati gde treba
+        view.setDrawing(umlDrawing);
         view.getDrawing().addUndoableEditListener(undo);
         initActions();
         undo.addPropertyChangeListener(new PropertyChangeListener() {
