@@ -20,6 +20,7 @@ import communicationBroker.messages.DiagramMessageType;
 import communicationBroker.messages.handleInterfaces.IHandleDiagramMessage;
 import enumerations.RuntimeClassEnum;
 import javax.swing.JToolBar;
+import org.jboss.logging.Message;
 import org.jhotdraw.draw.ConnectionFigure;
 import org.jhotdraw.draw.DefaultDrawing;
 import org.jhotdraw.draw.DrawingEvent;
@@ -184,5 +185,42 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
 
         return null;
     }
+
+    @Override
+    public void HandleDiagramMessage(DiagramMessage message) {
+        switch(message.getMessageType())
+        {
+        
+            case DiagramMessageType.ADDED:
+                
+                    HandleADD(message);
+                
+            case DiagramMessageType.DELETED:
+                
+                    HandleDELETED(message);
+                
+            case DiagramMessageType.CHANGED:
+                
+                    HandleCHANGED(message);
+                
+        
+    }
+       
+}
+    public void HandleADD(DiagramMessage message)
+    {
+        
+        
+    }
     
+      public void HandleDELETED(DiagramMessage message)
+    {
+        
+        
+    }
+        public void HandleCHANGED(DiagramMessage message)
+    {
+        
+        
+    }
 }
