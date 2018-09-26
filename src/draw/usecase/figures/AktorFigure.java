@@ -39,6 +39,10 @@ import draw.commonClasses.AbstractDiagramElementFigure;
 public class AktorFigure extends AbstractDiagramElementFigure {
     
     private Aktor aktor;
+
+    public AktorFigure(Aktor aktor) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
      private static class AktorNameAdapter extends AbstractFigureListener {
         private AktorFigure target;

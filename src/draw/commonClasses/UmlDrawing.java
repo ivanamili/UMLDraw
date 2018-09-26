@@ -58,19 +58,36 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     //sluzi da bi se znalo da li je korisnik taj koji crta i treba objekti da se salju
     //ili su objekti vec stigli kroz mrezu i ne treba ponovo da se salju.
     private boolean isDrawing;
-    
+    private String loggedUser;
+     
     
     //treba nam da bi odavde mogli da se disablujemo i enablujemo kad treba
     private JToolBar drawingToolbar;
     private DiagramCommClient diagramComm=null;
     private DiagramMessage message;
-    public UmlDrawing(String receiveExchange, String logUser)
+    
+    public UmlDrawing()
     {
         super();        
-        UmlCrtez=new Crtez();
+        UmlCrtez=null;
         isDrawing=false;
         this.addDrawingListener(this);
+    }
+    
+    public void setupUmlDrawing(String logUser,Crtez startCrtez){
+        loggedUser=logUser;
+        UmlCrtez=startCrtez;
+        
+        String receiveExchange= UmlCrtez.getNaslov()+"_receive_exchange";
         diagramComm=new DiagramCommClient(receiveExchange,this,logUser);
+        diagramComm.startConsumer();
+        
+        if(loggedUser.equals(UmlCrtez.getImeAutora()))
+            isDrawing=true;
+        else
+            isDrawing=false;
+            
+         DisableAllInContainer.enableComponents(drawingToolbar, isDrawing);
     }
     
     public void setIsDrawing(boolean isDrawing){

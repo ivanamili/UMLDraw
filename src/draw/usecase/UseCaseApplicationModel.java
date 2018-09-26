@@ -5,6 +5,7 @@
  */
 package draw.usecase;
 
+import businessLogic.CommonClasses.Crtez;
 import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
 import draw.usecase.figures.ExtendConnectionFigure;
@@ -57,6 +58,9 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
     private DefaultDrawingEditor sharedEditor;
     private HashMap<String,Action> actions;
     
+    private String loggedUser;
+    private Crtez createdCrtez;
+    
     private static class ToolButtonListener implements ItemListener {
         private Tool tool;
         private DrawingEditor editor;
@@ -71,7 +75,9 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         }
     }
     
-    public UseCaseApplicationModel() {
+    public UseCaseApplicationModel(String loggedUser, Crtez crtez) {
+        this.loggedUser=loggedUser;
+        this.createdCrtez=crtez;
     }
     
     public void initApplication(Application a) {
@@ -191,6 +197,8 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         //da bi is drawinga mogli da disablujemo toolbar kad se crtanje zavrsi
         //i enablujemo kada dodje red da opet crta
         p.getUmlDrawing().setToolBar(tb);
+        p.getUmlDrawing().setupUmlDrawing(loggedUser, createdCrtez);
+        
         return list;
     }
 }

@@ -30,6 +30,10 @@ public class ImplementationConnectionFigure extends AbstractDiagramConnectionFig
         this.veza= new ClassDiagramVeza();
         initFigure();
     }
+
+    public ImplementationConnectionFigure(ClassDiagramVeza bussinesObject) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     @Override
     public AbstractDiagramElement getDataObject() {
         return this.veza;

@@ -1,6 +1,7 @@
 
 package draw.classDiagram;
 
+import businessLogic.CommonClasses.Crtez;
 import draw.usecase.*;
 import draw.commonClasses.UmlDrawing;
 import java.util.prefs.*;

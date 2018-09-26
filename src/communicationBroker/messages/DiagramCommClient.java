@@ -49,6 +49,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
            
             
             //kreiranje reda za odgovore sa servera
+            channel.exchangeDeclare(receiveExchange, BuiltinExchangeType.FANOUT);
             receiveQueue = channel.queueDeclare().getQueue();
             channel.queueBind(receiveQueue,receiveExchange,"");
             
@@ -67,6 +68,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
    
         try {
             message.setSender(logUser);
+            
             channel.basicPublish(receiveExchange,
             "", null, message.serializeMessage());
             return true;

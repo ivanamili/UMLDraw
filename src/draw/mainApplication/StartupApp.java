@@ -41,6 +41,8 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     private Crtez createdCrtez=null;
     private Crtez joinedCrtez=null;
     
+    private Crtez currentWorkingCrtez=null;
+    
     private DefaultListModel<String> contributorListModel;
     private DefaultListModel<String> joinDiagramListModel;
     
@@ -72,9 +74,6 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        DefaultPanel = new javax.swing.JPanel();
-        btnStartUseCase = new javax.swing.JButton();
-        btnStartClassDiagram = new javax.swing.JButton();
         MainPanel = new javax.swing.JPanel();
         RegisterLoginPanel = new javax.swing.JPanel();
         lblUsername = new javax.swing.JLabel();
@@ -131,41 +130,6 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                 formWindowClosing(evt);
             }
         });
-
-        btnStartUseCase.setText("Use Case Diagram");
-        btnStartUseCase.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStartUseCaseActionPerformed(evt);
-            }
-        });
-
-        btnStartClassDiagram.setText("Class Diagram");
-        btnStartClassDiagram.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStartClassDiagramActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout DefaultPanelLayout = new javax.swing.GroupLayout(DefaultPanel);
-        DefaultPanel.setLayout(DefaultPanelLayout);
-        DefaultPanelLayout.setHorizontalGroup(
-            DefaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DefaultPanelLayout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addGroup(DefaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnStartClassDiagram, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnStartUseCase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(139, 139, 139))
-        );
-        DefaultPanelLayout.setVerticalGroup(
-            DefaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(DefaultPanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(btnStartUseCase)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnStartClassDiagram)
-                .addContainerGap(22, Short.MAX_VALUE))
-        );
 
         MainPanel.setLayout(new java.awt.CardLayout());
 
@@ -267,7 +231,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         StartCrtezPanelLayout.setVerticalGroup(
             StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(StartCrtezPanelLayout.createSequentialGroup()
-                .addContainerGap(91, Short.MAX_VALUE)
+                .addContainerGap(104, Short.MAX_VALUE)
                 .addComponent(btnCreateNewCrtez)
                 .addGap(19, 19, 19)
                 .addComponent(btnJoinCrtez)
@@ -582,7 +546,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                 .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(lblAdminCurrentDrawingUser))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         MainPanel.add(AdminPanel, "card7");
@@ -591,55 +555,15 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(DefaultPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(MainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(DefaultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnStartUseCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartUseCaseActionPerformed
-        //just fake command line arguments
-        String[] args=null;
-        
-        Application app;
-        String os = System.getProperty("os.name").toLowerCase();
-        app = new UmlDrawSDIApplication();
-        
-        UseCaseApplicationModel model = new UseCaseApplicationModel();
-        
-        model.setName("UMLDraw u pokusaju");
-        model.setVersion("0.5");
-        model.setCopyright("Copyright IvanaMilivojevic");
-        model.setProjectClassName("draw.usecase.UseCaseProject");
-        app.setModel(model);
-        app.launch(args);
-    }//GEN-LAST:event_btnStartUseCaseActionPerformed
-
-    private void btnStartClassDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartClassDiagramActionPerformed
-         //just fake command line arguments
-        String[] args=null;
-        
-        Application app;
-        String os = System.getProperty("os.name").toLowerCase();
-        app = new UmlDrawSDIApplication();
-        
-        ClassDiagramApplicationModel model = new ClassDiagramApplicationModel();
-        
-        model.setName("UMLDraw u pokusaju");
-        model.setVersion("0.5");
-        model.setCopyright("Copyright IvanaMilivojevic");
-        model.setProjectClassName("draw.classDiagram.ClassDiagramProject");
-        app.setModel(model);
-        app.launch(args);
-    }//GEN-LAST:event_btnStartClassDiagramActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         
@@ -809,7 +733,6 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AdminPanel;
     private javax.swing.JPanel CreateNewPanel;
-    private javax.swing.JPanel DefaultPanel;
     private javax.swing.JPanel JoinExisting;
     private javax.swing.JPanel MainPanel;
     private javax.swing.JPanel RegisterLoginPanel;
@@ -823,9 +746,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     private javax.swing.JButton btnJoinDiagramRefresh;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
-    private javax.swing.JButton btnStartClassDiagram;
     private javax.swing.JToggleButton btnStartDrawing;
-    private javax.swing.JButton btnStartUseCase;
     private javax.swing.JComboBox<String> cmbDiagramType;
     private javax.swing.JList<String> existingDiagramList;
     private javax.swing.JLabel jLabel1;
@@ -961,12 +882,27 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         
     }
     
+    private void initializeAdminPannel(Crtez crtezToStart)
+    {
+        currentWorkingCrtez=crtezToStart;
+        lblAdminDiagramName.setText(currentWorkingCrtez.getNaslov());
+        lblAdminDiagramType.setText(currentWorkingCrtez.getTip().toString());
+        lblAdminAutorName.setText(currentWorkingCrtez.getImeAutora());
+        lblAdminCurrentDrawingUser.setText(currentWorkingCrtez.getImeAutora());
+        
+        adminContributorList.setModel(contributorListModel);
+        cardLayout.show(MainPanel, "card7");
+        
+    }
+    
     private void startDrawingWindow(Crtez crtezToStart)
     {
         if(crtezToStart.getTip()==DiagramTypeEnum.CLASS)
             startClassDrawingWindow(crtezToStart);
         else if (crtezToStart.getTip()==DiagramTypeEnum.USECASE)
             startUseCaseDrawingWindow(crtezToStart);
+        
+        initializeAdminPannel(crtezToStart);
     }
     
     private void startClassDrawingWindow(Crtez crtezToStart){
@@ -977,9 +913,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         String os = System.getProperty("os.name").toLowerCase();
         app = new UmlDrawSDIApplication();
         
-        ClassDiagramApplicationModel model = new ClassDiagramApplicationModel();
+        ClassDiagramApplicationModel model = new ClassDiagramApplicationModel(loggedUser, crtezToStart);
         
-        model.setName("User: "+loggedUser);
+        model.setName("User: "+loggedUser+", Diagram name: "+crtezToStart.getNaslov());
         model.setVersion("0.5");
         model.setCopyright("Copyright IvanaMilivojevic");
         model.setProjectClassName("draw.classDiagram.ClassDiagramProject");
@@ -995,9 +931,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         String os = System.getProperty("os.name").toLowerCase();
         app = new UmlDrawSDIApplication();
         
-        UseCaseApplicationModel model = new UseCaseApplicationModel();
+        UseCaseApplicationModel model = new UseCaseApplicationModel(loggedUser, crtezToStart);
         
-        model.setName("User: "+loggedUser);
+        model.setName("User: "+loggedUser+", Diagram name: "+crtezToStart.getNaslov());
         model.setVersion("0.5");
         model.setCopyright("Copyright IvanaMilivojevic");
         model.setProjectClassName("draw.usecase.UseCaseProject");

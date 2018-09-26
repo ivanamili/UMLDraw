@@ -1,6 +1,7 @@
 
 package draw.usecase;
 
+import businessLogic.CommonClasses.Crtez;
 import draw.commonClasses.UmlDrawing;
 import java.util.prefs.*;
 import org.jhotdraw.gui.*;

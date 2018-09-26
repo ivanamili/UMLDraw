@@ -5,6 +5,7 @@
  */
 package draw.classDiagram;
 
+import businessLogic.CommonClasses.Crtez;
 import draw.classDiagram.figures.AgregationConnectionFigure;
 import draw.classDiagram.figures.ClassFigure;
 import draw.classDiagram.figures.CompositionConnectionFigure;
@@ -68,6 +69,9 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
     private DefaultDrawingEditor sharedEditor;
     private HashMap<String,Action> actions;
     
+    private String loggedUser;
+    private Crtez createdCrtez;
+    
     private static class ToolButtonListener implements ItemListener {
         private Tool tool;
         private DrawingEditor editor;
@@ -82,7 +86,9 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         }
     }
     
-    public ClassDiagramApplicationModel() {
+    public ClassDiagramApplicationModel(String loggedUser, Crtez crtez) {
+        this.loggedUser=loggedUser;
+        this.createdCrtez=crtez;
     }
     
     public void initApplication(Application a) {
@@ -197,6 +203,7 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         //da bi is drawinga mogli da disablujemo toolbar kad se crtanje zavrsi
         //i enablujemo kada dodje red da opet crta
         p.getUmlDrawing().setToolBar(tb);
+        p.getUmlDrawing().setupUmlDrawing(loggedUser, createdCrtez);
         
         list.add(tb);
         
