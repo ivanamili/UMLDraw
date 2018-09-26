@@ -7,8 +7,18 @@ package draw.commonClasses;
 
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.AbstractClassHierarchy.*;
+import businessLogic.ClassDiagrams.*;
 import businessLogic.CommonClasses.Crtez;
+import businessLogic.UseCaseDiagrams.Aktor;
+import businessLogic.UseCaseDiagrams.AktorVeza;
+import businessLogic.UseCaseDiagrams.UseCase;
+import businessLogic.UseCaseDiagrams.UseCaseVeza;
 import com.rabbitmq.client.ConnectionFactory;
+import communicationBroker.messages.DiagramCommClient;
+import communicationBroker.messages.DiagramMessage;
+import communicationBroker.messages.DiagramMessageType;
+import communicationBroker.messages.handleInterfaces.IHandleDiagramMessage;
+import enumerations.RuntimeClassEnum;
 import javax.swing.JToolBar;
 import org.jhotdraw.draw.ConnectionFigure;
 import org.jhotdraw.draw.DefaultDrawing;
@@ -28,7 +38,7 @@ import org.jhotdraw.draw.LineConnectionFigure;
 *kako sam Crtez sadrzi reference business objekata, kako se oni budu menjali (a za njihovo azuriranje su zaduzene figure
 *koje ih sadrze) promene ce automatsi biti vidljive i u crtezu
 * */
-public class UmlDrawing extends DefaultDrawing implements DrawingListener{
+public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHandleDiagramMessage{
     
     private Crtez UmlCrtez;
     //sluzi da bi se znalo da li je korisnik taj koji crta i treba objekti da se salju
@@ -38,13 +48,15 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
     
     //treba nam da bi odavde mogli da se disablujemo i enablujemo kad treba
     private JToolBar drawingToolbar;
-
-    public UmlDrawing()
+    private DiagramCommClient diagramComm=null;
+    private DiagramMessage message;
+    public UmlDrawing(String receiveExchange, String logUser)
     {
         super();        
         UmlCrtez=new Crtez();
         isDrawing=false;
         this.addDrawingListener(this);
+        diagramComm=new DiagramCommClient(receiveExchange,this,logUser);
     }
     
     public void setIsDrawing(boolean isDrawing){
@@ -97,14 +109,24 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
     public void figureAdded(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
         System.out.println("Dodat element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
-        //dodati slanje poruke o ADD NEW FIGURE
+        
+               message=new DiagramMessage();
+               message.setMessageType(DiagramMessageType.ADDED);
+               message.setBussinesObjectFigure(elem);
+               message.setObjectType(getTypeEnumFromObject(elem));
+               diagramComm.sendLoginMessage(message);
     }
 
     @Override
     public void figureRemoved(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
         System.out.println("Uklonjen element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
-        //dodati slanje poruke za brisanje REMOVE FIGURE
+               
+               message=new DiagramMessage();
+               message.setMessageType(DiagramMessageType.DELETED);
+               message.setBussinesObjectFigure(elem);
+               message.setObjectType(getTypeEnumFromObject(elem));
+               diagramComm.sendLoginMessage(message);
     }
     
     //metode iz figure listener
@@ -119,7 +141,12 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
         {
             AbstractDiagramElement elem= ((IDataFigure)e.getFigure()).getDataObject();
             System.out.println("Figure changed: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
-            //posalji poruku ostalima da je na datoj figuri doslo do promene
+                 
+               message=new DiagramMessage();
+               message.setMessageType(DiagramMessageType.CHANGED);
+               message.setBussinesObjectFigure(elem);
+               message.setObjectType(getTypeEnumFromObject(elem));
+               diagramComm.sendLoginMessage(message);
         }
         
         this.UmlCrtez.getID();
@@ -132,6 +159,30 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener{
             String tamoneksto="";
         }
     }
-    
+    RuntimeClassEnum getTypeEnumFromObject(Object elem)
+    {
+        if(elem instanceof Argument)
+            return RuntimeClassEnum.ARGUMENT;
+        else if(elem instanceof Atribut)
+            return RuntimeClassEnum.ATRIBUT;
+        else if(elem instanceof ClassDiagramVeza)
+            return RuntimeClassEnum.CLASS_DIAGRAM_VEZA;
+        else if(elem instanceof Interfejs)
+            return RuntimeClassEnum.INTERFEJS;
+        else if(elem instanceof Klasa)
+            return RuntimeClassEnum.KLASA;
+        else if(elem instanceof Metod)
+            return RuntimeClassEnum.METOD;
+        else if(elem instanceof Aktor)
+            return RuntimeClassEnum.AKTOR;
+        else if(elem instanceof AktorVeza)
+            return RuntimeClassEnum.AKTOR_VEZA;
+        else if(elem instanceof UseCase)
+            return RuntimeClassEnum.USE_CASE;
+        else if(elem instanceof UseCaseVeza)
+            return RuntimeClassEnum.USE_CASE_VEZA;
+
+        return null;
+    }
     
 }
