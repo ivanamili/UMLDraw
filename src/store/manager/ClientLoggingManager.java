@@ -134,6 +134,10 @@ public class ClientLoggingManager implements IClientLoggingManager {
             {
                 CrtezDb crtez1= new CrtezDb();
                 crtez1.setNaslov(crtez.getNaslov());
+                crtez1.setTip(crtez.getTip().name());
+                crtez1.setCounter1(crtez.getElemCounter());
+                crtez1.setCounter2(crtez.getElemCounter());
+                crtez1.setImeAutora(crtez.getImeAutora());
                 session.save(crtez1);
                 tx.commit();
                 System.out.println("Crtez "+crtez.getNaslov()+" successfully add in database!");
