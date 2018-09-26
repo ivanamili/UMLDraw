@@ -50,6 +50,9 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
     ListFigure attributes= new ListFigure();
     ListFigure methods = new ListFigure();
 
+    public ClassFigure(Klasa klasa) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
    
     //adapter za ime klase
      private static class ClassNameAdapter extends AbstractFigureListener {

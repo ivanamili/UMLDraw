@@ -27,6 +27,10 @@ public class AktorConnectionFigure extends AbstractDiagramConnectionFigure imple
         super();
         this.aktorVeza=new AktorVeza();
     }
+
+    public AktorConnectionFigure(AktorVeza aktorVeza) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     @Override
     public boolean canConnect(Figure start, Figure end){

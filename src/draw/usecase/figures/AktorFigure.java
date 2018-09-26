@@ -65,13 +65,13 @@ public class AktorFigure extends AbstractDiagramElementFigure {
         aktor= new Aktor();
         aktor.setNaziv("New Aktor");
         aktor.setOkvir((RectangleFigure)this.getPresentationFigure());
-        STROKE_COLOR.set(this.getPresentationFigure(), null);
-        ((RectangleFigure)this.getPresentationFigure()).setAttributeEnabled(STROKE_COLOR, false);
         initFigure();        
     }
     
     public void initFigure()
     {
+        STROKE_COLOR.set(this.getPresentationFigure(), null);
+        ((RectangleFigure)this.getPresentationFigure()).setAttributeEnabled(STROKE_COLOR, false);
         setLayouter(new VerticalLayouter());
         Insets2DDouble insets = new Insets2DDouble(8,8,8,8);
         LAYOUT_INSETS.set(this, insets);

@@ -79,6 +79,7 @@ public class UseCaseVeza extends UseCaseDiagramVeza implements Serializable {
             
             return that;
         }
-	
+
+  
 
 }
