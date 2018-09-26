@@ -16,6 +16,7 @@ import java.io.Serializable;
  */
 public class DiagramMessage implements Serializable {
     private String messageType;
+    private String sender;
     private Object bussinesObjectFigure;
     private RuntimeClassEnum objectType;
     
@@ -76,6 +77,20 @@ public class DiagramMessage implements Serializable {
      */
     public void setObjectType(RuntimeClassEnum objectType) {
         this.objectType = objectType;
+    }
+
+    /**
+     * @return the sender
+     */
+    public String getSender() {
+        return sender;
+    }
+
+    /**
+     * @param sender the sender to set
+     */
+    public void setSender(String sender) {
+        this.sender = sender;
     }
     
 }

@@ -24,17 +24,19 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     
     //ime reda preko koga ce da se primaju response-ovi;
     String receiveQueue;
-    String exchangeName;
+    String receiveExchange;
     String messageConsumerTag=null;
     Consumer messageConsumer;
+    
+    String logUser;
     
     //klasa koja ce da handluje prispele odgovore sa servera
     IHandleDiagramMessage  diagramHandler;
     
-    public DiagramCommClient(String exchangeName,IHandleDiagramMessage  diagramHandler){
+    public DiagramCommClient(String exchangeName,IHandleDiagramMessage  diagramHandler, String logUser){
         this.diagramHandler=diagramHandler;
-;       this.exchangeName=exchangeName;
-        
+;       this.receiveExchange=exchangeName;
+        this.logUser=logUser;
         //creating connection
         factory=new ConnectionFactory();
         factory.setHost(CommunicationConfig.BROKER_HOST);
@@ -48,6 +50,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
             
             //kreiranje reda za odgovore sa servera
             receiveQueue = channel.queueDeclare().getQueue();
+            channel.queueBind(receiveQueue,receiveExchange,"");
             
             //kreira reply consumer objekat ali ga ne startuje
             messageConsumer= createConsumer();
@@ -59,18 +62,13 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     }
     
     //salje poruku i vraca true ako je poruka poslata uspesno, u suprotnom false
-    public boolean sendLoginMessage(DiagramMessage message){
-        String corrId = UUID.randomUUID().toString();
-        
-        AMQP.BasicProperties props = new AMQP.BasicProperties
-            .Builder()
-            .correlationId(corrId)
-            .replyTo(receiveQueue)
-            .build();
-        
+    public boolean sendLoginMessage(DiagramMessage message){        
+     
+   
         try {
-            channel.basicPublish(exchangeName,
-            "", props, message.serializeMessage());
+            message.setSender(logUser);
+            channel.basicPublish(receiveExchange,
+            "", null, message.serializeMessage());
             return true;
         } catch (IOException ex) {
             Logger.getLogger(DiagramCommClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -120,6 +118,8 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
                     Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException 
             {
                 DiagramMessage message=getMessage(body);
+                if(logUser.equals(message.getSender()))
+                    return;
                 diagramHandler.HandleDiagramMessage(message);
             }      
         };
