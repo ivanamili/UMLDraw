@@ -123,6 +123,10 @@ public class ServerApp implements IHandleLoginMessage {
                 response.setPayload(success);
                 break;
             }
+            case MessageType.DIAGRAM_RESPONSE:
+            {
+                break;
+            }
         }
         return response;
     }

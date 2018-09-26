@@ -14,6 +14,8 @@ public final class MessageType {
     public static final String REGISTER="register";
     public static final String LOGIN_RESPONSE="login_response";
     public static final String REGISTER_RESPONSE="register_response";
+    public static final String DIAGRAM_CREATE="diagram_create";
+    public static final String DIAGRAM_RESPONSE="diagram_response";
     
     private MessageType(){}
     

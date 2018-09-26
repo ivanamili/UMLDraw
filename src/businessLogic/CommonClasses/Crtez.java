@@ -5,10 +5,11 @@ import businessLogic.AbstractClassHierarchy.Veza;
 import businessLogic.AbstractClassHierarchy.Element;
 import businessLogic.ClassDiagrams.Metod;
 import enumerations.DiagramTypeEnum;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Crtez {
+public class Crtez implements Serializable {
 
 	private int ID;
 	private String naslov;

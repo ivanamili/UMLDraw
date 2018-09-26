@@ -5,6 +5,7 @@
  */
 package draw.mainApplication;
 
+import businessLogic.CommonClasses.Crtez;
 import communicationBroker.messages.LoginClient;
 import communicationBroker.messages.LoginMessage;
 import communicationBroker.messages.LoginResponse;
@@ -13,7 +14,9 @@ import communicationBroker.messages.handleInterfaces.IHandleLoginResponse;
 import draw.classDiagram.ClassDiagramApplicationModel;
 import draw.commonClasses.UmlDrawSDIApplication;
 import draw.usecase.UseCaseApplicationModel;
+import enumerations.DiagramTypeEnum;
 import java.awt.CardLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
@@ -29,6 +32,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
      */
     private LoginClient loginClient;
     private CardLayout cardLayout;
+    private String loggedUser=null;
+    
+    private Crtez createdCrtez=null;
     
     public StartupApp() {
         initComponents();
@@ -37,6 +43,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         loginClient.startConsumer();
         
         cardLayout=(CardLayout) MainPanel.getLayout();
+        cmbDiagramType.setModel(new DefaultComboBoxModel(DiagramTypeEnum.values()));
     }
 
     /**
@@ -63,6 +70,17 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         StartCrtezPanel = new javax.swing.JPanel();
         btnCreateNewCrtez = new javax.swing.JButton();
         btnJoinCrtez = new javax.swing.JButton();
+        CreateNewPanel = new javax.swing.JPanel();
+        lblCrtezName = new javax.swing.JLabel();
+        txtDiagramName = new javax.swing.JTextField();
+        lblCrtezType = new javax.swing.JLabel();
+        cmbDiagramType = new javax.swing.JComboBox<>();
+        btnCreateDiagram = new javax.swing.JButton();
+        lblCreateCrtez = new javax.swing.JLabel();
+        lblDiagramCreateSuccess = new javax.swing.JLabel();
+        WaitForJoining = new javax.swing.JPanel();
+        lblWaitCrtezName = new javax.swing.JLabel();
+        btnStartDrawing = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -89,15 +107,12 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         DefaultPanel.setLayout(DefaultPanelLayout);
         DefaultPanelLayout.setHorizontalGroup(
             DefaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(DefaultPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DefaultPanelLayout.createSequentialGroup()
                 .addGap(130, 130, 130)
-                .addGroup(DefaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(DefaultPanelLayout.createSequentialGroup()
-                        .addComponent(btnStartClassDiagram, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(DefaultPanelLayout.createSequentialGroup()
-                        .addComponent(btnStartUseCase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(139, 139, 139))))
+                .addGroup(DefaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnStartClassDiagram, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnStartUseCase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(139, 139, 139))
         );
         DefaultPanelLayout.setVerticalGroup(
             DefaultPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,7 +163,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                         .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtUsername)
                             .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                        .addContainerGap(87, Short.MAX_VALUE))
+                        .addContainerGap(96, Short.MAX_VALUE))
                     .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
                         .addComponent(btnRegister)
                         .addGap(63, 63, 63)
@@ -204,19 +219,114 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                 .addGroup(StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnCreateNewCrtez, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnJoinCrtez, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         StartCrtezPanelLayout.setVerticalGroup(
             StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(StartCrtezPanelLayout.createSequentialGroup()
-                .addGap(64, 64, 64)
+                .addContainerGap(82, Short.MAX_VALUE)
                 .addComponent(btnCreateNewCrtez)
-                .addGap(18, 18, 18)
+                .addGap(19, 19, 19)
                 .addComponent(btnJoinCrtez)
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addGap(118, 118, 118))
         );
 
         MainPanel.add(StartCrtezPanel, "card3");
+
+        lblCrtezName.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        lblCrtezName.setText("Diagram name: ");
+
+        lblCrtezType.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        lblCrtezType.setText("Diagram type:");
+
+        cmbDiagramType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnCreateDiagram.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        btnCreateDiagram.setText("Create");
+        btnCreateDiagram.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateDiagramActionPerformed(evt);
+            }
+        });
+
+        lblCreateCrtez.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblCreateCrtez.setText("Create new Diagram");
+
+        javax.swing.GroupLayout CreateNewPanelLayout = new javax.swing.GroupLayout(CreateNewPanel);
+        CreateNewPanel.setLayout(CreateNewPanelLayout);
+        CreateNewPanelLayout.setHorizontalGroup(
+            CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(btnCreateDiagram, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblCrtezType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblCrtezName, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDiagramName)
+                            .addComponent(cmbDiagramType, 0, 136, Short.MAX_VALUE)))
+                    .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                        .addGap(151, 151, 151)
+                        .addComponent(lblCreateCrtez))
+                    .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                        .addGap(119, 119, 119)
+                        .addComponent(lblDiagramCreateSuccess)))
+                .addContainerGap(80, Short.MAX_VALUE))
+        );
+        CreateNewPanelLayout.setVerticalGroup(
+            CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(lblCreateCrtez)
+                .addGap(69, 69, 69)
+                .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCrtezName)
+                    .addComponent(txtDiagramName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCrtezType)
+                    .addComponent(cmbDiagramType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addComponent(btnCreateDiagram)
+                .addGap(18, 18, 18)
+                .addComponent(lblDiagramCreateSuccess)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        MainPanel.add(CreateNewPanel, "card4");
+
+        lblWaitCrtezName.setText("crtez name here");
+
+        btnStartDrawing.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        btnStartDrawing.setText("Start Drawing");
+
+        javax.swing.GroupLayout WaitForJoiningLayout = new javax.swing.GroupLayout(WaitForJoining);
+        WaitForJoining.setLayout(WaitForJoiningLayout);
+        WaitForJoiningLayout.setHorizontalGroup(
+            WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(WaitForJoiningLayout.createSequentialGroup()
+                .addGap(125, 125, 125)
+                .addGroup(WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnStartDrawing)
+                    .addComponent(lblWaitCrtezName, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(133, Short.MAX_VALUE))
+        );
+        WaitForJoiningLayout.setVerticalGroup(
+            WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(WaitForJoiningLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(lblWaitCrtezName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addComponent(btnStartDrawing)
+                .addGap(86, 86, 86))
+        );
+
+        MainPanel.add(WaitForJoining, "card5");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -230,7 +340,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             .addGroup(layout.createSequentialGroup()
                 .addComponent(DefaultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
         );
 
         pack();
@@ -274,6 +384,8 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         
+        loggedUser=txtUsername.getText();
+        
         String[] credentials= new String[2];
         credentials[0]=txtUsername.getText();
         credentials[1]=txtPassword.getText();
@@ -287,6 +399,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        
+        loggedUser=txtUsername.getText();
+        
         String[] credentials= new String[2];
         credentials[0]=txtUsername.getText();
         credentials[1]=txtPassword.getText();
@@ -308,8 +423,25 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     }//GEN-LAST:event_btnJoinCrtezActionPerformed
 
     private void btnCreateNewCrtezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewCrtezActionPerformed
-        // TODO add your handling code here:
+        cardLayout.show(MainPanel, "card4");
     }//GEN-LAST:event_btnCreateNewCrtezActionPerformed
+
+    private void btnCreateDiagramActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateDiagramActionPerformed
+        
+        //kreiraj kostur crteza
+        Crtez crtezToTry= new Crtez();
+        crtezToTry.setNaslov(txtDiagramName.getText());
+        crtezToTry.setTip((DiagramTypeEnum)cmbDiagramType.getSelectedItem());
+        crtezToTry.setImeAutora(loggedUser);
+        
+        createdCrtez=crtezToTry;
+        
+        LoginMessage message=new LoginMessage();
+        message.setMessageType(MessageType.DIAGRAM_CREATE);
+        message.setPayload(crtezToTry);
+        loginClient.sendLoginMessage(message);
+        btnCreateDiagram.setEnabled(false);
+    }//GEN-LAST:event_btnCreateDiagramActionPerformed
 
     /**
      * @param args the command line arguments
@@ -347,19 +479,30 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel CreateNewPanel;
     private javax.swing.JPanel DefaultPanel;
     private javax.swing.JPanel MainPanel;
     private javax.swing.JPanel RegisterLoginPanel;
     private javax.swing.JPanel StartCrtezPanel;
+    private javax.swing.JPanel WaitForJoining;
+    private javax.swing.JButton btnCreateDiagram;
     private javax.swing.JButton btnCreateNewCrtez;
     private javax.swing.JButton btnJoinCrtez;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnStartClassDiagram;
+    private javax.swing.JToggleButton btnStartDrawing;
     private javax.swing.JButton btnStartUseCase;
+    private javax.swing.JComboBox<String> cmbDiagramType;
+    private javax.swing.JLabel lblCreateCrtez;
+    private javax.swing.JLabel lblCrtezName;
+    private javax.swing.JLabel lblCrtezType;
+    private javax.swing.JLabel lblDiagramCreateSuccess;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblSuccess;
     private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblWaitCrtezName;
+    private javax.swing.JTextField txtDiagramName;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
@@ -375,7 +518,10 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                     cardLayout.next(MainPanel);
                 } 
                 else
+                {
                     lblSuccess.setText("Logging failed!");
+                    loggedUser=null;
+                }
                 
                 setEnableLoginButtons(true);
                 break;
@@ -389,10 +535,28 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                     cardLayout.next(MainPanel);
                 }
                 else
+                {
                     lblSuccess.setText("Registration failed!");
+                    loggedUser=null;
+                }
                 
                 setEnableLoginButtons(true);
                 break;
+            }
+            case MessageType.DIAGRAM_RESPONSE:
+            {
+                int diagramId=(int)response.getPayload();
+                if(diagramId==-1){
+                    lblDiagramCreateSuccess.setText("Diagram with that name already exists!");
+                    createdCrtez=null;
+                    btnCreateDiagram.setEnabled(true);
+                }
+                //uspesno je kreiran novi dijagram, upisi id i sacuvaj ga
+                else
+                {
+                    createdCrtez.setID(diagramId);
+                    lblWaitCrtezName.setText(createdCrtez.getNaslov());
+                }
             }
         }
     }
