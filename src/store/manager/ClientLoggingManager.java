@@ -5,12 +5,15 @@
  */
 package store.manager;
 
+import businessLogic.CommonClasses.Crtez;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import store.entity.KorisnikDb;
+import store.entity.CrtezDb;
 import store.entity.NewHibernateUtil;
+
 
 /**
  *
@@ -111,5 +114,53 @@ public class ClientLoggingManager implements IClientLoggingManager {
             session.close(); 
          } 
     }
+    @Override
+    public int tryCrtez(Crtez crtez)
+    {
+    Session session=null;
+        Transaction tx = null;
+        CrtezDb koIzBaze;
+        try{
+            session = sessionFactory.openSession();
+               //zapocinje se transakcija        
+            tx = session.beginTransaction();
+            Query q=session.createQuery("from Crtez c where c.naslov like :naslov");
+            q.setParameter("naslov", crtez.getNaslov());
+            
+
+            koIzBaze=(CrtezDb)q.uniqueResult();
+            //ne postoji korisnik sa tim username-mom, dodaj korisnika u bazu
+            if(koIzBaze==null)
+            {
+                CrtezDb crtez1= new CrtezDb();
+                crtez1.setNaslov(crtez.getNaslov());
+                session.save(crtez1);
+                tx.commit();
+                System.out.println("Crtez "+crtez.getNaslov()+" successfully add in database!");
+                return crtez1.getId();
+            }
+            //postoji korisnik sa tim imenom
+            else
+            {
+                
+                System.out.println("Crtez "+crtez.getNaslov()+" write  failed!");
+                return -1;
+            }
+             
+           }
+        catch (Exception e) 
+        {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+            return 0;
+         } finally {
+            session.close(); 
+         } 
+    }
+    
+    
+
+
+  
     
 }
