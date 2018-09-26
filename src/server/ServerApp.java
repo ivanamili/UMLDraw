@@ -5,12 +5,16 @@
  */
 package server;
 
+import businessLogic.CommonClasses.Crtez;
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
 import communicationBroker.messages.LoginMessage;
 import communicationBroker.messages.LoginResponse;
 import communicationBroker.messages.LoginServer;
 import communicationBroker.messages.MessageType;
 import communicationBroker.messages.handleInterfaces.IHandleLoginMessage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,12 +41,17 @@ public class ServerApp implements IHandleLoginMessage {
     //manager za komunikaciju sa bazom sto se tice crud operacija
     private IPersistenceManager persistenceManager;
     
+    //Kolekcija crteza koji trenutno cekaju na druge da se prikljuce
+    private HashMap<String,Crtez> diagramToJoin;
+    
     public ServerApp(){
         loginManager= new ClientLoggingManager();
         persistenceManager= new PersistenceManager();
         
         loginServer= new LoginServer(this);
         loginServer.startConsumer();
+        
+        diagramToJoin= new HashMap();
     }
     
     //metoda koja treba da startuje server
@@ -123,9 +132,33 @@ public class ServerApp implements IHandleLoginMessage {
                 response.setPayload(success);
                 break;
             }
-            case MessageType.DIAGRAM_RESPONSE:
+            case MessageType.DIAGRAM_CREATE:
             {
+                Crtez diagram= (Crtez) message.getPayload();
+                int id=loginManager.tryCrtez(diagram);
+                response.setResponseType(MessageType.DIAGRAM_RESPONSE);
+                response.setPayload(id);
+                
+                //dodat novi crtez kome mogu drugi da se pridruze
+                if(id!=-1){
+                    diagram.setID(id);
+                    diagramToJoin.put(diagram.getNaslov(), diagram);
+                }
                 break;
+            }
+            case MessageType.DIAGRAM_JOIN_REQUEST:
+            {
+                response.setResponseType(MessageType.DIAGRAM_JOIN_RESPONSE);
+                ArrayList<Crtez> crtezList=new ArrayList(diagramToJoin.values());
+                response.setPayload(crtezList);
+                break;
+            }
+            case MessageType.START_DRAWING:
+            {
+                String diagramToClose=(String) message.getPayload();
+                diagramToJoin.remove(diagramToClose);
+                response.setResponseType(MessageType.EMPTY_RESPONSE);
+                response.setPayload(null);
             }
         }
         return response;

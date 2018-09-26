@@ -124,7 +124,7 @@ public class ClientLoggingManager implements IClientLoggingManager {
             session = sessionFactory.openSession();
                //zapocinje se transakcija        
             tx = session.beginTransaction();
-            Query q=session.createQuery("from Crtez c where c.naslov like :naslov");
+            Query q=session.createQuery("from CrtezDb c where c.naslov like :naslov");
             q.setParameter("naslov", crtez.getNaslov());
             
 

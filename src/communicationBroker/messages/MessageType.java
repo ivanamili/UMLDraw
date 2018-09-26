@@ -16,6 +16,13 @@ public final class MessageType {
     public static final String REGISTER_RESPONSE="register_response";
     public static final String DIAGRAM_CREATE="diagram_create";
     public static final String DIAGRAM_RESPONSE="diagram_response";
+    public static final String DIAGRAM_JOIN_REQUEST="diagram_join_request";
+    public static final String DIAGRAM_JOIN_RESPONSE="diagram_join_response";
+    public static final String ADMIN_MESSAGE_JOINED="joined_to_diagram";
+    public static final String ADMIN_DRAWING_STARTED="drawing_started";
+    public static final String START_DRAWING="start_drawing";
+    public static final String EMPTY_RESPONSE="empty_response";
+    
     
     private MessageType(){}
     

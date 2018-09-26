@@ -16,8 +16,12 @@ import draw.commonClasses.UmlDrawSDIApplication;
 import draw.usecase.UseCaseApplicationModel;
 import enumerations.DiagramTypeEnum;
 import java.awt.CardLayout;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.ListSelectionModel;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
 
@@ -35,6 +39,12 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     private String loggedUser=null;
     
     private Crtez createdCrtez=null;
+    private Crtez joinedCrtez=null;
+    
+    private DefaultListModel<String> contributorListModel;
+    private DefaultListModel<String> joinDiagramListModel;
+    
+    private ArrayList<Crtez> diagramToJoin;
     
     public StartupApp() {
         initComponents();
@@ -44,6 +54,13 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         
         cardLayout=(CardLayout) MainPanel.getLayout();
         cmbDiagramType.setModel(new DefaultComboBoxModel(DiagramTypeEnum.values()));
+        
+        contributorListModel = new DefaultListModel();
+        waitContributorList.setModel(contributorListModel);
+        
+        joinDiagramListModel= new DefaultListModel();
+        existingDiagramList.setModel(joinDiagramListModel);
+        existingDiagramList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
     /**
@@ -81,6 +98,32 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         WaitForJoining = new javax.swing.JPanel();
         lblWaitCrtezName = new javax.swing.JLabel();
         btnStartDrawing = new javax.swing.JToggleButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        lblWaitDiagramType = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        waitContributorList = new javax.swing.JList<>();
+        JoinExisting = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        existingDiagramList = new javax.swing.JList<>();
+        btnJoinDiagramRefresh = new javax.swing.JButton();
+        btnJoinDiagramJoin = new javax.swing.JButton();
+        AdminPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        adminContributorList = new javax.swing.JList<>();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        lblAdminDiagramName = new javax.swing.JLabel();
+        lblAdminDiagramType = new javax.swing.JLabel();
+        lblAdminAutorName = new javax.swing.JLabel();
+        lblAdminCurrentDrawingUser = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -163,7 +206,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                         .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtUsername)
                             .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                        .addContainerGap(96, Short.MAX_VALUE))
+                        .addContainerGap(109, Short.MAX_VALUE))
                     .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
                         .addComponent(btnRegister)
                         .addGap(63, 63, 63)
@@ -224,7 +267,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         StartCrtezPanelLayout.setVerticalGroup(
             StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(StartCrtezPanelLayout.createSequentialGroup()
-                .addContainerGap(82, Short.MAX_VALUE)
+                .addContainerGap(91, Short.MAX_VALUE)
                 .addComponent(btnCreateNewCrtez)
                 .addGap(19, 19, 19)
                 .addComponent(btnJoinCrtez)
@@ -267,16 +310,18 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                             .addComponent(lblCrtezType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblCrtezName, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtDiagramName)
-                            .addComponent(cmbDiagramType, 0, 136, Short.MAX_VALUE)))
+                        .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbDiagramType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                                .addComponent(txtDiagramName, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                                .addGap(106, 106, 106))))
                     .addGroup(CreateNewPanelLayout.createSequentialGroup()
                         .addGap(151, 151, 151)
                         .addComponent(lblCreateCrtez))
                     .addGroup(CreateNewPanelLayout.createSequentialGroup()
                         .addGap(119, 119, 119)
                         .addComponent(lblDiagramCreateSuccess)))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap())
         );
         CreateNewPanelLayout.setVerticalGroup(
             CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,29 +349,243 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
 
         btnStartDrawing.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnStartDrawing.setText("Start Drawing");
+        btnStartDrawing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartDrawingActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel1.setText("Diagram name:");
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel2.setText("Diagram type:");
+
+        lblWaitDiagramType.setText("crtez type here");
+
+        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel3.setText("Contributors");
+
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel4.setText("Wait for other users");
+
+        waitContributorList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(waitContributorList);
 
         javax.swing.GroupLayout WaitForJoiningLayout = new javax.swing.GroupLayout(WaitForJoining);
         WaitForJoining.setLayout(WaitForJoiningLayout);
         WaitForJoiningLayout.setHorizontalGroup(
             WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(WaitForJoiningLayout.createSequentialGroup()
-                .addGap(125, 125, 125)
+                .addContainerGap(48, Short.MAX_VALUE)
                 .addGroup(WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnStartDrawing)
-                    .addComponent(lblWaitCrtezName, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(133, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WaitForJoiningLayout.createSequentialGroup()
+                        .addComponent(btnStartDrawing)
+                        .addGap(137, 137, 137))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WaitForJoiningLayout.createSequentialGroup()
+                        .addGroup(WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(WaitForJoiningLayout.createSequentialGroup()
+                                .addGroup(WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblWaitCrtezName, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblWaitDiagramType, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(68, 68, 68))))
+            .addGroup(WaitForJoiningLayout.createSequentialGroup()
+                .addGap(145, 145, 145)
+                .addComponent(jLabel4)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         WaitForJoiningLayout.setVerticalGroup(
             WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(WaitForJoiningLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(lblWaitCrtezName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblWaitCrtezName, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(WaitForJoiningLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(lblWaitDiagramType))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnStartDrawing)
-                .addGap(86, 86, 86))
+                .addGap(16, 16, 16))
         );
 
         MainPanel.add(WaitForJoining, "card5");
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel5.setText("Join existing diagram");
+
+        existingDiagramList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(existingDiagramList);
+
+        btnJoinDiagramRefresh.setText("Refresh");
+        btnJoinDiagramRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnJoinDiagramRefreshActionPerformed(evt);
+            }
+        });
+
+        btnJoinDiagramJoin.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        btnJoinDiagramJoin.setText("Join");
+        btnJoinDiagramJoin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnJoinDiagramJoinActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout JoinExistingLayout = new javax.swing.GroupLayout(JoinExisting);
+        JoinExisting.setLayout(JoinExistingLayout);
+        JoinExistingLayout.setHorizontalGroup(
+            JoinExistingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JoinExistingLayout.createSequentialGroup()
+                .addGap(124, 124, 124)
+                .addComponent(jLabel5)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JoinExistingLayout.createSequentialGroup()
+                .addContainerGap(73, Short.MAX_VALUE)
+                .addGroup(JoinExistingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JoinExistingLayout.createSequentialGroup()
+                        .addComponent(btnJoinDiagramRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnJoinDiagramJoin, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(70, 70, 70))
+        );
+        JoinExistingLayout.setVerticalGroup(
+            JoinExistingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JoinExistingLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(JoinExistingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnJoinDiagramJoin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnJoinDiagramRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        MainPanel.add(JoinExisting, "card6");
+
+        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel6.setText("Admin Screen");
+
+        jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel7.setText("Diagram name:");
+
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel8.setText("Diagram type:");
+
+        jLabel9.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel9.setText("Diagram author:");
+
+        adminContributorList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(adminContributorList);
+
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel10.setText("Contributors");
+
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        jLabel11.setText("Currently drawing: ");
+
+        lblAdminDiagramName.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        lblAdminDiagramName.setText("Diagram name here");
+
+        lblAdminDiagramType.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        lblAdminDiagramType.setText("Diagram type here");
+
+        lblAdminAutorName.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        lblAdminAutorName.setText("Diagram author name here");
+
+        lblAdminCurrentDrawingUser.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        lblAdminCurrentDrawingUser.setForeground(new java.awt.Color(0, 0, 204));
+        lblAdminCurrentDrawingUser.setText("current user");
+
+        javax.swing.GroupLayout AdminPanelLayout = new javax.swing.GroupLayout(AdminPanel);
+        AdminPanel.setLayout(AdminPanelLayout);
+        AdminPanelLayout.setHorizontalGroup(
+            AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AdminPanelLayout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AdminPanelLayout.createSequentialGroup()
+                .addContainerGap(76, Short.MAX_VALUE)
+                .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(AdminPanelLayout.createSequentialGroup()
+                        .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel10)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(AdminPanelLayout.createSequentialGroup()
+                                .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblAdminDiagramName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblAdminDiagramType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblAdminAutorName, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))))
+                        .addGap(84, 84, 84))
+                    .addGroup(AdminPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblAdminCurrentDrawingUser, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))))
+        );
+        AdminPanelLayout.setVerticalGroup(
+            AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AdminPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(lblAdminDiagramName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(lblAdminDiagramType))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(lblAdminAutorName))
+                .addGap(4, 4, 4)
+                .addComponent(jLabel10)
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(AdminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(lblAdminCurrentDrawingUser))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        MainPanel.add(AdminPanel, "card7");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -340,7 +599,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             .addGroup(layout.createSequentialGroup()
                 .addComponent(DefaultPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                .addComponent(MainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -419,7 +678,14 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     }//GEN-LAST:event_formWindowClosing
 
     private void btnJoinCrtezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinCrtezActionPerformed
-        // TODO add your handling code here:
+        //zatrazi od servera crteze kojima moze da se prikljuci
+        LoginMessage message=new LoginMessage();
+        message.setMessageType(MessageType.DIAGRAM_JOIN_REQUEST);
+        message.setPayload(null);
+        
+        loginClient.sendLoginMessage(message);
+        
+        cardLayout.show(MainPanel, "card6");
     }//GEN-LAST:event_btnJoinCrtezActionPerformed
 
     private void btnCreateNewCrtezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewCrtezActionPerformed
@@ -442,6 +708,68 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         loginClient.sendLoginMessage(message);
         btnCreateDiagram.setEnabled(false);
     }//GEN-LAST:event_btnCreateDiagramActionPerformed
+
+    private void btnJoinDiagramRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinDiagramRefreshActionPerformed
+        //ponovo trazi od server dijagrame kojima moze da se prikljuci
+        LoginMessage message=new LoginMessage();
+        message.setMessageType(MessageType.DIAGRAM_JOIN_REQUEST);
+        message.setPayload(null);
+        
+        loginClient.sendLoginMessage(message);
+    }//GEN-LAST:event_btnJoinDiagramRefreshActionPerformed
+
+    private void btnJoinDiagramJoinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinDiagramJoinActionPerformed
+        int selectedIndex= existingDiagramList.getSelectedIndex();        
+        //nije selektovan ni jedan crtez
+        if(selectedIndex==-1)
+            return;
+        
+        Crtez selectedCrtez= diagramToJoin.get(selectedIndex);
+        joinedCrtez=selectedCrtez;
+        //kreiraj red i binduj se na adminExchange
+        loginClient.createAndBindToAdminExchange(selectedCrtez.getNaslov());
+        
+        //upisi ime autora u listu i prikazi wait bez dugmeta za start drawing
+        lblWaitCrtezName.setText(joinedCrtez.getNaslov());
+        lblWaitDiagramType.setText(joinedCrtez.getTip().toString());
+        btnStartDrawing.setVisible(false);
+                    
+        //dodaj korisnika kao kreatora modela
+        contributorListModel.addElement(joinedCrtez.getImeAutora()+" (CREATOR)");
+        
+        cardLayout.show(MainPanel, "card5");
+        
+        //javi ostalima koji su na tom crtezu da si se prikljucio
+        LoginResponse message=new LoginResponse();
+        message.setResponseType(MessageType.ADMIN_MESSAGE_JOINED);
+        message.setPayload(loggedUser);
+        loginClient.sendAdminMessage(message);
+    }//GEN-LAST:event_btnJoinDiagramJoinActionPerformed
+
+    private void btnStartDrawingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartDrawingActionPerformed
+        //zapocinje se crtanje
+        //ovde moze da dodje samo onaj ko je kreirao crtez, oni koji su se prikljucili ne mogu da 
+        
+        //ovo ne bi trebalo nikad da se desi
+        if(createdCrtez==null)
+            return;
+        
+        //prvo posalji serveru poruku da tom crtezu vise ne mogu da se prikljucuju
+        LoginMessage serverMessage= new LoginMessage();
+        serverMessage.setMessageType(MessageType.START_DRAWING);
+        serverMessage.setPayload(createdCrtez.getNaslov());
+        loginClient.sendLoginMessage(serverMessage);
+        
+        //zatim posalji i svim ostalima da mogu da krenu sa crtanjem
+        LoginResponse contributersMessage= new LoginResponse();
+        contributersMessage.setResponseType(MessageType.ADMIN_DRAWING_STARTED);
+        contributersMessage.setPayload(loggedUser);
+        
+        loginClient.sendAdminMessage(contributersMessage);
+        
+        //ovu zadju poruku ce da dobiju svi, pa i onaj ko je poslao
+        //tako da ovde ne treba nista vise
+    }//GEN-LAST:event_btnStartDrawingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -479,21 +807,45 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel AdminPanel;
     private javax.swing.JPanel CreateNewPanel;
     private javax.swing.JPanel DefaultPanel;
+    private javax.swing.JPanel JoinExisting;
     private javax.swing.JPanel MainPanel;
     private javax.swing.JPanel RegisterLoginPanel;
     private javax.swing.JPanel StartCrtezPanel;
     private javax.swing.JPanel WaitForJoining;
+    private javax.swing.JList<String> adminContributorList;
     private javax.swing.JButton btnCreateDiagram;
     private javax.swing.JButton btnCreateNewCrtez;
     private javax.swing.JButton btnJoinCrtez;
+    private javax.swing.JButton btnJoinDiagramJoin;
+    private javax.swing.JButton btnJoinDiagramRefresh;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnStartClassDiagram;
     private javax.swing.JToggleButton btnStartDrawing;
     private javax.swing.JButton btnStartUseCase;
     private javax.swing.JComboBox<String> cmbDiagramType;
+    private javax.swing.JList<String> existingDiagramList;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblAdminAutorName;
+    private javax.swing.JLabel lblAdminCurrentDrawingUser;
+    private javax.swing.JLabel lblAdminDiagramName;
+    private javax.swing.JLabel lblAdminDiagramType;
     private javax.swing.JLabel lblCreateCrtez;
     private javax.swing.JLabel lblCrtezName;
     private javax.swing.JLabel lblCrtezType;
@@ -502,9 +854,11 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     private javax.swing.JLabel lblSuccess;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JLabel lblWaitCrtezName;
+    private javax.swing.JLabel lblWaitDiagramType;
     private javax.swing.JTextField txtDiagramName;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtUsername;
+    private javax.swing.JList<String> waitContributorList;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -554,11 +908,101 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                 //uspesno je kreiran novi dijagram, upisi id i sacuvaj ga
                 else
                 {
+                    btnCreateDiagram.setEnabled(true);
                     createdCrtez.setID(diagramId);
+                    
+                    //setuj ime i tip crteza u wait formi
                     lblWaitCrtezName.setText(createdCrtez.getNaslov());
+                    lblWaitDiagramType.setText(createdCrtez.getTip().toString());
+                    
+                    //dodaj korisnika kao kreatora modela
+                    contributorListModel.addElement(loggedUser+" (CREATOR)");
+                    
+                    //kreiraj admin exchange i binduj svoj red za nju
+                    loginClient.createAndBindToAdminExchange(createdCrtez.getNaslov());
+                    cardLayout.show(MainPanel, "card5");
+                    
                 }
+                break;
+            }
+            case MessageType.DIAGRAM_JOIN_RESPONSE:
+            {
+                diagramToJoin=(ArrayList)response.getPayload();
+                joinDiagramListModel.clear();
+                for(int i=0; i< diagramToJoin.size();i++){
+                    joinDiagramListModel.addElement(diagramToJoin.get(i).getNaslov());
+                }
+                break;
+            }
+            case MessageType.ADMIN_MESSAGE_JOINED:
+            {
+                String joinedUser=(String) response.getPayload();
+                contributorListModel.addElement(joinedUser);
+                break;
+            }
+            case MessageType.ADMIN_DRAWING_STARTED:
+            {
+                String creator= (String) response.getPayload();
+                
+                //ovo ce da izvrsi onaj ko je kreirao crtez
+                if(createdCrtez!=null)
+                    startDrawingWindow(createdCrtez);
+                //ovo ce da izvrse oni koji su se prikljucili
+                else if (joinedCrtez!=null)
+                    startDrawingWindow(joinedCrtez);
+                
+                break;
+            }
+            case MessageType.EMPTY_RESPONSE:
+            {
+                break;
             }
         }
+        
+    }
+    
+    private void startDrawingWindow(Crtez crtezToStart)
+    {
+        if(crtezToStart.getTip()==DiagramTypeEnum.CLASS)
+            startClassDrawingWindow(crtezToStart);
+        else if (crtezToStart.getTip()==DiagramTypeEnum.USECASE)
+            startUseCaseDrawingWindow(crtezToStart);
+    }
+    
+    private void startClassDrawingWindow(Crtez crtezToStart){
+        //just fake command line arguments
+        String[] args=null;
+        
+        Application app;
+        String os = System.getProperty("os.name").toLowerCase();
+        app = new UmlDrawSDIApplication();
+        
+        ClassDiagramApplicationModel model = new ClassDiagramApplicationModel();
+        
+        model.setName("User: "+loggedUser);
+        model.setVersion("0.5");
+        model.setCopyright("Copyright IvanaMilivojevic");
+        model.setProjectClassName("draw.classDiagram.ClassDiagramProject");
+        app.setModel(model);
+        app.launch(args);
+    }
+    
+    private void startUseCaseDrawingWindow(Crtez crtezToStart){
+         //just fake command line arguments
+        String[] args=null;
+        
+        Application app;
+        String os = System.getProperty("os.name").toLowerCase();
+        app = new UmlDrawSDIApplication();
+        
+        UseCaseApplicationModel model = new UseCaseApplicationModel();
+        
+        model.setName("User: "+loggedUser);
+        model.setVersion("0.5");
+        model.setCopyright("Copyright IvanaMilivojevic");
+        model.setProjectClassName("draw.usecase.UseCaseProject");
+        app.setModel(model);
+        app.launch(args);
     }
     
     private void setEnableLoginButtons(boolean enable)

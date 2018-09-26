@@ -27,6 +27,11 @@ public class LoginClient {//potrebno za komunikaciju sa rabbitmq
     String replyConsumerTag=null;
     Consumer replyQueueConsumer;
     
+    String diagramAdminExchange;
+    String diagramAdminQueue;
+    String diagramAdminConsumerTag=null;
+    Consumer diagramAdminConsumer;
+    
     //klasa koja ce da handluje prispele odgovore sa servera
     IHandleLoginResponse responseHandler;
     
@@ -48,9 +53,11 @@ public class LoginClient {//potrebno za komunikaciju sa rabbitmq
             
             //kreiranje reda za odgovore sa servera
             replyQueueName = channel.queueDeclare().getQueue();
+            diagramAdminQueue= channel.queueDeclare().getQueue();
             
             //kreira reply consumer objekat ali ga ne startuje
             replyQueueConsumer= createConsumer();
+            diagramAdminConsumer= createConsumer();
         }
         catch(Exception e){
             System.out.println("Error while opening LoginClient connection");
@@ -71,6 +78,21 @@ public class LoginClient {//potrebno za komunikaciju sa rabbitmq
         try {
             channel.basicPublish(CommunicationConfig.LOGIN_EXCHANGE,
                     CommunicationConfig.LOGIN_KEY, props, message.serializeMessage());
+            return true;
+        } catch (IOException ex) {
+            Logger.getLogger(LoginClient.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
+    public boolean sendAdminMessage(LoginResponse message){
+        
+        if(diagramAdminExchange==null)
+            return false;
+        
+         try {
+            channel.basicPublish(diagramAdminExchange,
+                    CommunicationConfig.FANOUT_NO_KEY, null, message.serializeMessage());
             return true;
         } catch (IOException ex) {
             Logger.getLogger(LoginClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -142,5 +164,26 @@ public class LoginClient {//potrebno za komunikaciju sa rabbitmq
         }
         
     }
+    
+    public boolean createAndBindToAdminExchange(String crtezName){
+        try {
+            diagramAdminExchange=crtezName+"_adminExchange";
+            //kreiraj exchange za admin poruke
+            channel.exchangeDeclare(diagramAdminExchange,BuiltinExchangeType.FANOUT);
+            //binduj red za exchange
+            channel.queueBind(diagramAdminQueue,
+                               diagramAdminExchange,
+                               CommunicationConfig.FANOUT_NO_KEY);
+            
+            //zakaci consumer-a
+            diagramAdminConsumerTag=channel.basicConsume(diagramAdminQueue,true, diagramAdminConsumer);
+            return true;
+        } catch (IOException ex) {
+            Logger.getLogger(LoginClient.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
+    
     
 }
