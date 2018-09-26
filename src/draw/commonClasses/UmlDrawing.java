@@ -18,7 +18,20 @@ import communicationBroker.messages.DiagramCommClient;
 import communicationBroker.messages.DiagramMessage;
 import communicationBroker.messages.DiagramMessageType;
 import communicationBroker.messages.handleInterfaces.IHandleDiagramMessage;
+import draw.classDiagram.figures.AgregationConnectionFigure;
+import draw.classDiagram.figures.ClassFigure;
+import draw.classDiagram.figures.CompositionConnectionFigure;
+import draw.classDiagram.figures.GeneralisationConnectionFigure;
+import draw.classDiagram.figures.ImplementationConnectionFigure;
+import draw.classDiagram.figures.InterfaceFigure;
+import draw.usecase.figures.AktorConnectionFigure;
+import draw.usecase.figures.AktorFigure;
+import draw.usecase.figures.ExtendConnectionFigure;
+import draw.usecase.figures.IncludeConnectionFigure;
+import draw.usecase.figures.UseCaseFigure;
+import enumerations.ClassConnTypeEnum;
 import enumerations.RuntimeClassEnum;
+import enumerations.UseCaseConnType;
 import javax.swing.JToolBar;
 import org.jboss.logging.Message;
 import org.jhotdraw.draw.ConnectionFigure;
@@ -223,4 +236,60 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         
         
     }
+        
+     Figure CreateFigureFromBussinesObject(Object bussinesObject, RuntimeClassEnum type)
+     {
+        switch(type)
+        {
+            case KLASA:{
+                return new ClassFigure((Klasa)bussinesObject);
+            }
+            case AKTOR:{
+                return new AktorFigure((Aktor)bussinesObject);
+            }
+            case AKTOR_VEZA:{
+                return new AktorConnectionFigure((AktorVeza)bussinesObject);
+            }
+            case USE_CASE:{
+                return new UseCaseFigure((UseCase)bussinesObject);
+            }
+            case USE_CASE_VEZA:{
+                return CreateUseCaseFromBussinesObject((UseCaseVeza) bussinesObject);
+            }
+            case INTERFEJS:{
+                return new InterfaceFigure((Interfejs)bussinesObject);
+            }
+            case CLASS_DIAGRAM_VEZA:{
+                return CreateClassDiagramConnectionFromBussinesObject((ClassDiagramVeza)bussinesObject);
+            }
+         }
+        return null;
+     }
+     
+     Figure CreateUseCaseFromBussinesObject(UseCaseVeza bussinesObject)
+     {
+       if(bussinesObject.getTipVeze()==UseCaseConnType.INCLUDE)       
+           return new IncludeConnectionFigure(bussinesObject);           
+       else if(bussinesObject.getTipVeze()==UseCaseConnType.EXTEND)
+           return new ExtendConnectionFigure(bussinesObject);
+       return null;               
+     }
+     
+      Figure CreateClassDiagramConnectionFromBussinesObject(ClassDiagramVeza bussinesObject)
+     {
+       if(bussinesObject.getTip()==ClassConnTypeEnum.AGREGATION)
+       
+           return new AgregationConnectionFigure(bussinesObject);
+           
+           else if(bussinesObject.getTip()==ClassConnTypeEnum.COMPOSITION)
+               return new CompositionConnectionFigure(bussinesObject);
+       
+       else if(bussinesObject.getTip()==ClassConnTypeEnum.GENERALISATION)
+               return new GeneralisationConnectionFigure(bussinesObject);
+       
+       else if(bussinesObject.getTip()==ClassConnTypeEnum.IMPLEMENTATION)
+               return new ImplementationConnectionFigure(bussinesObject);
+       
+       return null;               
+     }
 }

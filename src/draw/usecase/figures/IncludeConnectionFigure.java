@@ -28,6 +28,10 @@ public class IncludeConnectionFigure extends AbstractDiagramConnectionFigure imp
         this.useCaseVeza= new UseCaseVeza();
         initFigure();
     }
+
+    public IncludeConnectionFigure(UseCaseVeza bussinesObject) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     private void initFigure(){
         this.useCaseVeza.setTipVeze(UseCaseConnType.INCLUDE);

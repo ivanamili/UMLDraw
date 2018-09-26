@@ -48,6 +48,10 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
     ListFigure methods = new ListFigure();
     
     Insets2DDouble defaultInsets = new Insets2DDouble(4,8,4,8);
+
+    public InterfaceFigure(Interfejs interfejs) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     //adapter za ime klase
      private static class InterfaceNameAdapter extends AbstractFigureListener {
