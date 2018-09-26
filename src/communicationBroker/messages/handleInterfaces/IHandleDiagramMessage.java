@@ -6,7 +6,7 @@
 package communicationBroker.messages.handleInterfaces;
 
 import communicationBroker.messages.DiagramMessage;
-
+import communicationBroker.messages.LoginResponse;
 
 /**
  *

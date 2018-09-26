@@ -25,14 +25,15 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     //ime reda preko koga ce da se primaju response-ovi;
     String receiveQueue;
     String exchangeName;
+    String messageConsumerTag=null;
     Consumer messageConsumer;
     
     //klasa koja ce da handluje prispele odgovore sa servera
     IHandleDiagramMessage  diagramHandler;
     
-    public DiagramCommClient(String receiveQueue, String exchangeName,IHandleDiagramMessage  diagramHandler){
+    public DiagramCommClient(String exchangeName,IHandleDiagramMessage  diagramHandler){
         this.diagramHandler=diagramHandler;
-;
+;       this.exchangeName=exchangeName;
         
         //creating connection
         factory=new ConnectionFactory();
@@ -68,11 +69,11 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
             .build();
         
         try {
-            channel.basicPublish( String exchangeName,
+            channel.basicPublish(exchangeName,
             "", props, message.serializeMessage());
             return true;
         } catch (IOException ex) {
-            Logger.getLogger(LoginClient.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiagramCommClient.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
@@ -83,7 +84,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
             return true;
         
         try {
-            messageConsumerTag=channel.basicConsume(receiveQueue, true, );
+            messageConsumerTag=channel.basicConsume(receiveQueue, true,messageConsumer);
             return true;
         } catch (IOException ex) {
             Logger.getLogger(DiagramCommClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -93,15 +94,15 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     
     public boolean stopConsumer(){
         //vec je stopiran
-        if(replyConsumerTag==null)
+        if(messageConsumerTag==null)
             return true;
         
         try {
-            channel.basicCancel(replyConsumerTag);
-            replyConsumerTag=null;
+            channel.basicCancel(messageConsumerTag);
+            messageConsumerTag=null;
             return true;
         } catch (IOException ex) {
-            Logger.getLogger(LoginClient.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DiagramCommClient.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
@@ -126,11 +127,11 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
         return consumer;
     }
     
-    private LoginResponse getMessage(byte[] body){
+    private DiagramMessage getMessage(byte[] body){
         
-        LoginResponse message;
+        DiagramMessage message;
         try {
-            message = LoginResponse.deserializeMessage(body);
+            message = DiagramMessage.deserializeMessage(body);
             return message;
         } catch (IOException ex) {
             Logger.getLogger(LoginServer.class.getName()).log(Level.SEVERE, null, ex);
