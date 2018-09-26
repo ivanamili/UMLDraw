@@ -50,7 +50,7 @@ public class ClientLoggingManager implements IClientLoggingManager {
                 korisnik.setIme(username);
                 korisnik.setSifra(password);
                 session.save(korisnik);
-                
+                tx.commit();
                 System.out.println("User "+username+" successfully registered!");
                 return true;
             }
@@ -61,7 +61,7 @@ public class ClientLoggingManager implements IClientLoggingManager {
                 System.out.println("User "+username+" registration failed!");
                 return false;
             }
-                
+             
            }
         catch (Exception e) 
         {
@@ -87,6 +87,7 @@ public class ClientLoggingManager implements IClientLoggingManager {
             q.setParameter("sifra", password);
 
             koIzBaze=(KorisnikDb)q.uniqueResult();
+            tx.commit();
             //ne postoji korisnik sa tim username-mom, dodaj korisnika u bazu
             if(koIzBaze==null)
             {

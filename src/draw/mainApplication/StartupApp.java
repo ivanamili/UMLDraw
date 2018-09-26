@@ -13,6 +13,7 @@ import communicationBroker.messages.handleInterfaces.IHandleLoginResponse;
 import draw.classDiagram.ClassDiagramApplicationModel;
 import draw.commonClasses.UmlDrawSDIApplication;
 import draw.usecase.UseCaseApplicationModel;
+import java.awt.CardLayout;
 import javax.swing.JFrame;
 import org.jhotdraw.app.Application;
 import org.jhotdraw.app.DefaultSDIApplication;
@@ -27,12 +28,15 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
      * Creates new form StartupApp
      */
     private LoginClient loginClient;
+    private CardLayout cardLayout;
     
     public StartupApp() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         loginClient= new LoginClient(this);
         loginClient.startConsumer();
+        
+        cardLayout=(CardLayout) MainPanel.getLayout();
     }
 
     /**
@@ -57,8 +61,8 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         btnLogin = new javax.swing.JButton();
         lblSuccess = new javax.swing.JLabel();
         StartCrtezPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        btnCreateNewCrtez = new javax.swing.JButton();
+        btnJoinCrtez = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -129,8 +133,6 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             }
         });
 
-        lblSuccess.setText("success indicator");
-
         javax.swing.GroupLayout RegisterLoginPanelLayout = new javax.swing.GroupLayout(RegisterLoginPanel);
         RegisterLoginPanel.setLayout(RegisterLoginPanelLayout);
         RegisterLoginPanelLayout.setHorizontalGroup(
@@ -160,9 +162,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         RegisterLoginPanelLayout.setVerticalGroup(
             RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(lblSuccess)
-                .addGap(50, 50, 50)
+                .addGap(106, 106, 106)
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsername)
                     .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -170,7 +170,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPassword)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                .addGap(10, 10, 10)
+                .addComponent(lblSuccess)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
                     .addComponent(btnLogin))
@@ -179,32 +181,39 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
 
         MainPanel.add(RegisterLoginPanel, "card2");
 
-        jButton1.setText("jButton1");
+        btnCreateNewCrtez.setText("Create new Diagram");
+        btnCreateNewCrtez.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateNewCrtezActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("jLabel1");
+        btnJoinCrtez.setText("Join existing Diagram");
+        btnJoinCrtez.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnJoinCrtezActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout StartCrtezPanelLayout = new javax.swing.GroupLayout(StartCrtezPanel);
         StartCrtezPanel.setLayout(StartCrtezPanelLayout);
         StartCrtezPanelLayout.setHorizontalGroup(
             StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(StartCrtezPanelLayout.createSequentialGroup()
-                .addGroup(StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(StartCrtezPanelLayout.createSequentialGroup()
-                        .addGap(143, 143, 143)
-                        .addComponent(jButton1))
-                    .addGroup(StartCrtezPanelLayout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addComponent(jLabel1)))
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addGap(143, 143, 143)
+                .addGroup(StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnCreateNewCrtez, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnJoinCrtez, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         StartCrtezPanelLayout.setVerticalGroup(
             StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(StartCrtezPanelLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel1)
-                .addGap(45, 45, 45)
-                .addComponent(jButton1)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addGap(64, 64, 64)
+                .addComponent(btnCreateNewCrtez)
+                .addGap(18, 18, 18)
+                .addComponent(btnJoinCrtez)
+                .addContainerGap(119, Short.MAX_VALUE))
         );
 
         MainPanel.add(StartCrtezPanel, "card3");
@@ -294,6 +303,14 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         loginClient.stopConsumer();
     }//GEN-LAST:event_formWindowClosing
 
+    private void btnJoinCrtezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJoinCrtezActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnJoinCrtezActionPerformed
+
+    private void btnCreateNewCrtezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewCrtezActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCreateNewCrtezActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -334,12 +351,12 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     private javax.swing.JPanel MainPanel;
     private javax.swing.JPanel RegisterLoginPanel;
     private javax.swing.JPanel StartCrtezPanel;
+    private javax.swing.JButton btnCreateNewCrtez;
+    private javax.swing.JButton btnJoinCrtez;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnStartClassDiagram;
     private javax.swing.JButton btnStartUseCase;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblSuccess;
     private javax.swing.JLabel lblUsername;
@@ -353,8 +370,10 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             case MessageType.LOGIN_RESPONSE:
             {
                 boolean success= (boolean)response.getPayload();
-                if(success)
+                if(success){
                     lblSuccess.setText("Logging successfull!");
+                    cardLayout.next(MainPanel);
+                } 
                 else
                     lblSuccess.setText("Logging failed!");
                 
@@ -365,7 +384,10 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             {
                 boolean success= (boolean)response.getPayload();
                 if(success)
+                {
                     lblSuccess.setText("Registration successfull!");
+                    cardLayout.next(MainPanel);
+                }
                 else
                     lblSuccess.setText("Registration failed!");
                 

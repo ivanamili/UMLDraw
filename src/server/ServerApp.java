@@ -121,9 +121,7 @@ public class ServerApp implements IHandleLoginMessage {
                 boolean success= loginManager.tryRegister(credentials[0],credentials[1]);
                 response.setResponseType(MessageType.REGISTER_RESPONSE);
                 response.setPayload(success);
-                
-                return response;
-                
+                break;
             }
         }
         return response;
