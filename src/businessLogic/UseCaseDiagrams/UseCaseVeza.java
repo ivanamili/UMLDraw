@@ -2,6 +2,7 @@ package businessLogic.UseCaseDiagrams;
 
 import businessLogic.AbstractClassHierarchy.*;
 import enumerations.UseCaseConnType;
+import java.io.Serializable;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,7 +10,7 @@ import org.hibernate.Transaction;
 import store.entity.UseCaseKonekcijaDb;
 import store.entity.UseCaseKonekcijaDbId;
 
-public class UseCaseVeza extends UseCaseDiagramVeza {
+public class UseCaseVeza extends UseCaseDiagramVeza implements Serializable {
 
 	private int crtezID;
 	private int ID;

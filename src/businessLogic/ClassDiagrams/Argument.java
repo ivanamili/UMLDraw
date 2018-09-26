@@ -1,6 +1,8 @@
 package businessLogic.ClassDiagrams;
 
-public class Argument {
+import java.io.Serializable;
+
+public class Argument implements Serializable{
 
 	private int crtezID;
 	private int klasaID;

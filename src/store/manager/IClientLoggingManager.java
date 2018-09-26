@@ -17,4 +17,7 @@ public interface IClientLoggingManager {
     //ne postoji, dodaje korisnika u bazu, vraca true
     //ako korisnik postoji, registracija neuspesna, vraca false
     public boolean tryRegister(String username, String password);
+    
+    //proverava da li su kredencijali ispravni
+    public boolean tryLogin(String username, String password);
 }

@@ -1,10 +1,11 @@
 package businessLogic.ClassDiagrams;
 
 import enumerations.VisibilityTypeEnum;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Metod {
+public class Metod implements Serializable {
 
 	private int crtezID;
 	private int klasaIliInterjfejsID;

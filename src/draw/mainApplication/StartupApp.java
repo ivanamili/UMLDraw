@@ -5,6 +5,11 @@
  */
 package draw.mainApplication;
 
+import communicationBroker.messages.LoginClient;
+import communicationBroker.messages.LoginMessage;
+import communicationBroker.messages.LoginResponse;
+import communicationBroker.messages.MessageType;
+import communicationBroker.messages.handleInterfaces.IHandleLoginResponse;
 import draw.classDiagram.ClassDiagramApplicationModel;
 import draw.commonClasses.UmlDrawSDIApplication;
 import draw.usecase.UseCaseApplicationModel;
@@ -16,14 +21,18 @@ import org.jhotdraw.app.DefaultSDIApplication;
  *
  * @author Korisnik
  */
-public class StartupApp extends javax.swing.JFrame {
+public class StartupApp extends javax.swing.JFrame implements IHandleLoginResponse {
 
     /**
      * Creates new form StartupApp
      */
+    private LoginClient loginClient;
+    
     public StartupApp() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        loginClient= new LoginClient(this);
+        loginClient.startConsumer();
     }
 
     /**
@@ -46,8 +55,17 @@ public class StartupApp extends javax.swing.JFrame {
         txtPassword = new javax.swing.JTextField();
         btnRegister = new javax.swing.JButton();
         btnLogin = new javax.swing.JButton();
+        lblSuccess = new javax.swing.JLabel();
+        StartCrtezPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         btnStartUseCase.setText("Use Case Diagram");
         btnStartUseCase.addActionListener(new java.awt.event.ActionListener() {
@@ -111,6 +129,8 @@ public class StartupApp extends javax.swing.JFrame {
             }
         });
 
+        lblSuccess.setText("success indicator");
+
         javax.swing.GroupLayout RegisterLoginPanelLayout = new javax.swing.GroupLayout(RegisterLoginPanel);
         RegisterLoginPanel.setLayout(RegisterLoginPanelLayout);
         RegisterLoginPanelLayout.setHorizontalGroup(
@@ -132,11 +152,17 @@ public class StartupApp extends javax.swing.JFrame {
                         .addGap(63, 63, 63)
                         .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(71, 71, 71))))
+            .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
+                .addGap(160, 160, 160)
+                .addComponent(lblSuccess)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         RegisterLoginPanelLayout.setVerticalGroup(
             RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(42, 42, 42)
+                .addComponent(lblSuccess)
+                .addGap(50, 50, 50)
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsername)
                     .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -148,10 +174,40 @@ public class StartupApp extends javax.swing.JFrame {
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
                     .addComponent(btnLogin))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         MainPanel.add(RegisterLoginPanel, "card2");
+
+        jButton1.setText("jButton1");
+
+        jLabel1.setText("jLabel1");
+
+        javax.swing.GroupLayout StartCrtezPanelLayout = new javax.swing.GroupLayout(StartCrtezPanel);
+        StartCrtezPanel.setLayout(StartCrtezPanelLayout);
+        StartCrtezPanelLayout.setHorizontalGroup(
+            StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(StartCrtezPanelLayout.createSequentialGroup()
+                .addGroup(StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(StartCrtezPanelLayout.createSequentialGroup()
+                        .addGap(143, 143, 143)
+                        .addComponent(jButton1))
+                    .addGroup(StartCrtezPanelLayout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(jLabel1)))
+                .addContainerGap(184, Short.MAX_VALUE))
+        );
+        StartCrtezPanelLayout.setVerticalGroup(
+            StartCrtezPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(StartCrtezPanelLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addComponent(jLabel1)
+                .addGap(45, 45, 45)
+                .addComponent(jButton1)
+                .addContainerGap(122, Short.MAX_VALUE))
+        );
+
+        MainPanel.add(StartCrtezPanel, "card3");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -208,12 +264,35 @@ public class StartupApp extends javax.swing.JFrame {
     }//GEN-LAST:event_btnStartClassDiagramActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
+        
+        String[] credentials= new String[2];
+        credentials[0]=txtUsername.getText();
+        credentials[1]=txtPassword.getText();
+        
+        LoginMessage message= new LoginMessage();
+        message.setMessageType(MessageType.LOGIN);
+        message.setPayload(credentials);
+        
+        loginClient.sendLoginMessage(message);
+        setEnableLoginButtons(false);
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-        // TODO add your handling code here:
+        String[] credentials= new String[2];
+        credentials[0]=txtUsername.getText();
+        credentials[1]=txtPassword.getText();
+        
+        LoginMessage message= new LoginMessage();
+        message.setMessageType(MessageType.REGISTER);
+        message.setPayload(credentials);
+        
+        loginClient.sendLoginMessage(message);
+        setEnableLoginButtons(false);
     }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        loginClient.stopConsumer();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -254,13 +333,51 @@ public class StartupApp extends javax.swing.JFrame {
     private javax.swing.JPanel DefaultPanel;
     private javax.swing.JPanel MainPanel;
     private javax.swing.JPanel RegisterLoginPanel;
+    private javax.swing.JPanel StartCrtezPanel;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnRegister;
     private javax.swing.JButton btnStartClassDiagram;
     private javax.swing.JButton btnStartUseCase;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblSuccess;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void HandleLoginResponse(LoginResponse response) {
+        switch(response.getResponseType()){
+            case MessageType.LOGIN_RESPONSE:
+            {
+                boolean success= (boolean)response.getPayload();
+                if(success)
+                    lblSuccess.setText("Logging successfull!");
+                else
+                    lblSuccess.setText("Logging failed!");
+                
+                setEnableLoginButtons(true);
+                break;
+            }
+            case MessageType.REGISTER_RESPONSE:
+            {
+                boolean success= (boolean)response.getPayload();
+                if(success)
+                    lblSuccess.setText("Registration successfull!");
+                else
+                    lblSuccess.setText("Registration failed!");
+                
+                setEnableLoginButtons(true);
+                break;
+            }
+        }
+    }
+    
+    private void setEnableLoginButtons(boolean enable)
+    {
+        btnLogin.setEnabled(enable);
+        btnRegister.setEnabled(enable);
+    }
 }

@@ -1,6 +1,7 @@
 package businessLogic.ClassDiagrams;
 
 import businessLogic.AbstractClassHierarchy.ClassDiagramElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +13,7 @@ import org.jhotdraw.draw.RectangleFigure;
 import store.entity.KlasaDb;
 import store.entity.KlasaDbId;
 
-public class Klasa extends ClassDiagramElement {
+public class Klasa extends ClassDiagramElement implements Serializable {
 
 	private int crtezID;
 	private int ID;

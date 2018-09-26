@@ -1,9 +1,10 @@
 package businessLogic.UseCaseDiagrams;
 import businessLogic.AbstractClassHierarchy.*;
+import java.io.Serializable;
 import org.jhotdraw.draw.*;
 
 
-public class Aktor extends UseCaseDiagramElement {
+public class Aktor extends UseCaseDiagramElement implements Serializable{
 
 	private int crtezID;
 	private int ID;

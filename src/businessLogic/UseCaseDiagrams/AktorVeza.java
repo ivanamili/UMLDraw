@@ -1,6 +1,7 @@
 package businessLogic.UseCaseDiagrams;
 
 import businessLogic.AbstractClassHierarchy.*;
+import java.io.Serializable;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,7 +15,7 @@ import store.entity.AktorKonekcijaDbId;
 import store.entity.UseCaseDb;
 import store.entity.UseCaseDbId;
 
-public class AktorVeza extends UseCaseDiagramVeza {
+public class AktorVeza extends UseCaseDiagramVeza implements Serializable {
 
 	private int crtezID;
 	private int ID;

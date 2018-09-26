@@ -1,7 +1,8 @@
 package businessLogic.ClassDiagrams;
 import enumerations.VisibilityTypeEnum;
+import java.io.Serializable;
 
-public class Atribut {
+public class Atribut implements Serializable {
 
 	private int crtezID;
 	private int klasaID;
