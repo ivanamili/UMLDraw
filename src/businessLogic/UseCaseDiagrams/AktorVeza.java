@@ -1,6 +1,7 @@
 package businessLogic.UseCaseDiagrams;
 
 import businessLogic.AbstractClassHierarchy.*;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -80,5 +81,23 @@ public class AktorVeza extends UseCaseDiagramVeza implements Serializable {
             
             return that;
         }
+
+    
+     //veze nemaju okvirnu figuru, pa ove metode ne rade nista        
+    @Override
+    public Rectangle2D.Double getPresentationBounds() {
+        //iako nema okvir, bitno je da vrati null da bi tamo znali da ta figura nema okvir
+        return null;
+    }
+
+    @Override
+    public void recreatePresentationFigure(Rectangle2D.Double bounds) {
+        //ova figura je tipa veza, pa nema okvir te ne radi nista
+    }
+
+    @Override
+    public void setBoundsToNull() {
+        //ova figura nema bounds pa ne treba nista da radi
+    }
 
 }

@@ -1,5 +1,6 @@
 package businessLogic.UseCaseDiagrams;
 import businessLogic.AbstractClassHierarchy.*;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import org.jhotdraw.draw.*;
 
@@ -73,6 +74,21 @@ public class Aktor extends UseCaseDiagramElement implements Serializable{
             
             return that;
         }
+
+    @Override
+    public Rectangle2D.Double getPresentationBounds() {
+       return this.okvir.getBounds();
+    }
+
+    @Override
+    public void recreatePresentationFigure(Rectangle2D.Double bounds) {
+        this.okvir=new RectangleFigure(bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+    
+    @Override
+    public void setBoundsToNull() {
+        this.okvir=null;
+    }
 
        
 

@@ -1,6 +1,7 @@
 package businessLogic.UseCaseDiagrams;
 
 import businessLogic.AbstractClassHierarchy.*;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import org.jhotdraw.draw.EllipseFigure;
 
@@ -72,6 +73,21 @@ public class UseCase extends UseCaseDiagramElement implements Serializable {
             
             return that;
         }
+
+    @Override
+    public Rectangle2D.Double getPresentationBounds() {
+       return this.elipsa.getBounds();
+    }
+
+    @Override
+    public void recreatePresentationFigure(Rectangle2D.Double bounds) {
+        this.elipsa=new EllipseFigure(bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+
+    @Override
+    public void setBoundsToNull() {
+        this.elipsa=null;
+    }
 
 
 }

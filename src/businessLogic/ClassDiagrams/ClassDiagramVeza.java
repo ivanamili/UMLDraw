@@ -4,6 +4,7 @@ import businessLogic.AbstractClassHierarchy.ClassDiagramElement;
 import businessLogic.AbstractClassHierarchy.Veza;
 import businessLogic.UseCaseDiagrams.UseCaseVeza;
 import enumerations.ClassConnTypeEnum;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -84,6 +85,23 @@ public class ClassDiagramVeza extends Veza implements Serializable{
             that.setTip(this.tip);
             
             return that;
+        }
+        
+              //veze nemaju okvirnu figuru, pa ove metode ne rade nista        
+        @Override
+        public Rectangle2D.Double getPresentationBounds() {
+            //iako nema okvir, bitno je da vrati null da bi tamo znali da ta figura nema okvir
+            return null;
+        }
+
+        @Override
+        public void recreatePresentationFigure(Rectangle2D.Double bounds) {
+            //ova figura je tipa veza, pa nema okvir te ne radi nista
+        }
+
+        @Override
+        public void setBoundsToNull() {
+            //ova figura nema bounds pa ne treba nista da radi
         }
 
 }

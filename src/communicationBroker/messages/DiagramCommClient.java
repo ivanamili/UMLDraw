@@ -75,7 +75,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     }
     
     //salje poruku i vraca true ako je poruka poslata uspesno, u suprotnom false
-    public boolean sendLoginMessage(DiagramMessage message){        
+    public boolean sendDiagramMessage(DiagramMessage message){        
      
    
         try {

@@ -1,6 +1,7 @@
 package businessLogic.ClassDiagrams;
 
 import businessLogic.AbstractClassHierarchy.ClassDiagramElement;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -106,6 +107,21 @@ public class Interfejs extends ClassDiagramElement implements Serializable {
             that.setMetodCounter(this.metodCounter);
             //array liste ce da postavi default construktor
             return that;
+        }
+        
+            @Override
+        public Rectangle2D.Double getPresentationBounds() {
+           return this.okvir.getBounds();
+        }
+
+        @Override
+        public void recreatePresentationFigure(Rectangle2D.Double bounds) {
+            this.okvir=new RectangleFigure(bounds.x, bounds.y, bounds.width, bounds.height);
+        }
+
+        @Override
+        public void setBoundsToNull() {
+            this.okvir=null;
         }
 
 

@@ -1,6 +1,7 @@
 
 package communicationBroker.messages;
 import enumerations.RuntimeClassEnum;
+import java.awt.geom.Rectangle2D;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,6 +20,7 @@ public class DiagramMessage implements Serializable {
     private String sender;
     private Object bussinesObjectFigure;
     private RuntimeClassEnum objectType;
+    private Rectangle2D.Double figureBounds;
     
     public DiagramMessage(){}
 
@@ -91,6 +93,20 @@ public class DiagramMessage implements Serializable {
      */
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    /**
+     * @return the figureBounds
+     */
+    public Rectangle2D.Double getFigureBounds() {
+        return figureBounds;
+    }
+
+    /**
+     * @param figureBounds the figureBounds to set
+     */
+    public void setFigureBounds(Rectangle2D.Double figureBounds) {
+        this.figureBounds = figureBounds;
     }
     
 }
