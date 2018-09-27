@@ -24,6 +24,8 @@ import draw.classDiagram.figures.CompositionConnectionFigure;
 import draw.classDiagram.figures.GeneralisationConnectionFigure;
 import draw.classDiagram.figures.ImplementationConnectionFigure;
 import draw.classDiagram.figures.InterfaceFigure;
+import draw.classDiagram.figures.attribute.AttributeFigure;
+import draw.classDiagram.figures.method.MethodFigure;
 import draw.usecase.figures.AktorConnectionFigure;
 import draw.usecase.figures.AktorFigure;
 import draw.usecase.figures.ExtendConnectionFigure;
@@ -32,6 +34,7 @@ import draw.usecase.figures.UseCaseFigure;
 import enumerations.ClassConnTypeEnum;
 import enumerations.RuntimeClassEnum;
 import enumerations.UseCaseConnType;
+import java.util.ArrayList;
 import javax.swing.JToolBar;
 import org.jboss.logging.Message;
 import org.jhotdraw.draw.ConnectionFigure;
@@ -142,23 +145,29 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
         System.out.println("Dodat element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
         
-               message=new DiagramMessage();
-               message.setMessageType(DiagramMessageType.ADDED);
-               message.setBussinesObjectFigure(elem);
-               message.setObjectType(getTypeEnumFromObject(elem));
-               diagramComm.sendLoginMessage(message);
+        if(isDrawing){
+           message=new DiagramMessage();
+           message.setMessageType(DiagramMessageType.ADDED);
+           message.setBussinesObjectFigure(elem);
+           message.setObjectType(getTypeEnumFromObject(elem));
+           diagramComm.sendLoginMessage(message);
+        }       
+              
     }
 
     @Override
     public void figureRemoved(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
         System.out.println("Uklonjen element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
+        
+        if(isDrawing){
+           message=new DiagramMessage();
+           message.setMessageType(DiagramMessageType.DELETED);
+           message.setBussinesObjectFigure(elem);
+           message.setObjectType(getTypeEnumFromObject(elem));
+           diagramComm.sendLoginMessage(message);
+        }
                
-               message=new DiagramMessage();
-               message.setMessageType(DiagramMessageType.DELETED);
-               message.setBussinesObjectFigure(elem);
-               message.setObjectType(getTypeEnumFromObject(elem));
-               diagramComm.sendLoginMessage(message);
     }
     
     //metode iz figure listener
@@ -173,12 +182,15 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         {
             AbstractDiagramElement elem= ((IDataFigure)e.getFigure()).getDataObject();
             System.out.println("Figure changed: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
-                 
+            
+            if(isDrawing){
                message=new DiagramMessage();
                message.setMessageType(DiagramMessageType.CHANGED);
                message.setBussinesObjectFigure(elem);
                message.setObjectType(getTypeEnumFromObject(elem));
                diagramComm.sendLoginMessage(message);
+            }
+              
         }
         
         this.UmlCrtez.getID();
@@ -221,18 +233,18 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     public void HandleDiagramMessage(DiagramMessage message) {
         switch(message.getMessageType())
         {
-        
-            case DiagramMessageType.ADDED:
-                
-                    HandleADD(message);
-                
-            case DiagramMessageType.DELETED:
-                
-                    HandleDELETED(message);
-                
-            case DiagramMessageType.CHANGED:
-                
+            case DiagramMessageType.ADDED:{                
+                    HandleADD(message); 
+                    break;
+            }
+            case DiagramMessageType.DELETED:{             
+                    HandleDELETED(message); 
+                    break;
+            }
+            case DiagramMessageType.CHANGED:{             
                     HandleCHANGED(message);
+                    break;
+            }
                 
         
     }
@@ -240,33 +252,54 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
 }
     public void HandleADD(DiagramMessage message)
     {
+        Figure newFigure= CreateFigureFromBussinesObject(message.getBussinesObjectFigure(),
+                                                         message.getObjectType());
+        
+        int figureCount=super.getFigures().size();
+        this.basicAdd(figureCount, newFigure);
+        
+    }
+    
+    public void HandleDELETED(DiagramMessage message)
+    {
         
         
     }
     
-      public void HandleDELETED(DiagramMessage message)
+    public void HandleCHANGED(DiagramMessage message)
     {
         
         
     }
-        public void HandleCHANGED(DiagramMessage message)
+    
+    private Figure getFigureByBusinessId(int id)
     {
+        ArrayList<Figure> allFigures= (ArrayList)this.getFigures();
         
-        
+        for(int i=0;i< allFigures.size();i++){
+            Figure currentFigure=allFigures.get(i);
+            int figureId= ((IDataFigure)currentFigure).getDataObject().getElemId();
+            if(figureId==id)
+                return currentFigure;
+        }
+        return null;
     }
         
-     Figure CreateFigureFromBussinesObject(Object bussinesObject, RuntimeClassEnum type)
+    private Figure CreateFigureFromBussinesObject(Object bussinesObject, RuntimeClassEnum type)
      {
         switch(type)
         {
-            case KLASA:{
-                return new ClassFigure((Klasa)bussinesObject);
-            }
             case AKTOR:{
                 return new AktorFigure((Aktor)bussinesObject);
             }
             case AKTOR_VEZA:{
-                return new AktorConnectionFigure((AktorVeza)bussinesObject);
+                AbstractDiagramConnectionFigure connFig=new AktorConnectionFigure((AktorVeza)bussinesObject);
+                Figure startFigure= getFigureByBusinessId(((AktorVeza)bussinesObject).getAktor());
+                Figure endFigure= getFigureByBusinessId(((AktorVeza)bussinesObject).getUseCase());
+         
+                connFig.setConnectionEndpoints(startFigure, endFigure);
+                
+                return connFig;
             }
             case USE_CASE:{
                 return new UseCaseFigure((UseCase)bussinesObject);
@@ -274,26 +307,43 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
             case USE_CASE_VEZA:{
                 return CreateUseCaseFromBussinesObject((UseCaseVeza) bussinesObject);
             }
+            case KLASA:{
+                return new ClassFigure((Klasa)bussinesObject);
+            }
             case INTERFEJS:{
                 return new InterfaceFigure((Interfejs)bussinesObject);
             }
             case CLASS_DIAGRAM_VEZA:{
                 return CreateClassDiagramConnectionFromBussinesObject((ClassDiagramVeza)bussinesObject);
             }
+            case ATRIBUT:{
+                return new AttributeFigure((Atribut)bussinesObject);
+            }
+            case METOD:{
+                return new MethodFigure((Metod)bussinesObject);
+            }
          }
         return null;
      }
      
-     Figure CreateUseCaseFromBussinesObject(UseCaseVeza bussinesObject)
+     private Figure CreateUseCaseFromBussinesObject(UseCaseVeza bussinesObject)
      {
-       if(bussinesObject.getTipVeze()==UseCaseConnType.INCLUDE)       
-           return new IncludeConnectionFigure(bussinesObject);           
-       else if(bussinesObject.getTipVeze()==UseCaseConnType.EXTEND)
-           return new ExtendConnectionFigure(bussinesObject);
-       return null;               
+         AbstractDiagramConnectionFigure connFig=null;
+         
+         if(bussinesObject.getTipVeze()==UseCaseConnType.INCLUDE)       
+             connFig= new IncludeConnectionFigure(bussinesObject);           
+         else if(bussinesObject.getTipVeze()==UseCaseConnType.EXTEND)
+             connFig= new ExtendConnectionFigure(bussinesObject);
+         
+         Figure startFigure= getFigureByBusinessId(bussinesObject.getOdKoga());
+         Figure endFigure= getFigureByBusinessId(bussinesObject.getDoKoga());
+         
+         connFig.setConnectionEndpoints(startFigure, endFigure);
+         
+         return connFig;        
      }
      
-      Figure CreateClassDiagramConnectionFromBussinesObject(ClassDiagramVeza bussinesObject)
+     private Figure CreateClassDiagramConnectionFromBussinesObject(ClassDiagramVeza bussinesObject)
      {
        if(bussinesObject.getTip()==ClassConnTypeEnum.AGREGATION)
        

@@ -29,7 +29,8 @@ public class AktorConnectionFigure extends AbstractDiagramConnectionFigure imple
     }
 
     public AktorConnectionFigure(AktorVeza aktorVeza) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        super();
+        this.aktorVeza=aktorVeza;
     }
     
     @Override

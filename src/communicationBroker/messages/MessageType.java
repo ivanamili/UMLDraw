@@ -22,6 +22,7 @@ public final class MessageType {
     public static final String ADMIN_DRAWING_STARTED="drawing_started";
     public static final String START_DRAWING="start_drawing";
     public static final String EMPTY_RESPONSE="empty_response";
+    public static final String ADMIN_DRAWING_USER_CHANGED="drawing_user_changed";
     
     
     private MessageType(){}

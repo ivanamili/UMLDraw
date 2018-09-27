@@ -878,6 +878,11 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             {
                 break;
             }
+            case MessageType.ADMIN_DRAWING_USER_CHANGED:
+            {
+                String currentDrawingUser= (String)response.getPayload();
+                lblAdminCurrentDrawingUser.setText(currentDrawingUser);
+            }
         }
         
     }

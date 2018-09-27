@@ -30,7 +30,9 @@ public class ExtendConnectionFigure extends AbstractDiagramConnectionFigure impl
     }
 
     public ExtendConnectionFigure(UseCaseVeza bussinesObject) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        super();
+        this.useCaseVeza=bussinesObject;
+        initFigure();
     }
     
     private void initFigure(){

@@ -5,6 +5,8 @@
  */
 package draw.commonClasses;
 
+import org.jhotdraw.draw.Figure;
+
 /**
  *
  * @author Korisnik
@@ -14,5 +16,14 @@ public abstract class AbstractDiagramConnectionFigure extends LabeledLineConnect
     @Override
     public void fireHandleDisconnect(){
         this.handleDisconnect(this.getStartFigure(), this.getEndFigure());
+    }
+    
+    public void setConnectionEndpoints(Figure startFigure, Figure endFigure)
+    {
+         this.setStartConnector(startFigure.findConnector(null, this));
+         this.setEndConnector(endFigure.findConnector(null, this));
+         
+         this.setBounds(this.getStartConnector().getAnchor(), this.getEndConnector().getAnchor());
+         this.updateConnection();
     }
 }

@@ -40,9 +40,7 @@ public class AktorFigure extends AbstractDiagramElementFigure {
     
     private Aktor aktor;
 
-    public AktorFigure(Aktor aktor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     
      private static class AktorNameAdapter extends AbstractFigureListener {
         private AktorFigure target;
@@ -70,6 +68,12 @@ public class AktorFigure extends AbstractDiagramElementFigure {
         aktor.setNaziv("New Aktor");
         aktor.setOkvir((RectangleFigure)this.getPresentationFigure());
         initFigure();        
+    }
+    
+    public AktorFigure(Aktor aktor) {
+        super(aktor.getOkvir());
+        this.aktor=aktor;
+        initFigure();
     }
     
     public void initFigure()
