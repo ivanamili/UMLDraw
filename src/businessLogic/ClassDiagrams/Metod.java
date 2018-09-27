@@ -114,5 +114,35 @@ public class Metod implements Serializable {
             this.setPovratnaVrednost(newMetod.getPovratnaVrednost());
             this.setVidljivost(newMetod.getVidljivost());
         }
+        
+         @Override 
+        public boolean equals(Object obj){
+            if(!(obj instanceof Metod))
+                return false;
+            
+            Metod object=(Metod)obj;
+            
+            if(this.argumentIDCounter==object.argumentIDCounter
+                    && this.povratnaVrednost.equals(object.povratnaVrednost)
+                    && this.isAbstract==object.isAbstract && this.isStatic==object.isStatic
+                    && this.vidljivost==object.vidljivost && this.naziv.equals(object.naziv)
+                    && this.ID==object.ID && this.klasaIliInterjfejsID==object.klasaIliInterjfejsID
+                    && this.crtezID==object.crtezID)
+            {
+                //proveri listu argumenata
+                if(this.argumenti.size()==object.argumenti.size())
+                {
+                    for(int i=0;i<this.argumenti.size();i++)
+                    {
+                        if(!this.argumenti.get(i).equals(object.argumenti.get(i)))
+                            return false;
+                    }
+                }
+                return false;
+            }
+              
+            
+            return false;
+        }
 
 }

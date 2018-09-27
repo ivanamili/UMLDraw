@@ -73,6 +73,25 @@ public class UseCase extends UseCaseDiagramElement implements Serializable {
             
             return that;
         }
+        
+         @Override
+        public boolean equals(Object obj){
+            //nisu istog tipa sigurno nisu jednaki
+            if(!(obj instanceof UseCase))
+                return false;
+            UseCase object=(UseCase) obj;
+            //poredi okvire, vrlo verovatno da ako se razlikuju da su oni
+            Rectangle2D.Double thisBounds=this.elipsa.getBounds();
+            Rectangle2D.Double objectBounds= object.elipsa.getBounds();
+            
+            //da li su sva polja jednaka, ukljucujuci i okvir
+            if(thisBounds.x==objectBounds.x && thisBounds.y ==objectBounds.y
+                    && thisBounds.width==objectBounds.width && thisBounds.height==objectBounds.height
+                    && this.ID==object.ID && this.crtezID==object.crtezID && this.naziv.equals(object.naziv))
+                return true;
+            
+            return false;
+        }
 
     @Override
     public Rectangle2D.Double getPresentationBounds() {

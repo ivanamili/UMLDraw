@@ -81,6 +81,21 @@ public class AktorVeza extends UseCaseDiagramVeza implements Serializable {
             
             return that;
         }
+        
+         @Override
+        public boolean equals(Object obj){
+            //nisu istog tipa sigurno nisu jednaki
+            if(!(obj instanceof AktorVeza))
+                return false;
+            AktorVeza object=(AktorVeza) obj;
+            
+            //da li su sva polja jednaka
+            if(this.ID==object.ID && this.crtezID==object.crtezID 
+                    && this.aktor==object.aktor && this.useCase==object.useCase)
+                return true;
+            
+            return false;
+        }
 
     
      //veze nemaju okvirnu figuru, pa ove metode ne rade nista        

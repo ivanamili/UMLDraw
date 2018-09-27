@@ -32,6 +32,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     
     String logUser;
     
+    
     //klasa koja ce da handluje prispele odgovore sa servera
     IHandleDiagramMessage  diagramHandler;
     
@@ -76,7 +77,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     
     //salje poruku i vraca true ako je poruka poslata uspesno, u suprotnom false
     public boolean sendDiagramMessage(DiagramMessage message){        
-     
+        
    
         try {
             message.setSender(logUser);

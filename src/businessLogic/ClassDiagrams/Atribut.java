@@ -61,6 +61,21 @@ public class Atribut implements Serializable {
             this.naziv = naziv;
         }
         
+         @Override 
+        public boolean equals(Object obj){
+            if(!(obj instanceof Atribut))
+                return false;
+            
+            Atribut object=(Atribut)obj;
+            
+            if(this.naziv.equals(object.naziv) && this.tip.equals(object.tip) && this.ID==object.ID
+                    && this.isStatic==object.isStatic && this.vidljivost==object.vidljivost
+                    && this.klasaID==object.klasaID && this.crtezID==object.crtezID)
+                return true;
+            
+            return false;
+        }
+        
         //pokuplja sve osim id-eva, oni se ne menjaju nikad
         public void update(Atribut noviAtribut){
             this.setNaziv(noviAtribut.getNaziv());

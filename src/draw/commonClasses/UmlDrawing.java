@@ -64,6 +64,13 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     //ili su objekti vec stigli kroz mrezu i ne treba ponovo da se salju.
     private boolean isDrawing;
     private String loggedUser;
+    
+    //posto se figureChanged fire-uje previse puta, ovde ce da se cuva poslednji objekat
+    //koji je poslat kroz mrezu i pre svakog slanja se proverava da li je slucajno
+    //objekat koji zelimo da saljemo isti kao vec poslati
+    //i ako jeste ne slati objekat kroz mrezu jer nema promena
+    //samo jhotdraw fantazira nesto i bombarduje eventima
+    private AbstractDiagramElement lastSentElement;
      
     
     //treba nam da bi odavde mogli da se disablujemo i enablujemo kad treba
@@ -144,7 +151,6 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     @Override
     public void figureAdded(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
-        System.out.println("Dodat element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
         
         if(isDrawing){
            sendDiagramMessage(DiagramMessageType.ADDED, elem);
@@ -155,10 +161,9 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     @Override
     public void figureRemoved(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
-        System.out.println("Uklonjen element: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
         
         if(isDrawing){
-           //sendDiagramMessage(DiagramMessageType.DELETED, elem);
+           sendDiagramMessage(DiagramMessageType.DELETED, elem);
         }
                
     }
@@ -174,10 +179,9 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         if(fig instanceof IDataFigure)
         {
             AbstractDiagramElement elem= ((IDataFigure)e.getFigure()).getDataObject();
-            System.out.println("Figure changed: ID "+elem.getElemId()+ " Klasa:"+ elem.getClass().getName());
             
             if(isDrawing){
-                //sendDiagramMessage(DiagramMessageType.CHANGED, elem);
+                sendDiagramMessage(DiagramMessageType.CHANGED, elem);
             }
               
         }
@@ -185,7 +189,19 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         this.UmlCrtez.getID();
     }
     
+    private boolean isElementSameAsLastSent(AbstractDiagramElement element){
+        
+        return lastSentElement.equals(element);
+    }
+    
     private void sendDiagramMessage(String type, AbstractDiagramElement element){
+        
+        //takav element je vec poslat, duplikat
+        if(type.equals(DiagramMessageType.CHANGED) && isElementSameAsLastSent(element))
+            return;
+        
+        //ipak treba da se salje element, on je sad poslednji poslati
+        lastSentElement=(AbstractDiagramElement)element.clone();
         
         DiagramMessage message= new DiagramMessage();
         message.setMessageType(type);
@@ -209,8 +225,7 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
             String tamoneksto="";
         }
     }
-    RuntimeClassEnum getTypeEnumFromObject(Object elem)
-    {
+    RuntimeClassEnum getTypeEnumFromObject(Object elem){
         if(elem instanceof Argument)
             return RuntimeClassEnum.ARGUMENT;
         else if(elem instanceof Atribut)
@@ -271,11 +286,18 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         
     }
     public void HandleDELETED(DiagramMessage message){
+        AbstractDiagramElement elem= (AbstractDiagramElement)message.getBussinesObjectFigure();
+        int deleteId= elem.getElemId();
+        Figure figToRemove= getFigureByBusinessId(deleteId);
         
+        basicRemove(figToRemove);
         
     }
     public void HandleCHANGED(DiagramMessage message){
+        AbstractDiagramElement elem= (AbstractDiagramElement)message.getBussinesObjectFigure();
+        Figure figToChange= getFigureByBusinessId(elem.getElemId());
         
+        ((IUpdatableFigure)figToChange).updateDiagramFigure(elem);
         
     }
     

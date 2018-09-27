@@ -149,6 +149,46 @@ public class Klasa extends ClassDiagramElement implements Serializable {
             //array liste ce da postavi default construktor
             return that;
         }
+        
+        @Override 
+        public boolean equals(Object obj){
+            
+            if(!(obj instanceof Klasa))
+                return false;
+            
+            Klasa object= (Klasa)obj;
+             
+            Rectangle2D.Double thisBounds=this.okvir.getBounds();
+            Rectangle2D.Double objectBounds= object.okvir.getBounds();
+            
+            if(thisBounds.x==objectBounds.x && thisBounds.y ==objectBounds.y
+                    && thisBounds.width==objectBounds.width && thisBounds.height==objectBounds.height
+                    && this.metodCounter==object.metodCounter && this.atributCounter==object.atributCounter
+                    && this.ime.equals(object.ime) && this.ID==object.ID
+                    && this.isAbstract==object.isAbstract && this.isStatic==object.isStatic
+                    && this.crtezID==object.crtezID)
+            {
+                //proveri atribute i metode
+                
+                if(this.atributi.size()==object.atributi.size()
+                        && this.metode.size()==object.metode.size())
+                {
+                    //proveri sve atribute
+                    for(int i=0;i<this.atributi.size();i++){
+                        if(!(this.atributi.get(i).equals(object.atributi.get(i))))
+                            return false;
+                    }
+                    
+                    //proveri sve metode
+                    for(int i=0;i<this.metode.size();i++){
+                        if(!(this.metode.get(i).equals(object.metode.get(i))))
+                            return false;
+                    }
+                }
+            }
+                
+            return true;
+        }
 
     
         public RectangleFigure getOkvir() {

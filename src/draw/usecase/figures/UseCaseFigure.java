@@ -27,18 +27,24 @@ import org.jhotdraw.draw.VerticalLayouter;
 import org.jhotdraw.geom.Insets2DDouble;
 import org.jhotdraw.samples.pert.figures.TaskFigure;
 import draw.commonClasses.AbstractDiagramElementFigure;
+import draw.commonClasses.IUpdatableFigure;
 
 /**
  *
  * @author Korisnik
  */
-public class UseCaseFigure extends AbstractDiagramElementFigure{
+public class UseCaseFigure extends AbstractDiagramElementFigure implements IUpdatableFigure{
 
+    private UseCase useCase;
+    private TextFigure ucName;
+    
     @Override
     //vraca useCase
     public AbstractDiagramElement getDataObject() {
         return this.useCase;
     }
+
+    
     
     //ADAPTERI KOJI MENJAJU UseCase objekat kako se menja ime figure
     //kada se promeni polozaj elipsa se sama promeni jer i useCase i figura IMAJU REFERENCE NA ISTU ELIPSU!
@@ -55,7 +61,7 @@ public class UseCaseFigure extends AbstractDiagramElementFigure{
             //target.firePropertyChange("name", e.getOldValue(), e.getNewValue());
         }
     }
-    private UseCase useCase;
+   
     
     //kada se kreira novi use case koriscenjem tool-a
     public UseCaseFigure()
@@ -75,13 +81,26 @@ public class UseCaseFigure extends AbstractDiagramElementFigure{
         initFigure();
     }
     
+    @Override
+    public void updateDiagramFigure(AbstractDiagramElement newElement) {
+        if(!(newElement instanceof UseCase))
+            return;
+        
+        UseCase elem= (UseCase) newElement;
+        
+        this.useCase.setNaziv(elem.getNaziv());
+        ucName.setText(this.useCase.getNaziv());
+        this.useCase.getElipsa().setBounds(elem.getElipsa().getBounds());
+    }
+    
+   
     private void initFigure()
     {
         //jhotdraw klasa
         setLayouter(new UseCaseVerticalLayouter());
         
         //prikazuje naziv useCase-a
-        TextFigure ucName= new UseCaseNameTextFigure();
+        ucName= new UseCaseNameTextFigure();
         ucName.setText(useCase.getNaziv());
         
         //razmak od elipse
@@ -91,9 +110,6 @@ public class UseCaseFigure extends AbstractDiagramElementFigure{
         
         //menja name u useCase-u kada se promeni ime figure
         ucName.addFigureListener(new UseCaseNameAdapter(this));
-        
-        
-        
     }
     
     //koristi se u clone funkciji

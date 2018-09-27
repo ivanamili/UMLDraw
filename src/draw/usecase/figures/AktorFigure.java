@@ -7,6 +7,7 @@ package draw.usecase.figures;
 
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.UseCaseDiagrams.Aktor;
+import businessLogic.UseCaseDiagrams.UseCase;
 import draw.usecase.auxiliaryClasses.AktorNameTextFigure;
 import draw.usecase.auxiliaryClasses.CoveculjakFigure;
 import draw.commonClasses.IDataFigure;
@@ -31,16 +32,16 @@ import org.jhotdraw.draw.TextFigure;
 import org.jhotdraw.draw.VerticalLayouter;
 import org.jhotdraw.geom.Insets2DDouble;
 import draw.commonClasses.AbstractDiagramElementFigure;
+import draw.commonClasses.IUpdatableFigure;
 
 /**
  *
  * @author Korisnik
  */
-public class AktorFigure extends AbstractDiagramElementFigure {
+public class AktorFigure extends AbstractDiagramElementFigure implements IUpdatableFigure{
     
     private Aktor aktor;
-
-    
+    private TextFigure name;
     
      private static class AktorNameAdapter extends AbstractFigureListener {
         private AktorFigure target;
@@ -76,6 +77,18 @@ public class AktorFigure extends AbstractDiagramElementFigure {
         initFigure();
     }
     
+    @Override
+    public void updateDiagramFigure(AbstractDiagramElement newElement) {
+        if(!(newElement instanceof Aktor))
+            return;
+        
+        Aktor elem= (Aktor) newElement;
+        name.setText(elem.getNaziv());
+        this.aktor.getOkvir().setBounds(elem.getOkvir().getBounds());
+        
+        
+    }
+    
     public void initFigure()
     {
         STROKE_COLOR.set(this.getPresentationFigure(), null);
@@ -87,7 +100,7 @@ public class AktorFigure extends AbstractDiagramElementFigure {
         CoveculjakFigure cicaglisa=new CoveculjakFigure();
         add(cicaglisa);
         
-        AktorNameTextFigure name=new AktorNameTextFigure();
+        name=new AktorNameTextFigure();
         name.setText(aktor.getNaziv());
         Insets2DDouble insets2 = new Insets2DDouble(8,0,8,0);
         LAYOUT_INSETS.set(name, insets2);

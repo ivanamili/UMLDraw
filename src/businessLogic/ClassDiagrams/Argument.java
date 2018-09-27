@@ -53,6 +53,21 @@ public class Argument implements Serializable{
 		this.tip = tip;
 	}
         
+        @Override 
+        public boolean equals(Object obj){
+            if(!(obj instanceof Argument))
+                return false;
+            
+            Argument object=(Argument)obj;
+            
+            if(this.naziv.equals(object.naziv) && this.tip.equals(object.tip) && this.ID==object.ID
+                    && this.metodID==object.metodID && this.klasaID==object.klasaID
+                    && this.crtezID==object.crtezID)
+                return true;
+            
+            return false;
+        }
+        
         @Override
         public String toString(){
             return naziv+" : "+tip;

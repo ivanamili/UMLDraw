@@ -109,6 +109,39 @@ public class Interfejs extends ClassDiagramElement implements Serializable {
             return that;
         }
         
+         @Override 
+        public boolean equals(Object obj){
+            
+            if(!(obj instanceof Interfejs))
+                return false;
+            
+            Interfejs object= (Interfejs)obj;
+             
+            Rectangle2D.Double thisBounds=this.okvir.getBounds();
+            Rectangle2D.Double objectBounds= object.okvir.getBounds();
+            
+            if(thisBounds.x==objectBounds.x && thisBounds.y ==objectBounds.y
+                    && thisBounds.width==objectBounds.width && thisBounds.height==objectBounds.height
+                    && this.metodCounter==object.metodCounter
+                    && this.naziv.equals(object.naziv) && this.ID==object.ID
+                    && this.crtezID==object.crtezID)
+            {
+                //proveri atribute i metode
+                
+                if(this.metode.size()==object.metode.size())
+                {
+                    //proveri sve metode
+                    for(int i=0;i<this.metode.size();i++){
+                        if(!(this.metode.get(i).equals(object.metode.get(i))))
+                            return false;
+                    }
+                }
+            }
+                
+            return true;
+        }
+
+        
             @Override
         public Rectangle2D.Double getPresentationBounds() {
            return this.okvir.getBounds();

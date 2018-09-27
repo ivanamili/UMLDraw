@@ -87,6 +87,22 @@ public class ClassDiagramVeza extends Veza implements Serializable{
             return that;
         }
         
+          @Override
+        public boolean equals(Object obj){
+            //nisu istog tipa sigurno nisu jednaki
+            if(!(obj instanceof ClassDiagramVeza))
+                return false;
+            ClassDiagramVeza object=(ClassDiagramVeza) obj;
+            
+            //da li su sva polja jednaka
+            if(this.ID==object.ID && this.crtezID==object.crtezID 
+                    && this.odKoga==object.odKoga && this.doKoga==object.doKoga
+                    && this.tip==object.tip)
+                return true;
+            
+            return false;
+        }
+        
               //veze nemaju okvirnu figuru, pa ove metode ne rade nista        
         @Override
         public Rectangle2D.Double getPresentationBounds() {
