@@ -86,6 +86,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
             return true;
         } catch (IOException ex) {
             Logger.getLogger(DiagramCommClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
             return false;
         }
     }

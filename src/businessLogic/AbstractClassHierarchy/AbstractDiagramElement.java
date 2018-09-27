@@ -13,4 +13,6 @@ public abstract class AbstractDiagramElement {
     public abstract int getElemId();
     public abstract void setElemId(int id);
     public abstract void setCrtezIdentifikator(int id);
+    
+    
 }
