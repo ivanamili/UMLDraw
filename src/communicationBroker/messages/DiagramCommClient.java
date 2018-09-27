@@ -28,14 +28,18 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
     String messageConsumerTag=null;
     Consumer messageConsumer;
     
+    String adminExchange;
+    
     String logUser;
     
     //klasa koja ce da handluje prispele odgovore sa servera
     IHandleDiagramMessage  diagramHandler;
     
-    public DiagramCommClient(String exchangeName,IHandleDiagramMessage  diagramHandler, String logUser){
+    public DiagramCommClient(String exchangeName,
+            IHandleDiagramMessage  diagramHandler, String logUser,String adminExchange){
         this.diagramHandler=diagramHandler;
-;       this.receiveExchange=exchangeName;
+        this.receiveExchange=exchangeName;
+        this.adminExchange=adminExchange;
         this.logUser=logUser;
         //creating connection
         factory=new ConnectionFactory();
@@ -59,6 +63,14 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
         catch(Exception e){
             System.out.println("Error while opening LoginClient connection");
             System.out.println(e.getMessage());
+        }
+    }
+    public void sendAdminMessage(LoginResponse message){
+        try {
+            channel.basicPublish(adminExchange,
+                    CommunicationConfig.FANOUT_NO_KEY, null, message.serializeMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(DiagramCommClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

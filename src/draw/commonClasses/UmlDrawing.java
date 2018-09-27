@@ -79,7 +79,8 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         UmlCrtez=startCrtez;
         
         String receiveExchange= UmlCrtez.getNaslov()+"_receive_exchange";
-        diagramComm=new DiagramCommClient(receiveExchange,this,logUser);
+        String adminExchange=UmlCrtez.getNaslov()+"_adminExchange";
+        diagramComm=new DiagramCommClient(receiveExchange,this,logUser,adminExchange);
         diagramComm.startConsumer();
         
         if(loggedUser.equals(UmlCrtez.getImeAutora()))
