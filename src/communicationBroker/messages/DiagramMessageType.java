@@ -14,6 +14,7 @@ public class DiagramMessageType {
     public static final String ADDED="added";
     public static final String DELETED="deleted";
     public static final String CHANGED="changed";
+    public static final String NEXT_USER_DRAWS="next_user_draws";
     
     private DiagramMessageType(){}
 }

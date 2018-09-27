@@ -85,7 +85,7 @@ public class AktorFigure extends AbstractDiagramElementFigure implements IUpdata
         Aktor elem= (Aktor) newElement;
         name.setText(elem.getNaziv());
         this.aktor.getOkvir().setBounds(elem.getOkvir().getBounds());
-        
+        this.changed();
         
     }
     

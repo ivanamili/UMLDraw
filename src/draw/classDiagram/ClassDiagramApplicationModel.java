@@ -70,6 +70,7 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
     private HashMap<String,Action> actions;
     
     private String loggedUser;
+    private String nextUser;
     private Crtez createdCrtez;
     
     private static class ToolButtonListener implements ItemListener {
@@ -86,9 +87,10 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         }
     }
     
-    public ClassDiagramApplicationModel(String loggedUser, Crtez crtez) {
+    public ClassDiagramApplicationModel(String loggedUser, Crtez crtez,String nextUser) {
         this.loggedUser=loggedUser;
         this.createdCrtez=crtez;
+        this.nextUser=nextUser;
     }
     
     public void initApplication(Application a) {
@@ -203,7 +205,7 @@ public class ClassDiagramApplicationModel extends DefaultApplicationModel {
         //da bi is drawinga mogli da disablujemo toolbar kad se crtanje zavrsi
         //i enablujemo kada dodje red da opet crta
         p.getUmlDrawing().setToolBar(tb);
-        p.getUmlDrawing().setupUmlDrawing(loggedUser, createdCrtez);
+        p.getUmlDrawing().setupUmlDrawing(loggedUser, createdCrtez,nextUser);
         
         list.add(tb);
         

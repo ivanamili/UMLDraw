@@ -17,6 +17,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import communicationBroker.messages.DiagramCommClient;
 import communicationBroker.messages.DiagramMessage;
 import communicationBroker.messages.DiagramMessageType;
+import communicationBroker.messages.LoginResponse;
+import communicationBroker.messages.MessageType;
 import communicationBroker.messages.handleInterfaces.IHandleDiagramMessage;
 import draw.classDiagram.figures.AgregationConnectionFigure;
 import draw.classDiagram.figures.ClassFigure;
@@ -65,6 +67,9 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     private boolean isDrawing;
     private String loggedUser;
     
+    //korisnik koji treba da crta sledeci kada ovaj zavrsi
+    private String nextUser;
+    
     //posto se figureChanged fire-uje previse puta, ovde ce da se cuva poslednji objekat
     //koji je poslat kroz mrezu i pre svakog slanja se proverava da li je slucajno
     //objekat koji zelimo da saljemo isti kao vec poslati
@@ -85,9 +90,10 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         this.addDrawingListener(this);
     }
     
-    public void setupUmlDrawing(String logUser,Crtez startCrtez){
+    public void setupUmlDrawing(String logUser,Crtez startCrtez,String nextUser){
         loggedUser=logUser;
         UmlCrtez=startCrtez;
+        this.nextUser=nextUser;
         
         String receiveExchange= UmlCrtez.getNaslov()+"_receive_exchange";
         String adminExchange=UmlCrtez.getNaslov()+"_adminExchange";
@@ -191,6 +197,9 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     
     private boolean isElementSameAsLastSent(AbstractDiagramElement element){
         
+        if(lastSentElement==null)
+            return false;
+        
         return lastSentElement.equals(element);
     }
     
@@ -222,10 +231,30 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     
     public void handleDoneDrawing(){
         if(isDrawing){
-            String tamoneksto="";
+            isDrawing=false;
+            //disable toolbar za crtanje
+            DisableAllInContainer.enableComponents(drawingToolbar, false);
+            
+            //posalji poruku ostalima da sledeci moze da krene sa crtanjem
+            
+            //poruku na response exchange
+            DiagramMessage nextToDrawMessage= new DiagramMessage();
+            nextToDrawMessage.setBussinesObjectFigure(nextUser);
+            nextToDrawMessage.setMessageType(DiagramMessageType.NEXT_USER_DRAWS);
+            nextToDrawMessage.setFigureBounds(null);
+            nextToDrawMessage.setObjectType(null);
+            
+            diagramComm.sendDiagramMessage(nextToDrawMessage);
+            
+            //poruku na admin exchange za admin konzolu
+            LoginResponse adminMessage= new LoginResponse();
+            adminMessage.setResponseType(MessageType.ADMIN_DRAWING_USER_CHANGED);
+            adminMessage.setPayload(nextUser);
+            diagramComm.sendAdminMessage(adminMessage);
         }
     }
-    RuntimeClassEnum getTypeEnumFromObject(Object elem){
+    
+    private RuntimeClassEnum getTypeEnumFromObject(Object elem){
         if(elem instanceof Argument)
             return RuntimeClassEnum.ARGUMENT;
         else if(elem instanceof Atribut)
@@ -252,6 +281,19 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
 
     @Override
     public void HandleDiagramMessage(DiagramMessage message) {
+        //menja se onaj ko crta, proveri da li ti treba da nastavis da crtas
+        if(message.getMessageType().equals(DiagramMessageType.NEXT_USER_DRAWS))
+        {
+            String drawingUser= (String) message.getBussinesObjectFigure();
+            //da ti crtas sledeci, enable toolbar
+            if(drawingUser.equals(loggedUser)){
+                 isDrawing=true;
+                //enable toolbar za crtanje
+                DisableAllInContainer.enableComponents(drawingToolbar, isDrawing);
+               
+            }
+            return;
+        }
         
         //rekreiraj figuru koja predstavlja okvir
         AbstractDiagramElement elem=(AbstractDiagramElement)message.getBussinesObjectFigure();
@@ -287,27 +329,38 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     }
     public void HandleDELETED(DiagramMessage message){
         AbstractDiagramElement elem= (AbstractDiagramElement)message.getBussinesObjectFigure();
+        
+        boolean isObjectConnection=false;
+        if((elem instanceof UseCaseDiagramVeza) || (elem instanceof Veza))
+            isObjectConnection=true;
+        
         int deleteId= elem.getElemId();
-        Figure figToRemove= getFigureByBusinessId(deleteId);
+        Figure figToRemove= getFigureByBusinessId(deleteId,isObjectConnection);
+        
+        if(figToRemove==null)
+            return;
         
         basicRemove(figToRemove);
         
     }
     public void HandleCHANGED(DiagramMessage message){
         AbstractDiagramElement elem= (AbstractDiagramElement)message.getBussinesObjectFigure();
-        Figure figToChange= getFigureByBusinessId(elem.getElemId());
+        Figure figToChange= getFigureByBusinessId(elem.getElemId(),false);
+        
+        if(figToChange==null)
+            return;
         
         ((IUpdatableFigure)figToChange).updateDiagramFigure(elem);
         
     }
     
-    private Figure getFigureByBusinessId(int id){
+    private Figure getFigureByBusinessId(int id, boolean connection){
         Object[] allFigures= this.getFigures().toArray();
         
         for(int i=0;i< allFigures.length;i++){
             Figure currentFigure=(Figure)allFigures[i];
             int figureId= ((IDataFigure)currentFigure).getDataObject().getElemId();
-            if(figureId==id)
+            if(figureId==id && (currentFigure instanceof ConnectionFigure)==connection)
                 return currentFigure;
         }
         return null;
@@ -321,8 +374,8 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
             }
             case AKTOR_VEZA:{
                 AbstractDiagramConnectionFigure connFig=new AktorConnectionFigure((AktorVeza)bussinesObject);
-                Figure startFigure= getFigureByBusinessId(((AktorVeza)bussinesObject).getAktor());
-                Figure endFigure= getFigureByBusinessId(((AktorVeza)bussinesObject).getUseCase());
+                Figure startFigure= getFigureByBusinessId(((AktorVeza)bussinesObject).getAktor(),false);
+                Figure endFigure= getFigureByBusinessId(((AktorVeza)bussinesObject).getUseCase(),false);
          
                 connFig.setConnectionEndpoints(startFigure, endFigure);
                 
@@ -353,7 +406,7 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         return null;
      }
      
-     private Figure CreateUseCaseFromBussinesObject(UseCaseVeza bussinesObject){
+    private Figure CreateUseCaseFromBussinesObject(UseCaseVeza bussinesObject){
          AbstractDiagramConnectionFigure connFig=null;
          
          if(bussinesObject.getTipVeze()==UseCaseConnType.INCLUDE)       
@@ -361,8 +414,8 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
          else if(bussinesObject.getTipVeze()==UseCaseConnType.EXTEND)
              connFig= new ExtendConnectionFigure(bussinesObject);
          
-         Figure startFigure= getFigureByBusinessId(bussinesObject.getOdKoga());
-         Figure endFigure= getFigureByBusinessId(bussinesObject.getDoKoga());
+         Figure startFigure= getFigureByBusinessId(bussinesObject.getOdKoga(),false);
+         Figure endFigure= getFigureByBusinessId(bussinesObject.getDoKoga(),false);
          
          connFig.setConnectionEndpoints(startFigure, endFigure);
          
@@ -370,7 +423,7 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
      }
      
      //treba da se dopuni kodom za dodavanje connectora, ako taj kod proradi u usecas
-     private Figure CreateClassDiagramConnectionFromBussinesObject(ClassDiagramVeza bussinesObject)
+    private Figure CreateClassDiagramConnectionFromBussinesObject(ClassDiagramVeza bussinesObject)
      {
        if(bussinesObject.getTip()==ClassConnTypeEnum.AGREGATION)
        

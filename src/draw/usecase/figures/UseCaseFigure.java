@@ -91,6 +91,7 @@ public class UseCaseFigure extends AbstractDiagramElementFigure implements IUpda
         this.useCase.setNaziv(elem.getNaziv());
         ucName.setText(this.useCase.getNaziv());
         this.useCase.getElipsa().setBounds(elem.getElipsa().getBounds());
+        this.changed();
     }
     
    

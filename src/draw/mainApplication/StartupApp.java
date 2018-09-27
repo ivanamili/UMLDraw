@@ -48,6 +48,21 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     
     private ArrayList<Crtez> diagramToJoin;
     
+    public String getNextUser(String requestingUser){
+      int index=contributorListModel.indexOf(requestingUser);
+      //onda je u pitanju kreator crteza,vrati drugog iz liste
+      if(index==-1)
+          return contributorListModel.get(1);
+      
+      //ako je posledji u listi, onda je njegov sledbenik prvi tj kreator crteza
+      else if(index==contributorListModel.size()-1)
+          return currentWorkingCrtez.getImeAutora();
+      
+      //neki u sredini, vrati sledeceg
+      else
+          return contributorListModel.get(index+1);
+    }
+    
     public StartupApp() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -889,7 +904,6 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     
     private void initializeAdminPannel(Crtez crtezToStart)
     {
-        currentWorkingCrtez=crtezToStart;
         lblAdminDiagramName.setText(currentWorkingCrtez.getNaslov());
         lblAdminDiagramType.setText(currentWorkingCrtez.getTip().toString());
         lblAdminAutorName.setText(currentWorkingCrtez.getImeAutora());
@@ -902,6 +916,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     
     private void startDrawingWindow(Crtez crtezToStart)
     {
+        currentWorkingCrtez=crtezToStart;
         if(crtezToStart.getTip()==DiagramTypeEnum.CLASS)
             startClassDrawingWindow(crtezToStart);
         else if (crtezToStart.getTip()==DiagramTypeEnum.USECASE)
@@ -918,7 +933,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         String os = System.getProperty("os.name").toLowerCase();
         app = new UmlDrawSDIApplication();
         
-        ClassDiagramApplicationModel model = new ClassDiagramApplicationModel(loggedUser, crtezToStart);
+         String nextUser= getNextUser(loggedUser);
+        
+        ClassDiagramApplicationModel model = new ClassDiagramApplicationModel(loggedUser, crtezToStart,nextUser);
         
         model.setName("User: "+loggedUser+", Diagram name: "+crtezToStart.getNaslov());
         model.setVersion("0.5");
@@ -936,7 +953,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         String os = System.getProperty("os.name").toLowerCase();
         app = new UmlDrawSDIApplication();
         
-        UseCaseApplicationModel model = new UseCaseApplicationModel(loggedUser, crtezToStart);
+        String nextUser= getNextUser(loggedUser);
+        
+        UseCaseApplicationModel model = new UseCaseApplicationModel(loggedUser, crtezToStart,nextUser);
         
         model.setName("User: "+loggedUser+", Diagram name: "+crtezToStart.getNaslov());
         model.setVersion("0.5");

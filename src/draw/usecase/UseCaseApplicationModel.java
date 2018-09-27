@@ -60,6 +60,7 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
     
     private String loggedUser;
     private Crtez createdCrtez;
+    private String nextUser;
     
     private static class ToolButtonListener implements ItemListener {
         private Tool tool;
@@ -75,9 +76,10 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         }
     }
     
-    public UseCaseApplicationModel(String loggedUser, Crtez crtez) {
+    public UseCaseApplicationModel(String loggedUser, Crtez crtez,String nextUser) {
         this.loggedUser=loggedUser;
         this.createdCrtez=crtez;
+        this.nextUser=nextUser;
     }
     
     public void initApplication(Application a) {
@@ -197,7 +199,7 @@ public class UseCaseApplicationModel extends DefaultApplicationModel {
         //da bi is drawinga mogli da disablujemo toolbar kad se crtanje zavrsi
         //i enablujemo kada dodje red da opet crta
         p.getUmlDrawing().setToolBar(tb);
-        p.getUmlDrawing().setupUmlDrawing(loggedUser, createdCrtez);
+        p.getUmlDrawing().setupUmlDrawing(loggedUser, createdCrtez,nextUser);
         
         return list;
     }
