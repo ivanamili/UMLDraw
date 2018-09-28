@@ -65,6 +65,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     
     public StartupApp() {
         initComponents();
+        this.setTitle("UMLDraw");
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         loginClient= new LoginClient(this);
         loginClient.startConsumer();
@@ -98,6 +99,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         btnRegister = new javax.swing.JButton();
         btnLogin = new javax.swing.JButton();
         lblSuccess = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         StartCrtezPanel = new javax.swing.JPanel();
         btnCreateNewCrtez = new javax.swing.JButton();
         btnJoinCrtez = new javax.swing.JButton();
@@ -140,6 +142,8 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         lblAdminCurrentDrawingUser = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 204, 204));
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -170,6 +174,10 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             }
         });
 
+        jLabel12.setFont(new java.awt.Font("Lucida Fax", 1, 36)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("UMLDraw");
+
         javax.swing.GroupLayout RegisterLoginPanelLayout = new javax.swing.GroupLayout(RegisterLoginPanel);
         RegisterLoginPanel.setLayout(RegisterLoginPanelLayout);
         RegisterLoginPanelLayout.setHorizontalGroup(
@@ -178,19 +186,22 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                 .addGap(65, 65, 65)
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
-                        .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtUsername)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                        .addContainerGap(109, Short.MAX_VALUE))
-                    .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
                         .addComponent(btnRegister)
                         .addGap(63, 63, 63)
                         .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71))))
+                        .addGap(71, 71, 71))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, RegisterLoginPanelLayout.createSequentialGroup()
+                        .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
+                                .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtUsername)
+                                    .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))))
+                        .addContainerGap(109, Short.MAX_VALUE))))
             .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
                 .addGap(160, 160, 160)
                 .addComponent(lblSuccess)
@@ -199,7 +210,9 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         RegisterLoginPanelLayout.setVerticalGroup(
             RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(RegisterLoginPanelLayout.createSequentialGroup()
-                .addGap(106, 106, 106)
+                .addContainerGap()
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54)
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsername)
                     .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -213,7 +226,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                 .addGroup(RegisterLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister)
                     .addComponent(btnLogin))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         MainPanel.add(RegisterLoginPanel, "card2");
@@ -766,6 +779,7 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

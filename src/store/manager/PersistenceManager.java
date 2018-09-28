@@ -284,6 +284,35 @@ public class PersistenceManager implements IPersistenceManager {
         return returnObject;
     }
     
+    private void saveOrUpdate(Atribut objToUpdate){
+        
+        AtributDb attrZaBazu= new AtributDb();
+        attrZaBazu.setId(new AtributDbId(objToUpdate.getCrtezID(),objToUpdate.getKlasaID(),objToUpdate.getID()));
+        attrZaBazu.setNaziv(objToUpdate.getNaziv());
+        attrZaBazu.setTip(objToUpdate.getTip());
+        attrZaBazu.setVidljivost(objToUpdate.getVidljivost().name());
+        attrZaBazu.setIsStatic((byte)(objToUpdate.getIsStatic()?1:0));
+		
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.saveOrUpdate(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
+    }
+    
     //ARGUMENT
     private void save(Argument objToSave,boolean saveAll) {
         ArgumentDb attrZaBazu= new ArgumentDb();
@@ -404,6 +433,32 @@ public class PersistenceManager implements IPersistenceManager {
 	arg.setTip(argIzBaze.getTip());
         
         return arg;
+    }
+    
+    private void saveOrUpdate(Argument objToUpdate){
+        ArgumentDb attrZaBazu= new ArgumentDb();
+        attrZaBazu.setId(new ArgumentDbId(objToUpdate.getCrtezID(),objToUpdate.getKlasaID(),objToUpdate.getMetodID(),objToUpdate.getID()));
+        attrZaBazu.setNaziv(objToUpdate.getNaziv());
+        attrZaBazu.setTip(objToUpdate.getTip());
+        
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.saveOrUpdate(attrZaBazu);
+         
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      }      
     }
     
     //METOD
@@ -588,6 +643,42 @@ public class PersistenceManager implements IPersistenceManager {
        
     }
     
+    private void saveOrUpdate(Metod objToUpdate){
+        //popunjavanje osnovnih podataka objekta za bazu
+        MetodDb zaBazu=new MetodDb();
+        zaBazu.setId(new MetodDbId(objToUpdate.getCrtezID(),objToUpdate.getKlasaIliInterjfejsID(),objToUpdate.getID()));
+        zaBazu.setNaziv(objToUpdate.getNaziv());
+        zaBazu.setVidljivost(objToUpdate.getVidljivost().name());
+        zaBazu.setIsStatic((byte)(objToUpdate.getIsStatic()?1:0));
+        zaBazu.setIsAbstract((byte)(objToUpdate.getIsAbstract()?1:0));
+        zaBazu.setPovratnaVrednost(objToUpdate.getPovratnaVrednost());
+        zaBazu.setAtributCounter(objToUpdate.getArgumentIDCounter());
+        
+        //tek ovde pocinje cuvanje 
+        Session session=null;
+        Transaction tx = null;        
+        try {
+            //session factory se dobija preko parametra, pa se otvara sesija
+            session = sessionFactory.openSession();
+            //zapocinje se transakcija        
+             tx = session.beginTransaction();
+
+            session.saveOrUpdate(zaBazu);
+            
+             //zavrsava se transakcija
+             tx.commit();
+      } catch (Exception e) {
+         if (tx!=null) tx.rollback();
+         e.printStackTrace(); 
+      } finally {
+         session.close(); 
+      } 
+        
+        for(Argument arg:objToUpdate.getArgumenti()){
+            saveOrUpdate(arg);
+        }
+    }
+    
     //KLASA 
     //POTREBNO PONOVNO TESTIRANJE!!!!!
     private void save(Klasa objToSave,boolean saveAll) {
@@ -600,11 +691,13 @@ public class PersistenceManager implements IPersistenceManager {
         zaBazu.setMetodCounter(objToSave.getMetodCounter());
         zaBazu.setAtributCounter(objToSave.getAtributCounter());
         //za okvir
-        Rectangle2D.Double bounds=objToSave.getOkvir().getBounds();
-        zaBazu.setPocetnaKoorX(bounds.x);
-        zaBazu.setPocetnaKoorY(bounds.y);
-        zaBazu.setVisina(bounds.height);
-        zaBazu.setSirina(bounds.width);
+        if(objToSave.getOkvir()!=null){
+            Rectangle2D.Double bounds=objToSave.getOkvir().getBounds();
+            zaBazu.setPocetnaKoorX(bounds.x);
+            zaBazu.setPocetnaKoorY(bounds.y);
+            zaBazu.setVisina(bounds.height);
+            zaBazu.setSirina(bounds.width);
+        }
         
         //tek ovde pocinje cuvanje 
                 
@@ -655,12 +748,17 @@ public class PersistenceManager implements IPersistenceManager {
         zaBazu.setIsStatic(objToUpdate.getIsStatic());
         zaBazu.setMetodCounter(objToUpdate.getMetodCounter());
         zaBazu.setAtributCounter(objToUpdate.getAtributCounter());
-        Rectangle2D.Double bounds=objToUpdate.getOkvir().getBounds();
-        zaBazu.setPocetnaKoorX(bounds.x);
-        zaBazu.setPocetnaKoorY(bounds.y);
-        zaBazu.setVisina(bounds.height);
-        zaBazu.setSirina(bounds.width);
+        
+        if(objToUpdate.getOkvir()!=null){
+            Rectangle2D.Double bounds=objToUpdate.getOkvir().getBounds();
+            zaBazu.setPocetnaKoorX(bounds.x);
+            zaBazu.setPocetnaKoorY(bounds.y);
+            zaBazu.setVisina(bounds.height);
+            zaBazu.setSirina(bounds.width);
+        }
         //tek ovde pocinje cuvanje 
+        
+        ArrayList<Atribut> postojeci=null;
                 
         Session session=null;
         Transaction tx = null;        
@@ -672,7 +770,7 @@ public class PersistenceManager implements IPersistenceManager {
 
             session.update(zaBazu);
              //zavrsava se transakcija
-            
+             
              tx.commit();
       } catch (Exception e) {
          if (tx!=null) tx.rollback();
@@ -680,6 +778,14 @@ public class PersistenceManager implements IPersistenceManager {
       } finally {
          session.close(); 
       } 
+        
+       for(Atribut attr: objToUpdate.getAtributi()){
+           saveOrUpdate(attr);
+       }
+       
+       for(Metod met:objToUpdate.getMetode()){
+           saveOrUpdate(met);
+       }
     }
     private void delete(Klasa objToDelete) {
         //popunjavanje osnovnih podataka objekta za bazu
@@ -881,8 +987,9 @@ public class PersistenceManager implements IPersistenceManager {
       } finally {
          session.close(); 
       } 
-        //metode se ne cuvaju.
-        //ako je neophodno ovde dodati kod ili poziv metode za to
+         for(Metod met:objToUpdate.getMetode()){
+           saveOrUpdate(met);
+       }
     }
     private void delete(Interfejs objToDelete) {
         

@@ -5,13 +5,19 @@
  */
 package server;
 
+import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.CommonClasses.Crtez;
 import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
+import communicationBroker.messages.DatabaseServer;
+import communicationBroker.messages.DiagramMessage;
+import communicationBroker.messages.DiagramMessageType;
 import communicationBroker.messages.LoginMessage;
 import communicationBroker.messages.LoginResponse;
 import communicationBroker.messages.LoginServer;
 import communicationBroker.messages.MessageType;
+import communicationBroker.messages.handleInterfaces.IHandleDiagramMessage;
 import communicationBroker.messages.handleInterfaces.IHandleLoginMessage;
+import enumerations.RuntimeClassEnum;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,12 +35,14 @@ import store.manager.PersistenceManager;
  *
  * @author Korisnik
  */
-public class ServerApp implements IHandleLoginMessage {
+public class ServerApp implements IHandleLoginMessage,IHandleDiagramMessage {
     private static final String EXIT="exit";
     static AtomicBoolean exitCommandIssued = new AtomicBoolean(false);
     
     //communication klase
     private LoginServer loginServer;
+    //
+    private DatabaseServer databaseServer;
     
     //manager za komunikaciju sa bazom sto se tice logovanja i ostalog oko kreiranja crteza
     private IClientLoggingManager loginManager;
@@ -50,6 +58,8 @@ public class ServerApp implements IHandleLoginMessage {
         
         loginServer= new LoginServer(this);
         loginServer.startConsumer();
+        
+        databaseServer= new DatabaseServer(this);
         
         diagramToJoin= new HashMap();
     }
@@ -159,8 +169,42 @@ public class ServerApp implements IHandleLoginMessage {
                 diagramToJoin.remove(diagramToClose);
                 response.setResponseType(MessageType.EMPTY_RESPONSE);
                 response.setPayload(null);
+                
+                //pocni da osluskujes na exchange za taj diagram
+                databaseServer.startListeningForDiagram(diagramToClose);
             }
         }
         return response;
+    }
+
+    @Override
+    public void HandleDiagramMessage(DiagramMessage message) {
+        if(message.getMessageType().equals(DiagramMessageType.NEXT_USER_DRAWS))
+            return;
+        
+         //rekreiraj figuru koja predstavlja okvir
+        AbstractDiagramElement elem=(AbstractDiagramElement)message.getBussinesObjectFigure();
+        //ovo bi trebalo da rekreira presetation figuru u objektu
+        elem.recreatePresentationFigure(message.getFigureBounds());
+        
+        switch(message.getMessageType())
+        {
+            case DiagramMessageType.ADDED:
+            {
+                persistenceManager.save(elem, message.getObjectType());
+                break;
+            }
+            case DiagramMessageType.CHANGED:
+            {
+                persistenceManager.update(elem, message.getObjectType());
+                break;
+            }
+            case DiagramMessageType.DELETED:
+            {
+                persistenceManager.delete(elem, message.getObjectType());
+                break;
+            }
+            
+        }
     }
 }
