@@ -8,6 +8,7 @@ package draw.classDiagram.figures;
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.ClassDiagrams.Interfejs;
 import businessLogic.ClassDiagrams.Klasa;
+import businessLogic.ClassDiagrams.Metod;
 import draw.classDiagram.auxiliaryClasses.IMethodContainer;
 import draw.classDiagram.figures.attribute.AddAttributeAction;
 import draw.classDiagram.figures.attribute.AttributeFigure;
@@ -18,6 +19,7 @@ import draw.classDiagram.figures.method.ChangeMethodAction;
 import draw.classDiagram.figures.method.DeleteMethodAction;
 import draw.classDiagram.figures.method.MethodFigure;
 import draw.commonClasses.AbstractDiagramElementFigure;
+import draw.commonClasses.IUpdatableFigure;
 import draw.usecase.auxiliaryClasses.UseCaseVerticalLayouter;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -42,16 +44,15 @@ import org.jhotdraw.samples.pert.figures.SeparatorLineFigure;
  *
  * @author Korisnik
  */
-public class InterfaceFigure extends AbstractDiagramElementFigure implements IMethodContainer{
+public class InterfaceFigure extends AbstractDiagramElementFigure implements IMethodContainer,IUpdatableFigure{
 
     private Interfejs interfejs;
     ListFigure methods = new ListFigure();
+    TextFigure name;
     
     Insets2DDouble defaultInsets = new Insets2DDouble(4,8,4,8);
 
-    public InterfaceFigure(Interfejs interfejs) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     
     //adapter za ime klase
      private static class InterfaceNameAdapter extends AbstractFigureListener {
@@ -81,6 +82,35 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
         initFigure();
     }
     
+    public InterfaceFigure(Interfejs interfejs) {
+        super(interfejs.getOkvir());
+        this.interfejs=interfejs;
+        initFigure();
+    }
+    
+       @Override
+    public void updateDiagramFigure(AbstractDiagramElement newElement) {
+         if(!(newElement instanceof Interfejs))
+            return;
+         
+         Interfejs element=(Interfejs) newElement;
+         this.interfejs.getOkvir().setBounds(element.getOkvir().getBounds());
+         this.getNameFigure().setText(element.getNaziv());
+         
+         //metode
+         this.interfejs.setMetode(element.getMetode());
+         this.interfejs.setMetodCounter(element.getMetodCounter());
+         
+         this.getMethodsContainer().removeAllChildren();
+         for(Metod met : this.interfejs.getMetode()){
+             MethodFigure metFigure= new MethodFigure(met);
+             this.AddMethodToDiagramOnly(metFigure);
+         }
+         
+         this.changed();
+         
+    }
+    
     private void initFigure() {
         setLayouter(new UseCaseVerticalLayouter());
         
@@ -99,7 +129,7 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
         interfLabel.setAttribute(FONT_ITALIC,true );
         
         //ime interfejsa
-        TextFigure name= new TextFigure(){
+        name= new TextFigure(){
             @Override
              public void basicSetBounds(Point2D.Double anchor, Point2D.Double lead) {
                 double width=Math.abs(lead.x-anchor.x);
@@ -113,20 +143,19 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
         LAYOUT_INSETS.set(name, defaultInsets);
         LAYOUT_INSETS.set(interfLabel, defaultInsets);
         
-        add(interfLabel);
-        add(name);
+        add(interfLabel);//child(0)
+        add(name);//child(1)
         //menja ime interfejsa u bussiness objektu kad se promeni tekst
         name.addFigureListener(new InterfaceNameAdapter(this));
         
-        add(new SeparatorLineFigure());
+        add(new SeparatorLineFigure());//child(2)
         
         LAYOUT_INSETS.set(methods, defaultInsets);
-        add(methods);//child 5
-        
-       
-       
-
-        
+        add(methods);//child(3)
+    }
+    
+     public ListFigure getMethodsContainer(){
+        return (ListFigure) getChild(3);
     }
     
     @Override
@@ -135,7 +164,7 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
         Collection<Action> actions= new LinkedList<Action>();
         
         //u slucaju da je kliknuto na neki metod
-        Figure possibleChild2= methods.findChild(p);
+        Figure possibleChild2= this.getMethodsContainer().findChild(p);
         if(possibleChild2!=null){
             actions.add(new ChangeMethodAction((MethodFigure)possibleChild2));
             actions.add(new DeleteMethodAction((MethodFigure)possibleChild2));            
@@ -162,11 +191,16 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
         return new Dimension2DDouble (w,h);
     }
     
+    private TextFigure getNameFigure(){
+        return (TextFigure) getChild(1);
+    }
+    
     @Override
     public GraphicalCompositeFigure clone(){
-        InterfaceFigure that= new InterfaceFigure();
+        InterfaceFigure that= (InterfaceFigure)super.clone();
         that.interfejs= (this.interfejs==null)? null : (Interfejs)this.interfejs.clone();
-        that.interfejs.setOkvir((RectangleFigure)this.getPresentationFigure());
+        that.interfejs.setOkvir((RectangleFigure)that.getPresentationFigure());
+        that.getNameFigure().addFigureListener(new InterfaceNameAdapter(that));
         //dodati eventuelne listenere
         return that;
     }
@@ -182,7 +216,7 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
       @Override
     public void DeleteMethod(MethodFigure methodToDelete) {
         this.interfejs.obrisiMetodu(methodToDelete.getMethod().getID());
-        this.methods.remove(methodToDelete);
+        this.getMethodsContainer().remove(methodToDelete);
     }
 
     @Override
@@ -194,7 +228,12 @@ public class InterfaceFigure extends AbstractDiagramElementFigure implements IMe
          newMethod.setParent((IMethodContainer)this);
          
          //dodavanje same figure u crtez
-         methods.add(newMethod);
+         this.getMethodsContainer().add(newMethod);
+    }
+    
+    public void AddMethodToDiagramOnly(MethodFigure newMethod){
+        newMethod.setParent((IMethodContainer)this);
+         this.getMethodsContainer().add(newMethod);
     }
 
     

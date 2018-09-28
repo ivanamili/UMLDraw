@@ -33,7 +33,9 @@ public class CompositionConnectionFigure extends AbstractDiagramConnectionFigure
     }
 
     public CompositionConnectionFigure(ClassDiagramVeza bussinesObject) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        super();
+        this.veza=bussinesObject;
+        initFigure();
     }
     
     @Override

@@ -169,7 +169,7 @@ public class LoginClient {//potrebno za komunikaciju sa rabbitmq
         try {
             diagramAdminExchange=crtezName+"_adminExchange";
             //kreiraj exchange za admin poruke
-            channel.exchangeDeclare(diagramAdminExchange,BuiltinExchangeType.FANOUT);
+            channel.exchangeDeclare(diagramAdminExchange,BuiltinExchangeType.FANOUT,true,true,null);
             //binduj red za exchange
             channel.queueBind(diagramAdminQueue,
                                diagramAdminExchange,

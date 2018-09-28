@@ -44,6 +44,7 @@ import org.jhotdraw.draw.ConnectionFigure;
 import org.jhotdraw.draw.DefaultDrawing;
 import org.jhotdraw.draw.DrawingEvent;
 import org.jhotdraw.draw.DrawingListener;
+import org.jhotdraw.draw.ElbowLiner;
 import org.jhotdraw.draw.EllipseFigure;
 import org.jhotdraw.draw.Figure;
 import org.jhotdraw.draw.FigureEvent;
@@ -149,6 +150,7 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
     
 
     //METODE IZ DrawingListener interfejsa
+    //ipak ne treba
     @Override
     public void areaInvalidated(DrawingEvent de) {
         //NE ZNAM DA LI CE DA TREBA, NEKA STOJI
@@ -163,7 +165,7 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
         }       
               
     }
-
+    
     @Override
     public void figureRemoved(DrawingEvent de) {
         AbstractDiagramElement elem= ((IDataFigure)de.getFigure()).getDataObject();
@@ -174,8 +176,6 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
                
     }
     
-    //metode iz figure listener
-    //PREVISE KOMPLIKOVANO, PREVISE PUTA SE BACA EVENT. MOGUCE RESENJE DA DEFINISEMO NAS TIP EXCEPTION-A I DA NJEGA BACAMO
     @Override
     public void figureChanged(FigureEvent e){
         
@@ -410,7 +410,8 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
          AbstractDiagramConnectionFigure connFig=null;
          
          if(bussinesObject.getTipVeze()==UseCaseConnType.INCLUDE)       
-             connFig= new IncludeConnectionFigure(bussinesObject);           
+             connFig= new IncludeConnectionFigure(bussinesObject); 
+         
          else if(bussinesObject.getTipVeze()==UseCaseConnType.EXTEND)
              connFig= new ExtendConnectionFigure(bussinesObject);
          
@@ -425,19 +426,29 @@ public class UmlDrawing extends DefaultDrawing implements DrawingListener, IHand
      //treba da se dopuni kodom za dodavanje connectora, ako taj kod proradi u usecas
     private Figure CreateClassDiagramConnectionFromBussinesObject(ClassDiagramVeza bussinesObject)
      {
-       if(bussinesObject.getTip()==ClassConnTypeEnum.AGREGATION)
-       
-           return new AgregationConnectionFigure(bussinesObject);
+        AbstractDiagramConnectionFigure connFig=null;
+         
+        if(bussinesObject.getTip()==ClassConnTypeEnum.AGREGATION)
+           connFig= new AgregationConnectionFigure(bussinesObject);
            
-           else if(bussinesObject.getTip()==ClassConnTypeEnum.COMPOSITION)
-               return new CompositionConnectionFigure(bussinesObject);
+        else if(bussinesObject.getTip()==ClassConnTypeEnum.COMPOSITION)
+           connFig= new CompositionConnectionFigure(bussinesObject);
        
-       else if(bussinesObject.getTip()==ClassConnTypeEnum.GENERALISATION)
-               return new GeneralisationConnectionFigure(bussinesObject);
+        else if(bussinesObject.getTip()==ClassConnTypeEnum.GENERALISATION){
+           connFig= new GeneralisationConnectionFigure(bussinesObject);
+           connFig.setLiner(new ElbowLiner());
+        }
        
-       else if(bussinesObject.getTip()==ClassConnTypeEnum.IMPLEMENTATION)
-               return new ImplementationConnectionFigure(bussinesObject);
+        else if(bussinesObject.getTip()==ClassConnTypeEnum.IMPLEMENTATION){
+           connFig=new ImplementationConnectionFigure(bussinesObject);
+           connFig.setLiner(new ElbowLiner());
+        }
        
-       return null;               
+         Figure startFigure= getFigureByBusinessId(bussinesObject.getOdKoga(),false);
+         Figure endFigure= getFigureByBusinessId(bussinesObject.getDoKoga(),false);
+         
+         connFig.setConnectionEndpoints(startFigure, endFigure);
+         
+         return connFig;                  
      }
 }

@@ -54,7 +54,7 @@ public class DiagramCommClient {//potrebno za komunikaciju sa rabbitmq
            
             
             //kreiranje reda za odgovore sa servera
-            channel.exchangeDeclare(receiveExchange, BuiltinExchangeType.FANOUT);
+            channel.exchangeDeclare(receiveExchange, BuiltinExchangeType.FANOUT,true,true,null);
             receiveQueue = channel.queueDeclare().getQueue();
             channel.queueBind(receiveQueue,receiveExchange,"");
             

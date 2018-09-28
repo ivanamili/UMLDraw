@@ -68,6 +68,18 @@ public class Argument implements Serializable{
             return false;
         }
         
+         @Override
+        public Object clone(){
+            Argument that= new Argument();
+            that.setCrtezID(this.crtezID);
+            that.setKlasaID(this.klasaID);
+            that.setID(this.ID);
+            that.setTip(this.tip);
+            that.setNaziv(this.naziv);
+            
+            return that;
+        }
+        
         @Override
         public String toString(){
             return naziv+" : "+tip;

@@ -9,6 +9,7 @@ import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
 import businessLogic.ClassDiagrams.Atribut;
 import draw.classDiagram.figures.ClassFigure;
 import draw.commonClasses.IDataFigure;
+import draw.commonClasses.LabelFigure;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -20,7 +21,7 @@ import org.jhotdraw.draw.TextFigure;
  *
  * @author Korisnik
  */
-public class AttributeFigure extends TextFigure {
+public class AttributeFigure extends LabelFigure {
 
     private Atribut atribut;
     private ClassFigure parent;
@@ -67,6 +68,7 @@ public class AttributeFigure extends TextFigure {
         attrString+=" : "+this.atribut.getTip();
         
         this.setText(attrString);
+        
         
         //ovo bi trebalo da podvuce ako je staticki atribut, ali je diskutabilno
         //da li ce da radi

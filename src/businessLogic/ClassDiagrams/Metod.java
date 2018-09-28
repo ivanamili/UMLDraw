@@ -137,12 +137,32 @@ public class Metod implements Serializable {
                         if(!this.argumenti.get(i).equals(object.argumenti.get(i)))
                             return false;
                     }
+                    return true;
                 }
                 return false;
             }
-              
-            
             return false;
+        }
+        
+         @Override
+        public Object clone(){
+            Metod that= new Metod();
+            that.setCrtezID(this.crtezID);
+            that.setKlasaIliInterfejsID(this.klasaIliInterjfejsID);
+            that.setID(this.ID);
+            that.setNaziv(this.naziv);
+            that.setIsStatic(this.isStatic);
+            that.setIsAbstract(this.isAbstract);
+            that.setVidljivost(this.vidljivost);
+            that.setPovratnaVrednost(this.povratnaVrednost);
+            
+            that.setArgumentIDCounter(this.argumentIDCounter);
+            that.argumenti=new ArrayList<Argument>();
+            for(Argument arg : this.argumenti){
+                that.argumenti.add((Argument) arg.clone());
+            }
+            
+            return that;
         }
 
 }

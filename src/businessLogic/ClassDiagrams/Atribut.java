@@ -76,6 +76,21 @@ public class Atribut implements Serializable {
             return false;
         }
         
+         @Override
+        public Object clone(){
+            Atribut that= new Atribut();
+            that.setCrtezID(this.crtezID);
+            that.setKlasaID(this.klasaID);
+            that.setID(this.ID);
+            that.setTip(this.tip);
+            that.setNaziv(this.naziv);
+            that.setIsStatic(this.isStatic);
+            that.setVidljivost(this.vidljivost);
+            
+            return that;
+        }
+        
+        
         //pokuplja sve osim id-eva, oni se ne menjaju nikad
         public void update(Atribut noviAtribut){
             this.setNaziv(noviAtribut.getNaziv());

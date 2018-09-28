@@ -6,7 +6,9 @@
 package draw.classDiagram.figures;
 
 import businessLogic.AbstractClassHierarchy.AbstractDiagramElement;
+import businessLogic.ClassDiagrams.Atribut;
 import businessLogic.ClassDiagrams.Klasa;
+import businessLogic.ClassDiagrams.Metod;
 import businessLogic.UseCaseDiagrams.UseCase;
 import draw.classDiagram.auxiliaryClasses.IMethodContainer;
 import draw.classDiagram.figures.attribute.AddAttributeAction;
@@ -18,6 +20,7 @@ import draw.classDiagram.figures.method.ChangeMethodAction;
 import draw.classDiagram.figures.method.DeleteMethodAction;
 import draw.classDiagram.figures.method.MethodFigure;
 import draw.commonClasses.AbstractDiagramElementFigure;
+import draw.commonClasses.IUpdatableFigure;
 import draw.usecase.auxiliaryClasses.UseCaseVerticalLayouter;
 import draw.usecase.figures.UseCaseFigure;
 import java.awt.geom.Point2D;
@@ -44,16 +47,13 @@ import org.jhotdraw.samples.pert.figures.SeparatorLineFigure;
  *
  * @author Korisnik
  */
-public class ClassFigure extends AbstractDiagramElementFigure implements IMethodContainer {
+public class ClassFigure extends AbstractDiagramElementFigure implements IMethodContainer,IUpdatableFigure {
     
     private Klasa klasa;
     ListFigure attributes= new ListFigure();
     ListFigure methods = new ListFigure();
+    TextFigure name;
 
-    public ClassFigure(Klasa klasa) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-   
     //adapter za ime klase
      private static class ClassNameAdapter extends AbstractFigureListener {
         private ClassFigure target;
@@ -85,6 +85,48 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
         
     }
     
+    public ClassFigure(Klasa klasa) {
+        super(klasa.getOkvir());
+        this.klasa=klasa;
+        initFigure();
+    }
+    
+      @Override
+    public void updateDiagramFigure(AbstractDiagramElement newElement) {
+         if(!(newElement instanceof Klasa))
+            return;
+         
+         Klasa element=(Klasa) newElement;
+         
+         this.klasa.getOkvir().setBounds(element.getOkvir().getBounds());
+         this.klasa.setIsAbstract(element.getIsAbstract());
+         this.klasa.setIsStatic(element.getIsStatic());
+         this.getNameFigure().setText(element.getIme());
+         
+         //izbrisi sve atribute prvo, pa ih dodaj jedan po jedan
+         this.klasa.setAtributi(element.getAtributi());
+         this.klasa.setAtributCounter(element.getAtributCounter());
+         
+         this.getAttributesContainer().removeAllChildren();
+         for(Atribut attrib : this.klasa.getAtributi()){
+             AttributeFigure attribFigure= new AttributeFigure(attrib);
+             this.AddAtributeToDiagramOnly(attribFigure);
+         }
+         
+         //metode
+         this.klasa.setMetode(element.getMetode());
+         this.klasa.setMetodCounter(element.getMetodCounter());
+         
+         this.getMethodsContainer().removeAllChildren();
+         for(Metod met : this.klasa.getMetode()){
+             MethodFigure metFigure= new MethodFigure(met);
+             this.AddMethodToDiagramOnly(metFigure);
+         }
+         
+         this.changed();
+         
+    }
+    
     //ovaj metod treba da vrati akcije koje su specificne za konkretnu figuru
     //njih ce da pokupi DelegationSelectionTool kad kreira popup menu i stavice ih na pocetak
     //konkretno, treba da budu stavljene akcije za dodavanje atributa i metoda
@@ -98,7 +140,7 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
         
         
         //proveri da slucajno nije klinuto na neki atribut
-        Figure possibleChild= attributes.findChild(p);
+        Figure possibleChild= this.getAttributesContainer().findChild(p);
         if(possibleChild!=null )
         {
             actions.add(new ChangeAttributeAction((AttributeFigure)possibleChild));
@@ -106,7 +148,7 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
         }
         
         //u slucaju da je kliknuto na neki metod
-        Figure possibleChild2= methods.findChild(p);
+        Figure possibleChild2= this.getMethodsContainer().findChild(p);
         if(possibleChild2!=null){
             actions.add(new ChangeMethodAction((MethodFigure)possibleChild2));
             actions.add(new DeleteMethodAction((MethodFigure)possibleChild2));            
@@ -122,7 +164,7 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
     private void initFigure(){
         setLayouter(new UseCaseVerticalLayouter());
         
-        TextFigure name= new TextFigure(){
+        name= new TextFigure(){
             @Override
              public void basicSetBounds(Point2D.Double anchor, Point2D.Double lead) {
                 double width=Math.abs(lead.x-anchor.x);
@@ -134,7 +176,7 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
         name.setText(this.klasa.getIme());
         //ovde treba za static i za abstract da se ubaci stil
         LAYOUT_INSETS.set(name, defaultInsets);
-        add(name);
+        add(name);//child(0)
         //menja ime klase u bussiness objektu kad se promeni tekst
         name.addFigureListener(new ClassNameAdapter(this));
         
@@ -147,17 +189,21 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
         LAYOUT_INSETS.set(attributes, defaultInsets);
         LAYOUT_INSETS.set(methods, defaultInsets);
         
-        add(attributes);//child 3
+        add(attributes);//child(2)
         add(sep);
-        add(methods);//child 5
+        add(methods);//child (4)
+    }
+    
+    private TextFigure getNameFigure(){
+        return (TextFigure) getChild(0);
     }
     
     public ListFigure getAttributesContainer(){
-        return (ListFigure) getChild(3);
+        return (ListFigure) getChild(2);
     }
     
     public ListFigure getMethodsContainer(){
-        return (ListFigure) getChild(5);
+        return (ListFigure) getChild(4);
     }
     
     @Override
@@ -177,9 +223,10 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
     
     @Override
     public GraphicalCompositeFigure clone(){
-        ClassFigure that= new ClassFigure();
+        ClassFigure that= (ClassFigure) super.clone();
         that.klasa= (this.klasa==null)? null : (Klasa)this.klasa.clone();
-        that.klasa.setOkvir((RectangleFigure)this.getPresentationFigure());
+        that.klasa.setOkvir((RectangleFigure)that.getPresentationFigure());
+        that.getNameFigure().addFigureListener(new ClassNameAdapter(that));
         //dodati eventuelne listenere
         return that;
     }
@@ -210,7 +257,7 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
          //posto atribut ne implementira IDataFigure pa nece on direktno da se uhvati tamo
          try
          {
-             attributes.add(newAttribute);
+             this.getAttributesContainer().add(newAttribute);
          }
          catch(Exception e)
          {
@@ -219,11 +266,17 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
          
      }
      
+     //ova se zove iz updateFigure metode
+     public void AddAtributeToDiagramOnly(AttributeFigure newAttribute){
+          newAttribute.setParent(this);
+          this.getAttributesContainer().add(newAttribute);
+     }
+     
      public void DeleteAttribute(AttributeFigure attributeToDelete){
          //obrisi atribut iz business objekta
          this.klasa.obrisiAtribut(attributeToDelete.getAtribut().getID());
          
-         this.attributes.remove(attributeToDelete);
+         this.getAttributesContainer().remove(attributeToDelete);
      }
      
     @Override
@@ -235,13 +288,18 @@ public class ClassFigure extends AbstractDiagramElementFigure implements IMethod
          newMethod.setParent((IMethodContainer)this);
          
          //dodavanje same figure u crtez
-         methods.add(newMethod);
+         this.getMethodsContainer().add(newMethod);
+    }
+    
+    public void AddMethodToDiagramOnly(MethodFigure newMethod){
+        newMethod.setParent((IMethodContainer)this);
+         this.getMethodsContainer().add(newMethod);
     }
      
     @Override
     public void DeleteMethod(MethodFigure methodToDelete) {
         this.klasa.obrisiMetodu(methodToDelete.getMethod().getID());
-        this.methods.remove(methodToDelete);
+        this.getMethodsContainer().remove(methodToDelete);
     }
      
 }

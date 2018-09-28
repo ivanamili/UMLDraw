@@ -142,11 +142,22 @@ public class Klasa extends ClassDiagramElement implements Serializable {
             that.setCrtezID(this.crtezID);
             that.setID(this.ID);
             that.setIme(this.ime);
+            that.setOkvir(this.okvir.clone());
             that.setIsAbstract(this.isAbstract);
             that.setIsStatic(this.isStatic);
             that.setAtributCounter(this.atributCounter);
             that.setMetodCounter(this.metodCounter);
-            //array liste ce da postavi default construktor
+            
+            that.atributi=new ArrayList<Atribut>();
+            for(Atribut attr : this.atributi){
+                that.atributi.add((Atribut)attr.clone());
+            }
+            
+            that.metode= new ArrayList<Metod>();
+            for(Metod met: this.metode){
+                that.metode.add((Metod)met.clone());
+            }
+            
             return that;
         }
         
@@ -157,9 +168,14 @@ public class Klasa extends ClassDiagramElement implements Serializable {
                 return false;
             
             Klasa object= (Klasa)obj;
-             
+            
+            if(this.okvir==null)
+                return false;
+            
             Rectangle2D.Double thisBounds=this.okvir.getBounds();
             Rectangle2D.Double objectBounds= object.okvir.getBounds();
+            
+            
             
             if(thisBounds.x==objectBounds.x && thisBounds.y ==objectBounds.y
                     && thisBounds.width==objectBounds.width && thisBounds.height==objectBounds.height
@@ -184,10 +200,12 @@ public class Klasa extends ClassDiagramElement implements Serializable {
                         if(!(this.metode.get(i).equals(object.metode.get(i))))
                             return false;
                     }
+                    return true;
                 }
+                return false;
             }
                 
-            return true;
+            return false;
         }
 
     

@@ -9,6 +9,7 @@ import businessLogic.ClassDiagrams.Argument;
 import businessLogic.ClassDiagrams.Metod;
 import draw.classDiagram.auxiliaryClasses.IMethodContainer;
 import draw.classDiagram.figures.ClassFigure;
+import draw.commonClasses.LabelFigure;
 import java.util.ArrayList;
 import static org.jhotdraw.draw.AttributeKeys.FONT_ITALIC;
 import static org.jhotdraw.draw.AttributeKeys.FONT_UNDERLINED;
@@ -19,7 +20,7 @@ import org.jhotdraw.draw.TextFigure;
  *
  * @author Korisnik
  */
-public class MethodFigure extends TextFigure{
+public class MethodFigure extends LabelFigure{
     
     private Metod method;
     private IMethodContainer parent;

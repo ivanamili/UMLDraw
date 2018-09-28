@@ -281,26 +281,24 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             .addGroup(CreateNewPanelLayout.createSequentialGroup()
                 .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(CreateNewPanelLayout.createSequentialGroup()
-                        .addGap(155, 155, 155)
-                        .addComponent(btnCreateDiagram, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(CreateNewPanelLayout.createSequentialGroup()
                         .addGap(53, 53, 53)
                         .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblCrtezType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblCrtezName, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbDiagramType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(CreateNewPanelLayout.createSequentialGroup()
-                                .addComponent(txtDiagramName, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                                .addGap(106, 106, 106))))
+                        .addGroup(CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cmbDiagramType, 0, 174, Short.MAX_VALUE)
+                            .addComponent(txtDiagramName)))
+                    .addGroup(CreateNewPanelLayout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(btnCreateDiagram, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(CreateNewPanelLayout.createSequentialGroup()
                         .addGap(151, 151, 151)
                         .addComponent(lblCreateCrtez))
                     .addGroup(CreateNewPanelLayout.createSequentialGroup()
                         .addGap(119, 119, 119)
                         .addComponent(lblDiagramCreateSuccess)))
-                .addContainerGap())
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         CreateNewPanelLayout.setVerticalGroup(
             CreateNewPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -622,9 +620,10 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
         message.setMessageType(MessageType.DIAGRAM_JOIN_REQUEST);
         message.setPayload(null);
         
+        cardLayout.show(MainPanel, "card6");
         loginClient.sendLoginMessage(message);
         
-        cardLayout.show(MainPanel, "card6");
+        
     }//GEN-LAST:event_btnJoinCrtezActionPerformed
 
     private void btnCreateNewCrtezActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewCrtezActionPerformed
@@ -804,7 +803,6 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
             {
                 boolean success= (boolean)response.getPayload();
                 if(success){
-                    lblSuccess.setText("Logging successfull!");
                     cardLayout.next(MainPanel);
                 } 
                 else
@@ -847,6 +845,8 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                     btnCreateDiagram.setEnabled(true);
                     createdCrtez.setID(diagramId);
                     
+                    cardLayout.show(MainPanel, "card5");
+                    
                     //setuj ime i tip crteza u wait formi
                     lblWaitCrtezName.setText(createdCrtez.getNaslov());
                     lblWaitDiagramType.setText(createdCrtez.getTip().toString());
@@ -856,8 +856,6 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
                     
                     //kreiraj admin exchange i binduj svoj red za nju
                     loginClient.createAndBindToAdminExchange(createdCrtez.getNaslov());
-                    cardLayout.show(MainPanel, "card5");
-                    
                 }
                 break;
             }
@@ -904,13 +902,14 @@ public class StartupApp extends javax.swing.JFrame implements IHandleLoginRespon
     
     private void initializeAdminPannel(Crtez crtezToStart)
     {
+        cardLayout.show(MainPanel, "card7");
         lblAdminDiagramName.setText(currentWorkingCrtez.getNaslov());
         lblAdminDiagramType.setText(currentWorkingCrtez.getTip().toString());
         lblAdminAutorName.setText(currentWorkingCrtez.getImeAutora());
         lblAdminCurrentDrawingUser.setText(currentWorkingCrtez.getImeAutora());
         
         adminContributorList.setModel(contributorListModel);
-        cardLayout.show(MainPanel, "card7");
+        
         
     }
     

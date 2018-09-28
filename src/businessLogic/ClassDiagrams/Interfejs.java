@@ -104,8 +104,14 @@ public class Interfejs extends ClassDiagramElement implements Serializable {
             that.setCrtezID(this.crtezID);
             that.setID(this.ID);
             that.setNaziv(this.naziv);
+            that.setOkvir(this.okvir.clone());
             that.setMetodCounter(this.metodCounter);
-            //array liste ce da postavi default construktor
+            
+            that.metode= new ArrayList<Metod>();
+            for(Metod met: this.metode){
+                that.metode.add((Metod)met.clone());
+            }
+            
             return that;
         }
         
@@ -135,10 +141,12 @@ public class Interfejs extends ClassDiagramElement implements Serializable {
                         if(!(this.metode.get(i).equals(object.metode.get(i))))
                             return false;
                     }
+                    return true;
                 }
+                return false;
             }
                 
-            return true;
+            return false;
         }
 
         
