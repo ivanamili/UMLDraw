@@ -673,10 +673,10 @@ public class PersistenceManager implements IPersistenceManager {
       } finally {
          session.close(); 
       } 
-        
-        for(Argument arg:objToUpdate.getArgumenti()){
-            saveOrUpdate(arg);
-        }
+//        
+//        for(Argument arg:objToUpdate.getArgumenti()){
+//            saveOrUpdate(arg);
+//        }
     }
     
     //KLASA 
@@ -758,7 +758,9 @@ public class PersistenceManager implements IPersistenceManager {
         }
         //tek ovde pocinje cuvanje 
         
-        ArrayList<Atribut> postojeci=null;
+        //da bi mogli da proverimo ako neki atributi nisu tu da ih obrisemo
+        List<Integer> atrIdLista=null;
+        List<Integer> metIdLista=null;
                 
         Session session=null;
         Transaction tx = null;        
@@ -769,6 +771,19 @@ public class PersistenceManager implements IPersistenceManager {
              tx = session.beginTransaction();
 
             session.update(zaBazu);
+            
+             //id-evi svih atributa koji pripadaju toj klasi
+            Query query=session.createQuery("select atr.id.attributId from AtributDb atr where atr.id.crtezId = :crtezID and atr.id.klasaId = :klasaID ");
+            query.setParameter("crtezID",objToUpdate.getCrtezID());
+            query.setParameter("klasaID",objToUpdate.getID());
+            atrIdLista=query.list();
+            
+            //id-evi svih metoda koje pripadaju toj klasi
+            query=session.createQuery("select met.id.id from MetodDb met where met.id.crtezId = :crtezID and met.id.klasaIliInterfejsId = :klasaID ");
+            query.setParameter("crtezID",objToUpdate.getCrtezID());
+            query.setParameter("klasaID",objToUpdate.getCrtezID());
+            metIdLista=query.list();
+            
              //zavrsava se transakcija
              
              tx.commit();
@@ -779,13 +794,63 @@ public class PersistenceManager implements IPersistenceManager {
          session.close(); 
       } 
         
+        //handluje dodate ili promenjene atribute
        for(Atribut attr: objToUpdate.getAtributi()){
            saveOrUpdate(attr);
        }
        
+       //handluje izbrisane atribute
+        Iterator i=atrIdLista.iterator();
+        int[] idComp= new int[3];
+        idComp[0]=objToUpdate.getCrtezID();
+        idComp[1]=objToUpdate.getID();
+        
+        ArrayList<Atribut> atributi=new ArrayList();
+        while(i.hasNext())
+        {
+            Atribut atr;
+            idComp[2]=(int)i.next();
+            atr=getAtributByID(idComp);
+            atributi.add(atr);
+        }
+        //jedan je izbrisan
+        //naci koji
+        if(atributi.size()>objToUpdate.getAtributi().size())
+        {
+            for(Atribut attr : atributi){
+                if(!objToUpdate.getAtributi().contains(attr))
+                    delete(attr);
+            }
+        }
+       // DEO ZA HANDLOVANJE METODA
+       
        for(Metod met:objToUpdate.getMetode()){
            saveOrUpdate(met);
        }
+       
+       //handluje izbrisane atribute
+        i=metIdLista.iterator();
+        idComp= new int[3];
+        idComp[0]=objToUpdate.getCrtezID();
+        idComp[1]=objToUpdate.getID();
+        
+        ArrayList<Metod> metode=new ArrayList();
+        while(i.hasNext())
+        {
+            Metod met;
+            idComp[2]=(int)i.next();
+            met=getMetodByID(idComp);
+            metode.add(met);
+        }
+        //jedan je izbrisan
+        //naci koji
+        if(metode.size()>objToUpdate.getMetode().size())
+        {
+            for(Metod met : metode){
+                if(!objToUpdate.getMetode().contains(met))
+                    delete(met);
+            }
+        }
     }
     private void delete(Klasa objToDelete) {
         //popunjavanje osnovnih podataka objekta za bazu
