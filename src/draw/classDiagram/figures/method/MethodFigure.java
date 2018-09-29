@@ -64,7 +64,7 @@ public class MethodFigure extends LabelFigure{
          if(argumenti.size()!=0)
          {
             int i;
-            for(i=0; i<argumenti.size()-2; i++){
+            for(i=0; i<argumenti.size()-1; i++){
                 text+= argumenti.get(i).getNaziv()+":"+argumenti.get(i).getTip()+",";
             }
             text+=argumenti.get(i).getNaziv()+":"+argumenti.get(i).getTip();

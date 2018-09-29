@@ -67,6 +67,14 @@ public class Interfejs extends ClassDiagramElement implements Serializable {
 		met.setCrtezID(this.crtezID);
                 met.setKlasaIliInterfejsID(this.ID);
                 met.setID(this.metodCounter);
+                
+                 for(int i=0;i<met.getArgumenti().size();i++){
+                    Argument arg= met.getArgumenti().get(i);
+                    arg.setCrtezID(this.crtezID);
+                    arg.setKlasaID(this.ID);
+                    arg.setMetodID(met.getID());
+                }
+                
                 this.metodCounter++;
                 this.metode.add(met);
 	}

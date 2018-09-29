@@ -114,6 +114,15 @@ public class Klasa extends ClassDiagramElement implements Serializable {
 		metoda.setCrtezID(this.crtezID);
                 metoda.setKlasaIliInterfejsID(this.ID);
                 metoda.setID(this.metodCounter);
+                
+                
+                for(int i=0;i<metoda.getArgumenti().size();i++){
+                    Argument arg= metoda.getArgumenti().get(i);
+                    arg.setCrtezID(this.crtezID);
+                    arg.setKlasaID(this.ID);
+                    arg.setMetodID(metoda.getID());
+                }
+                
                 this.metode.add(metoda);
                 this.metodCounter++;
 	}

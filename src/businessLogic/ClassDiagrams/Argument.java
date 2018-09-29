@@ -73,6 +73,7 @@ public class Argument implements Serializable{
             Argument that= new Argument();
             that.setCrtezID(this.crtezID);
             that.setKlasaID(this.klasaID);
+            that.setMetodID(this.metodID);
             that.setID(this.ID);
             that.setTip(this.tip);
             that.setNaziv(this.naziv);
